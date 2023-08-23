@@ -1,0 +1,20 @@
+CFLAGS=-std=c17 -Wall -Wpedantic -Wextra -g -fsanitize=address
+SOURCES=$(wildcard *.c)
+OBJECTS=$(SOURCES:.c=.o)
+TARGET=test_queue
+
+%.o:%.c
+	$(CC) $(CFLAGS) -c $^
+
+$(TARGET):$(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^
+
+.PHONY : clean all
+
+all:$(TARGET)
+	@echo $(SOURCES)
+	@echo $(OBJECTS)
+	@echo $(TARGET)
+
+clean:
+	rm $(OBJECTS) $(TARGET)
