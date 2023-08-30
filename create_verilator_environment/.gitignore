@@ -2,3 +2,4 @@
 !*.cpp
 !Makefile
 !.gitignore
+obj_dir/
