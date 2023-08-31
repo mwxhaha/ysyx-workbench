@@ -14,7 +14,7 @@ int main(int argc, char **argv)
     Verilated::traceEverOn(true); 
     VerilatedVcdC* tfp = new VerilatedVcdC;
     top->trace(tfp, 99); 
-    tfp->open("result.vcd");
+    tfp->open("simx.vcd");
 
     int sim_time = 100;
     while (contextp->time() < sim_time && !contextp->gotFinish())
