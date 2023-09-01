@@ -1,5 +1,7 @@
 !*.v
 !*.cpp
+!*.nxdc
 !Makefile
 !.gitignore
 obj_dir/
+auto_bind.cpp
