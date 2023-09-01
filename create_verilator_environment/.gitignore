@@ -4,4 +4,5 @@
 !Makefile
 !.gitignore
 obj_dir/
+build/
 auto_bind.cpp
