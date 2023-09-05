@@ -1,5 +1,6 @@
 !*.v
 !*.cpp
+!*.nxdc
 !Makefile
 !.gitignore
 build/
