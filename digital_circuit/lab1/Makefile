@@ -10,7 +10,7 @@ NXDC = $(wildcard $(NXDC_DIR)/*.nxdc)
 BUILD_DIR = $(abspath build)
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
-TOP_NAME = mux21b
+TOP_NAME = mux21c
 BIN = $(BUILD_DIR)/V$(TOP_NAME)
 WAVE = $(BUILD_DIR)/wave.vcd
 include ../../Makefile
@@ -41,7 +41,7 @@ $(SRC_AUTO_BIND): $(NXDC)
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 NV_VERILATOR_CFLAGS=$(INCFLAGS) -DNV_SIM
-NV_VERILATOR_FLAGS=$(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+NV_VERILATOR_FLAGS=$(addprefix -CFLAGS , $(NV_VERILATOR_CFLAGS))
 LDFLAGS = -lSDL2 -lSDL2_image
 NV_VERILATOR_FLAGS_2=$(addprefix -LDFLAGS , $(LDFLAGS))
 
