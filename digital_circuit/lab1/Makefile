@@ -1,7 +1,6 @@
 VERILATOR = verilator
+BUILD_TOOL = make
 WAVE_READER = gtkwave
-MAKE = make
-
 VSRC_DIR = $(abspath vsrc)
 VSRC = $(wildcard $(VSRC_DIR)/*.v)
 CSRC_DIR = $(abspath csrc)
@@ -14,11 +13,12 @@ OBJ_DIR = $(BUILD_DIR)/obj_dir
 TOP_NAME = mux21b
 BIN = $(BUILD_DIR)/V$(TOP_NAME)
 WAVE = $(BUILD_DIR)/wave.vcd
+include ../../Makefile
 
 default: sim
 
-CXXFLAGS = -DV_TOP_NAME="\"V$(TOP_NAME)\"" -Wall
-VERILATOR_FLAGS = --cc --Mdir $(OBJ_DIR) --exe -o $(BIN) -Wall --top-module $(TOP_NAME) --trace $(addprefix -CFLAGS , $(CXXFLAGS))
+VERILATOR_CFLAGS = -DV_TOP_NAME="\"V$(TOP_NAME)\"" -Wall
+VERILATOR_FLAGS = --cc --Mdir $(OBJ_DIR) --exe -o $(BIN) -Wall --top-module $(TOP_NAME) --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
 
 gen: $(VSRC) $(CSRC)
 	$(VERILATOR) $(VERILATOR_FLAGS) $^
@@ -26,11 +26,12 @@ gen: $(VSRC) $(CSRC)
 MAKE_FLAGS = -C $(OBJ_DIR) -f V$(TOP_NAME).mk
 
 build: gen
-	$(MAKE) $(MAKE_FLAGS) $(BIN)
+	$(BUILD_TOOL) $(MAKE_FLAGS) $(BIN)
 
 sim: build
 	$(BIN)
 	$(WAVE_READER) $(WAVE)
+	$(call git_commit, "sim RTL in digital circuit") 
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 
@@ -39,21 +40,22 @@ $(SRC_AUTO_BIND): $(NXDC)
 
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 INCFLAGS = $(addprefix -I, $(INC_PATH))
-CXXFLAGS += $(INCFLAGS)
+NV_VERILATOR_CFLAGS=$(INCFLAGS) -DNV_SIM
+NV_VERILATOR_FLAGS=$(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
 LDFLAGS = -lSDL2 -lSDL2_image
-CSRC += $(SRC_AUTO_BIND)
+NV_VERILATOR_FLAGS_2=$(addprefix -LDFLAGS , $(LDFLAGS))
 
-nvgen: $(VSRC) $(CSRC) $(NVBOARD_ARCHIVE)
-	$(VERILATOR) $(VERILATOR_FLAGS) $^ $(addprefix -LDFLAGS , $(LDFLAGS))
+nvgen: $(VSRC) $(CSRC) $(NVBOARD_ARCHIVE) $(SRC_AUTO_BIND)
+	$(VERILATOR) $(VERILATOR_FLAGS) $(NV_VERILATOR_FLAGS) $^ $(NV_VERILATOR_FLAGS_2)
 
 nvbuild: nvgen
-	$(MAKE) $(MAKE_FLAGS) $(BIN)
+	$(BUILD_TOOL) $(MAKE_FLAGS) $(BIN)
 
 nvsim: nvbuild
 	$(BIN)
+	$(call git_commit, "nvsim RTL in digital circuit") 
 
 clean: 
 	rm -rf $(BUILD_DIR)
 
-.PHONY : gen buid sim nvgen nvbluid nvsim clean
-
+.PHONY : default gen buid sim nvgen nvbluid nvsim clean

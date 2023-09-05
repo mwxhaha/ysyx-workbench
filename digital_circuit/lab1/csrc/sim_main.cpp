@@ -1,7 +1,7 @@
 // #define NV_SIM
 // #define V_TOP_NAME Vm_mux21
 
-#include "Vm_mux21.h"
+#include "Vmux21b.h"
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 #ifdef NV_SIM
