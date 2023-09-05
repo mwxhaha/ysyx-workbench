@@ -1,0 +1,5 @@
+!*.v
+!*.cpp
+!Makefile
+!.gitignore
+build/
