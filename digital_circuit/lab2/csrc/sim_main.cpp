@@ -1,7 +1,7 @@
 // #define NV_SIM
 // #define V_TOP_NAME Vdecode24
 
-#include "Vencode42.h"
+#include "Vencode42p.h"
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 #ifdef NV_SIM
@@ -97,8 +97,8 @@ int main(int argc, char **argv)
   top->en=0b1; top->x =0b0000; update();
                top->x =0b0001; update();
                top->x =0b0010; update();
-               top->x =0b0100; update();
-               top->x =0b1000; update();
+               top->x =0b0101; update();
+               top->x =0b1010; update();
     }
 #endif
 
