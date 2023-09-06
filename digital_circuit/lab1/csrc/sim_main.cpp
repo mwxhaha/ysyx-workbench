@@ -1,7 +1,7 @@
 // #define NV_SIM
 // #define V_TOP_NAME Vm_mux21
 
-#include "Vmux41b.h"
+#include "Vmux82.h"
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 #ifdef NV_SIM
@@ -90,24 +90,24 @@ int main(int argc, char **argv)
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
         top->s = 0b00;
-        top->a = 0b1110;
+        top->a = 0b11101110;
         update();
-        top->a = 0b0001;
+        top->a = 0b00010001;
         update();
         top->s = 0b01;
-        top->a = 0b1110;
+        top->a = 0b11101110;
         update();
-        top->a = 0b0010;
+        top->a = 0b00100010;
         update();
         top->s = 0b10;
-        top->a = 0b1010;
+        top->a = 0b10101010;
         update();
-        top->a = 0b0100;
+        top->a = 0b01000100;
         update();
         top->s = 0b11;
-        top->a = 0b0111;
+        top->a = 0b01110111;
         update();
-        top->a = 0b1001;
+        top->a = 0b10011001;
         update();
     }
 #endif

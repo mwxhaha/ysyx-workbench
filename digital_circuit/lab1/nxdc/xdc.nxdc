@@ -1,5 +1,5 @@
-top=mux41b
+top=mux82
 
-y (LD0)
-a (SW5,SW4,SW3,SW2)
+y (LD1,LD0)
+a (SW9,SW8,SW7,SW6,SW5,SW4,SW3,SW2)
 s (SW1,SW0)
