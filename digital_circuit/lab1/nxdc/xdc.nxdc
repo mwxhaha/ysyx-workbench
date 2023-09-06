@@ -1,5 +1,5 @@
-top=MuxKeyInternal
+top=mux41b
 
 y (LD0)
-a (SW3,SW2,SW1,SW0)
-s (SW5,SW4)
+a (SW5,SW4,SW3,SW2)
+s (SW1,SW0)

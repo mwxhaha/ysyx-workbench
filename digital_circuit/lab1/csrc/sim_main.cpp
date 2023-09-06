@@ -1,7 +1,7 @@
 // #define NV_SIM
 // #define V_TOP_NAME Vm_mux21
 
-#include "Vmux21e.h"
+#include "Vmux41b.h"
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 #ifdef NV_SIM
@@ -89,27 +89,25 @@ int main(int argc, char **argv)
     unsigned int sim_time = 100;
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
-        top->s = 0;
-        top->a = 0;
-        top->b = 0;
-        update(); // 将s，a和b均初始化为“0”
-        top->b = 1;
-        update(); // 将b改为“1”，s和a的值不变，继续保持“0”，
-        top->a = 1;
-        top->b = 0;
-        update(); // 将a，b分别改为“1”和“0”，s的值不变，
-        top->b = 1;
-        update(); // 将b改为“1”，s和a的值不变，维持10个时间单位
-        top->s = 1;
-        top->a = 0;
-        top->b = 0;
-        update(); // 将s，a，b分别变为“1,0,0”，维持10个时间单位
-        top->b = 1;
+        top->s = 0b00;
+        top->a = 0b1110;
         update();
-        top->a = 1;
-        top->b = 0;
+        top->a = 0b0001;
         update();
-        top->b = 1;
+        top->s = 0b01;
+        top->a = 0b1110;
+        update();
+        top->a = 0b0010;
+        update();
+        top->s = 0b10;
+        top->a = 0b1010;
+        update();
+        top->a = 0b0100;
+        update();
+        top->s = 0b11;
+        top->a = 0b0111;
+        update();
+        top->a = 0b1001;
         update();
     }
 #endif
