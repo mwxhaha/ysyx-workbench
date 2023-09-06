@@ -10,7 +10,7 @@ NXDC = $(wildcard $(NXDC_DIR)/*.nxdc)
 BUILD_DIR = $(abspath build)
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
-TOP_NAME = encode42p
+TOP_NAME = digital_tube
 BIN = $(BUILD_DIR)/V$(TOP_NAME)
 WAVE = $(BUILD_DIR)/wave.vcd
 include ../../Makefile

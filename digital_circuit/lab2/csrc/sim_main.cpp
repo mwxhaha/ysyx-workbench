@@ -1,7 +1,7 @@
 // #define NV_SIM
-// #define V_TOP_NAME Vdecode24
+// #define V_TOP_NAME Vdigital_tube
 
-#include "Vencode42p.h"
+#include "Vdigital_tube.h"
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 #ifdef NV_SIM
@@ -89,16 +89,12 @@ int main(int argc, char **argv)
     unsigned int sim_time = 100;
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
-  top->en=0b0; top->x =0b0000; update();
-               top->x =0b0001; update();
-               top->x =0b0010; update();
-               top->x =0b0100; update();
-               top->x =0b1000; update();
-  top->en=0b1; top->x =0b0000; update();
-               top->x =0b0001; update();
-               top->x =0b0010; update();
-               top->x =0b0101; update();
-               top->x =0b1010; update();
+        top->data=0b0000;
+        update();
+        top->data=0b0001;
+        update();
+        top->data=0b0010;
+        update();
     }
 #endif
 
