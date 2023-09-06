@@ -1,4 +1,4 @@
-top=mux41
+top=MuxKeyInternal
 
 y (LD0)
 a (SW3,SW2,SW1,SW0)
