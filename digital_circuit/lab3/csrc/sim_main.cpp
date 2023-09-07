@@ -1,7 +1,7 @@
 // #define NV_SIM
-// #define V_TOP_NAME Vadder
+#define V_TOP_NAME Vsimple_alu
 
-#include "Vadder8.h"
+#include "Vsimple_alu.h"
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 #ifdef NV_SIM
@@ -86,13 +86,19 @@ int main(int argc, char **argv)
         update();
     }
 #else
-    unsigned int sim_time = 200;
+    unsigned int sim_time = 1000;
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
-        top->in_x = contextp->time();
-        top->in_y = contextp->time() + 2;
-        update();
-        printf("%d %d %d %d\n", top->in_x, top->in_y, top->out_s, top->out_c);
+        for (unsigned int i = 0; i <= 1; ++i)
+            for (unsigned int j = 0; j <= 15; ++j)
+                for (unsigned int k = 0; k <= 15; ++k)
+                {
+                    top->a = j;
+                    top->b = k;
+                    top->addorsub = i;
+                    update();
+                    printf("a:%u b:%u addorsub:%u result:%u carray:%u zero:%u overflow:%u\n", top->a, top->b, top->addorsub, top->result, top->carry, top->zero, top->overflow);
+                }
     }
 #endif
 
