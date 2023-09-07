@@ -10,7 +10,7 @@ NXDC = $(wildcard $(NXDC_DIR)/*.nxdc)
 BUILD_DIR = $(abspath build)
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
-TOP_NAME = adder4
+TOP_NAME = adder8
 BIN = $(BUILD_DIR)/V$(TOP_NAME)
 WAVE = $(BUILD_DIR)/wave.vcd
 include ../../Makefile
@@ -18,10 +18,10 @@ include ../../Makefile
 default: sim
 
 VERILATOR_CFLAGS = -DV_TOP_NAME="\"V$(TOP_NAME)\"" -Wall
-VERILATOR_FLAGS = --cc --Mdir $(OBJ_DIR) --exe -o $(BIN) -Wall -Wno-PINCONNECTEMPTY --top-module $(TOP_NAME) --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+VERILATOR_FLAGS = --cc --Mdir $(OBJ_DIR) --exe -o $(BIN) -Wall --top-module $(TOP_NAME) --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
 
 gen: $(VSRC) $(CSRC)
-	$(VERILATOR) $(VERILATOR_FLAGS) $^
+	$(VERILATOR) $(VERILATOR_FLAGS) $^ ; echo $$?
 
 MAKE_FLAGS = -C $(OBJ_DIR) -f V$(TOP_NAME).mk
 
