@@ -10,7 +10,7 @@ NXDC = $(wildcard $(NXDC_DIR)/*.nxdc)
 BUILD_DIR = $(abspath build)
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
-TOP_NAME = simple_alu
+TOP_NAME = alu
 BIN = $(BUILD_DIR)/V$(TOP_NAME)
 WAVE = $(BUILD_DIR)/wave.vcd
 include ../../Makefile
@@ -46,7 +46,7 @@ LDFLAGS = -lSDL2 -lSDL2_image
 NV_VERILATOR_FLAGS_2=$(addprefix -LDFLAGS , $(LDFLAGS))
 
 nvgen: $(VSRC) $(CSRC) $(NVBOARD_ARCHIVE) $(SRC_AUTO_BIND)
-	$(VERILATOR) $(VERILATOR_FLAGS) $(NV_VERILATOR_FLAGS) $^ $(NV_VERILATOR_FLAGS_2)
+	$(VERILATOR) $(VERILATOR_FLAGS) $(NV_VERILATOR_FLAGS) $^ $(NV_VERILATOR_FLAGS_2) ; echo $$?
 
 nvbuild: nvgen
 	$(BUILD_TOOL) $(MAKE_FLAGS) $(BIN)
