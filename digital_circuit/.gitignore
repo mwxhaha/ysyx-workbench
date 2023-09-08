@@ -1,5 +1,6 @@
 !*.v
 !*.cpp
+!*.hpp
 !*.nxdc
 !Makefile
 !.gitignore

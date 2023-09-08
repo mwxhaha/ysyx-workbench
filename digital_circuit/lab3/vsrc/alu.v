@@ -7,71 +7,59 @@ module alu
          input wire [2:0] func,
          output reg [data_len-1:0] result
      );
-    
-    wire [data_len-1:0] result1;
-    reg addorsub;
-    wire carry,zero,overflow;
+
+    wire [data_len-1:0] result_adder_suber_i;
+    reg add_or_sub;
+    wire zero,overflow;
 
     always@(*)
     begin
         case (func)
-            3'b000: 
-            begin
-                addorsub=1'b0;
-                result=result1;
-            end
+            3'b000:
+                add_or_sub=1'b0;
             3'b001:
-            begin
-                addorsub=1'b1;
-                result=result1;
-            end
-            3'b010: 
-            begin
-                addorsub=1'b0;
-                result=~a;
-            end
-            3'b011:
-            begin
-                addorsub=1'b0;
-                result=a&b;
-            end
-            3'b100: 
-            begin
-                addorsub=1'b0;
-                result=a|b;
-            end
-            3'b101:
-            begin
-                addorsub=1'b0;
-                result=a^b;
-            end
-            3'b110: 
-            begin
-                addorsub=1'b1;
-                result=result1[data_len-1]^overflow;
-            end
+                add_or_sub=1'b1;
+            3'b110:
+                add_or_sub=1'b1;
             3'b111:
-            begin
-                addorsub=1'b1;
-                result=zero;
-            end
+                add_or_sub=1'b1;
             default:
-            begin
-                addorsub=1'b0;
-                result={data_len{1'b0}};
-            end
+                add_or_sub=1'b0;
         endcase
     end
-    
-    simple_alu simple_alu_i(
-        .a        	( a         ),
-        .b        	( b         ),
-        .addorsub 	( addorsub  ),
-        .result   	( result1   ),
-        .carry    	( carry     ),
-        .zero     	( zero      ),
-        .overflow 	( overflow  )
-    );
-    
+
+    always@(*)
+    begin
+        case (func)
+            3'b000:
+                result=result_adder_suber_i;
+            3'b001:
+                result=result_adder_suber_i;
+            3'b010:
+                result=~a;
+            3'b011:
+                result=a&b;
+            3'b100:
+                result=a|b;
+            3'b101:
+                result=a^b;
+            3'b110:
+                result=result_adder_suber_i[data_len-1]^overflow;
+            3'b111:
+                result=zero;
+            default:
+                result={data_len{1'b0}};
+        endcase
+    end
+
+    adder_suber adder_suber_i(
+                    .a        	( a                     ),
+                    .b        	( b                     ),
+                    .add_or_sub ( add_or_sub            ),
+                    .result   	( result_adder_suber_i  ),
+                    .carry    	(                       ),
+                    .zero     	( zero                  ),
+                    .overflow 	( overflow              )
+                );
 
 endmodule

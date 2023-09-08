@@ -2,28 +2,28 @@ VERILATOR = verilator
 BUILD_TOOL = make
 WAVE_READER = gtkwave
 VSRC_DIR = $(abspath vsrc)
-VSRC = $(wildcard $(VSRC_DIR)/*.v)
+VSRC = $(shell find $(VSRC_DIR) -name "*.v")
 CSRC_DIR = $(abspath csrc)
-CSRC = $(wildcard $(CSRC_DIR)/*.cpp)
+CSRC = $(shell find $(CSRC_DIR) -name "sim*.cpp" -or -name "$(TOP_NAME)*.cpp")
 NXDC_DIR = $(abspath nxdc)
 NXDC = $(wildcard $(NXDC_DIR)/*.nxdc)
 BUILD_DIR = $(abspath build)
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 TOP_NAME = alu
-BIN = $(BUILD_DIR)/V$(TOP_NAME)
+BIN = $(BUILD_DIR)/Vtop
 WAVE = $(BUILD_DIR)/wave.vcd
 include ../../Makefile
 
 default: sim
 
-VERILATOR_CFLAGS = -DV_TOP_NAME="\"V$(TOP_NAME)\"" -Wall
-VERILATOR_FLAGS = --cc --Mdir $(OBJ_DIR) --exe -o $(BIN) -Wall --top-module $(TOP_NAME) --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+VERILATOR_CFLAGS = -DTOP_NAME=$(TOP_NAME) -Wall -I$(CSRC_DIR)
+VERILATOR_FLAGS = --cc --Mdir $(OBJ_DIR) --exe -o $(BIN) -Wall --top-module $(TOP_NAME) --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS)) --prefix Vtop
 
-gen: $(VSRC) $(CSRC)
+gen: $(VSRC) $(CSRC) $(SIM)
 	$(VERILATOR) $(VERILATOR_FLAGS) $^ ; echo $$?
 
-MAKE_FLAGS = -C $(OBJ_DIR) -f V$(TOP_NAME).mk
+MAKE_FLAGS = -C $(OBJ_DIR) -f Vtop.mk
 
 build: gen
 	$(BUILD_TOOL) $(MAKE_FLAGS) $(BIN)
@@ -38,14 +38,12 @@ SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 $(SRC_AUTO_BIND): $(NXDC)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
-include $(NVBOARD_HOME)/scripts/nvboard.mk
-INCFLAGS = $(addprefix -I, $(INC_PATH))
-NV_VERILATOR_CFLAGS=$(INCFLAGS) -DNV_SIM
+NV_VERILATOR_CFLAGS=-I$(NVBOARD_HOME)/include -DNV_SIM
 NV_VERILATOR_FLAGS=$(addprefix -CFLAGS , $(NV_VERILATOR_CFLAGS))
-LDFLAGS = -lSDL2 -lSDL2_image
-NV_VERILATOR_FLAGS_2=$(addprefix -LDFLAGS , $(LDFLAGS))
+VERILATOR_LDFLAGS = -lSDL2 -lSDL2_image
+NV_VERILATOR_FLAGS_2=$(addprefix -LDFLAGS , $(VERILATOR_LDFLAGS))
 
-nvgen: $(VSRC) $(CSRC) $(NVBOARD_ARCHIVE) $(SRC_AUTO_BIND)
+nvgen: $(VSRC) $(CSRC) $(NVBOARD_HOME)/build/nvboard.a $(SRC_AUTO_BIND)
 	$(VERILATOR) $(VERILATOR_FLAGS) $(NV_VERILATOR_FLAGS) $^ $(NV_VERILATOR_FLAGS_2) ; echo $$?
 
 nvbuild: nvgen
