@@ -23,24 +23,24 @@ void update()
 #endif
 }
 
-// void cycle(int n)
-// {
-//     while (n > 0)
-//     {
-//         top->clk = 1;
-//         update();
-//         top->clk = 0;
-//         update();
-//         n--;
-//     }
-// }
+void cycle(int n)
+{
+    while (n > 0)
+    {
+        top->clk = 1;
+        update();
+        top->clk = 0;
+        update();
+        n--;
+    }
+}
 
-// void reset(int n)
-// {
-//     top->rst = 1;
-//     cycle(n);
-//     top->rst = 0;
-// }
+void reset(int n)
+{
+    top->rst = 1;
+    cycle(n);
+    top->rst = 0;
+}
 
 void sim_init(int argc, char **argv)
 {
