@@ -1,7 +1,5 @@
 #define HEADER_IN(X) <X##_sim.hpp>
 #define HEADER(X) HEADER_IN(X)
-#define SIM_IN(X) X##_sim()
-#define SIM(X) SIM_IN(X)
 
 #include "verilated.h"
 #include "Vtop.h"
@@ -17,7 +15,7 @@ int main(int argc, char **argv)
 {
     sim_init(argc, argv);
 
-    SIM(TOP_NAME);
+    sim();
 
     sim_exit();
 

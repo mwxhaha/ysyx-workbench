@@ -4,13 +4,13 @@ WAVE_READER = gtkwave
 VSRC_DIR = $(abspath vsrc)
 VSRC = $(shell find $(VSRC_DIR) -name "*.v")
 CSRC_DIR = $(abspath csrc)
-CSRC = $(shell find $(CSRC_DIR) -name "sim*.cpp" -or -name "$(TOP_NAME)*.cpp")
+CSRC = $(shell find $(CSRC_DIR) -name "sim*.cpp" -or -name "$(TOP_NAME)_sim.cpp")
 NXDC_DIR = $(abspath nxdc)
 NXDC = $(wildcard $(NXDC_DIR)/*.nxdc)
 BUILD_DIR = $(abspath build)
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
-TOP_NAME = fsm_bin
+TOP_NAME = ps2_keyboard
 BIN = $(BUILD_DIR)/Vtop
 WAVE = $(BUILD_DIR)/wave.vcd
 include ../../Makefile
