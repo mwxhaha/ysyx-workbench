@@ -19,8 +19,11 @@
 #include <readline/history.h>
 #include "sdb.h"
 #include <utils.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <debug.h>
+#include <common.h>
+#include <memory/vaddr.h>
 
 static int is_batch_mode = false;
 
@@ -58,9 +61,9 @@ static int cmd_q(char *args) {
 
 static int cmd_si(char *args) {
   if (args) {
-    int number;
-    int result = sscanf(args, "%d", &number);
-    if (result > 0) {
+    uint64_t number;
+    int result = sscanf(args, "%ld", &number);
+    if (result == 1) {
       Assert(number > 0, "step number must be larger than 0");
       cpu_exec(number);
     } else {
@@ -76,7 +79,7 @@ static int cmd_info(char *args) {
   if (args) {
     char cmd;
     int result = sscanf(args, "%c", &cmd);
-    if (result > 0) {
+    if (result == 1) {
       switch (cmd) {
         case 'r':
           isa_reg_display();
@@ -97,6 +100,25 @@ static int cmd_info(char *args) {
   return 0;
 }
 
+static int cmd_x(char *args) {
+  if (args) {
+    int scan_len;
+    vaddr_t addr;
+    int result = sscanf(args, "%d %x", &scan_len, &addr);
+    if (result == 2) {
+      for (int i = 0; i < scan_len - 1; i++) {
+        printf("%#.8x ", vaddr_read(addr + i * 4, 4));
+      }
+      printf("%#.8x\n", vaddr_read(addr + (scan_len - 1) * 4, 4));
+    } else {
+      Log("x format error, using like this: x N EXPR");
+    }
+  } else {
+    Log("x format error, using like this: x N EXPR");
+  }
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -108,7 +130,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Step in N instruction", cmd_si },
-  { "info", "Display the state of register and information of watching point", cmd_info }
+  { "info", "Display the state of register and information of watching point", cmd_info },
+  { "x", "scan the memory", cmd_x }
   /* TODO: Add more commands */
 
 };
