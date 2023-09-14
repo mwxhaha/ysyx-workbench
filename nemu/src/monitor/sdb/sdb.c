@@ -18,6 +18,9 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <utils.h>
+#include <stdio.h>
+#include <debug.h>
 
 static int is_batch_mode = false;
 
@@ -53,6 +56,47 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args) {
+  if (args) {
+    int number;
+    int result = sscanf(args, "%d", &number);
+    if (result > 0) {
+      Assert(number > 0, "step number must be larger than 0");
+      cpu_exec(number);
+    } else {
+      Log("si format error, using like this: si N");
+    }
+  } else {
+    cpu_exec(1);
+  }
+  return 0;
+}
+
+static int cmd_info(char *args) {
+  if (args) {
+    char cmd;
+    int result = sscanf(args, "%c", &cmd);
+    if (result > 0) {
+      switch (cmd) {
+        case 'r':
+          isa_reg_display();
+          break;
+        case 'w':
+          Log("Not support");
+          break;
+        default:
+          Log("info format error, using like this: info r/w");
+          break;
+      }
+    } else {
+      Log("info format error, using like this: info r/w");
+    }
+  } else {
+    Log("info format error, using like this: info r/w");
+  }
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -63,7 +107,8 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "Step in N instruction", cmd_si },
+  { "info", "Display the state of register and information of watching point", cmd_info }
   /* TODO: Add more commands */
 
 };
