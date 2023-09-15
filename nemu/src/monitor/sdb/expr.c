@@ -19,9 +19,10 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
+#include <string.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ, TK_NUMBER
 
   /* TODO: Add more token types */
 
@@ -39,6 +40,12 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+  {"-", '-'},         
+  {"\\*", '*'},         
+  {"/", '/'},     
+  {"\\(", '('},     
+  {"\\)", ')'},     
+  {"[0-9]+", TK_NUMBER}
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -70,13 +77,15 @@ typedef struct token {
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
-static bool make_token(char *e) {
+// static bool make_token(char *e) {
+bool make_token(char *e) {//debug
   int position = 0;
   int i;
   regmatch_t pmatch;
 
   nr_token = 0;
 
+  int j = 0;
   while (e[position] != '\0') {
     /* Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i ++) {
@@ -93,9 +102,15 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
+        Assert(strlen(substr_start) <= 31, "number is too large");
         switch (rules[i].token_type) {
-          default: TODO();
+          TK_NOTYPE:
+            break;
+          TK_NUMBER:
+            strcpy(tokens[j].str, substr_start);
+          default:
+            tokens[j].type = rules[i].token_type;
+            j++;
         }
 
         break;
