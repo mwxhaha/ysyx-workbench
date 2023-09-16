@@ -20,6 +20,7 @@
  */
 #include <regex.h>
 #include <string.h>
+#include <debug.h>
 
 enum {
   TK_NOTYPE = 256, TK_EQ, TK_NUMBER
@@ -85,7 +86,6 @@ bool make_token(char *e) {//debug
 
   nr_token = 0;
 
-  int j = 0;
   while (e[position] != '\0') {
     /* Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i ++) {
@@ -104,13 +104,14 @@ bool make_token(char *e) {//debug
          */
         Assert(strlen(substr_start) <= 31, "number is too large");
         switch (rules[i].token_type) {
-          TK_NOTYPE:
+          case TK_NOTYPE:
             break;
-          TK_NUMBER:
-            strcpy(tokens[j].str, substr_start);
+          case TK_NUMBER:
+            Assert(memcpy(tokens[nr_token].str, substr_start, substr_len),"string process error");
+            tokens[nr_token].str[substr_len] = '\0';
           default:
-            tokens[j].type = rules[i].token_type;
-            j++;
+            tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
         }
 
         break;
