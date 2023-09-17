@@ -23,9 +23,10 @@
 #include <stdbool.h>
 
 // this should be enough
-static char buf[65536] = {};
+#define BUF_MAX 65536
+static char buf[BUF_MAX] = {};
 static int buf_i = 0;
-static char code_buf[65536 + 128] = {}; // a little larger than `buf`
+static char code_buf[BUF_MAX + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
 "int main() { "
@@ -37,20 +38,20 @@ static char *code_format =
 static int choose(int n) { return rand() % n; }
 
 static bool gen_num() {
-  int number = rand() % 100;
+  int number = rand() % 10000;
   sprintf(buf + buf_i, "%d", number);
   if (number != 0)
     buf_i += (int)log10(number) + 1;
   else
     buf_i++;
-  if (buf_i >= 65530) return false;
+  if (buf_i >= BUF_MAX) return false;
   return true;
 }
 
 static bool gen(char c) {
   sprintf(buf + buf_i, "%c", c);
   buf_i++;
-  if (buf_i >= 65530) return false;
+  if (buf_i >= BUF_MAX) return false;
   return true;
 }
 
@@ -70,7 +71,7 @@ static bool gen_rand_op() {
       break;
   }
   buf_i++;
-  if (buf_i >= 65530) return false;
+  if (buf_i >= BUF_MAX) return false;
   return true;
 }
 
@@ -111,16 +112,17 @@ static bool gen_rand_expr() {
 int main(int argc, char *argv[]) {
   int seed = time(0);
   srand(seed);
-  int loop = 1;
+  int loop = 100;
   if (argc > 1) {
     sscanf(argv[1], "%d", &loop);
   }
-  int i;
-  for (i = 0; i < loop; i ++) {
+
+  FILE *fp2 = fopen("/home/mwxhaha/ysyx-workbench/nemu/tools/gen-expr/input", "w");
+  assert(fp2 != NULL);
+  for (int i = 0; i < loop; i ++) {
     buf_i = 0;
     if (!gen_rand_expr()) continue;
     buf[buf_i] = '\0';
-
     sprintf(code_buf, code_format, buf);
 
     FILE *fp = fopen("/tmp/.code.c", "w");
@@ -130,16 +132,20 @@ int main(int argc, char *argv[]) {
 
     int ret = system("gcc /tmp/.code.c -Werror -o /tmp/.expr");
     if (ret != 0) continue;
-
     fp = popen("/tmp/.expr", "r");
     assert(fp != NULL);
-
-    int result;
-    ret = fscanf(fp, "%d", &result);
-    pclose(fp);
+    unsigned int result;
+    ret = fscanf(fp, "%u", &result);
     if (ret != 1) continue;
+    pclose(fp);
 
-    printf("%u %s\n", result, buf);
+    while (buf_i>=0)
+    {
+      if (buf[buf_i] == 'u') buf[buf_i] = ' ';
+      buf_i--;
+    }
+    fprintf(fp2,"%u\n%s\n", result, buf);
   }
+  fclose(fp2);
   return 0;
 }

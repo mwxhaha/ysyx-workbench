@@ -1,7 +1,7 @@
 /***************************************************************************************
-* Copyright (c) 2014-2022 Zihao Yu, Nanjing University
-*
-* NEMU is licensed under Mulan PSL v2.
+ * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
+ *
+ * NEMU is licensed under Mulan PSL v2.
 * You can use this software according to the terms and conditions of the Mulan PSL v2.
 * You may obtain a copy of Mulan PSL v2 at:
 *          http://license.coscl.org.cn/MulanPSL2
@@ -74,11 +74,12 @@ void init_regex() {
 
 typedef struct token {
   int type;
-  char str[32];
+  char str[sizeof(word_t) + 1];
 } Token;
 
-static Token tokens[32] __attribute__((used)) = {};
-static int nr_token __attribute__((used))  = 0;
+#define TOKENS_MAX 65536
+static Token tokens[TOKENS_MAX] __attribute__((used)) = {};
+static int nr_token __attribute__((used)) = 0;
 
 static bool make_token(char *e) {
   int position = 0;
@@ -103,16 +104,21 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-        Assert(strlen(substr_start) <= 31, "number is too large");
         switch (rules[i].token_type) {
           case TK_NOTYPE:
             break;
           case TK_NUMBER:
-            Assert(memcpy(tokens[nr_token].str, substr_start, substr_len),"string process error");
+            Assert(substr_len <= sizeof(word_t), "number is too large");
+            Assert(memcpy(tokens[nr_token].str, substr_start, substr_len),
+                   "string process error");
             tokens[nr_token].str[substr_len] = '\0';
+            tokens[nr_token].type = TK_NUMBER;
+            nr_token++;
+            break;
           default:
             tokens[nr_token].type = rules[i].token_type;
             nr_token++;
+            break;
         }
 
         break;
@@ -172,13 +178,13 @@ static word_t eval(int p, int q, bool *success) {
   if (p > q) {
     *success = false;
     Log("expression split failed");
-    return 2147483647;
+    return -1;
 
   } else if (p == q) {
     if (tokens[p].type != TK_NUMBER) {
       *success = false;
       Log("the number in expression is illegal");
-      return 2147483647;
+      return -1;
     }
     word_t number;
     if (sscanf(tokens[p].str, "%d", &number) == 1) {
@@ -186,18 +192,15 @@ static word_t eval(int p, int q, bool *success) {
     } else {
       *success = false;
       Log("the number in expression is illegal");
-      return 2147483647;
+      return -1;
     }
 
   } else {
     bool check = check_parentheses(p, q, success);
-    if (!(*success)) return 2147483647;
+    if (!(*success)) return -1;
     if (check) {
-      /* The expression is surrounded by a matched pair of parentheses.
-       * If that is the case, just throw away the parentheses.
-       */
       word_t val = eval(p + 1, q - 1, success);
-      if (!(*success)) return 2147483647;
+      if (!(*success)) return -1;
       return val;
     } else {
 
@@ -222,7 +225,7 @@ static word_t eval(int p, int q, bool *success) {
             break;
           case '(':
             i = find_parentheses(i, success) + 1;
-            if (!(*success)) return 2147483647;
+            if (!(*success)) return -1;
             break;
           default:
             i++;
@@ -230,13 +233,13 @@ static word_t eval(int p, int q, bool *success) {
         }
       }
       word_t val1 = eval(p, main_op - 1, success);
-      if (!(*success)) return 2147483647;
+      if (!(*success)) return -1;
       word_t val2 = eval(main_op + 1, q, success);
-      if (!(*success)) return 2147483647;
+      if (!(*success)) return -1;
       if (tokens[main_op].type == '/' && val2 == 0) {
         *success = false;
         Log("div 0");
-        return 2147483647;
+        return -1;
       }
       switch (tokens[main_op].type) {
         case '+':
@@ -250,7 +253,7 @@ static word_t eval(int p, int q, bool *success) {
         default:
           *success = false;
           Log("operator analysis failed");
-          return 2147483647;
+          return -1;
       }
     }
   }
@@ -259,12 +262,43 @@ static word_t eval(int p, int q, bool *success) {
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
-    return 2147483647;
+    return -1;
   }
 
   /* TODO: Insert codes to evaluate the expression. */
   word_t val = eval(0, nr_token - 1, success);
-  if (!(*success)) return 2147483647;
+  if (!(*success)) return -1;
 
   return val;
+}
+
+void test_expr() {
+  bool success = true;
+  word_t val = expr("1+1", &success);
+  Assert(success, "expression is illegal");
+  printf("%u\n", val);
+}
+
+static char buf[TOKENS_MAX];
+
+void test_expr_auto() {
+  FILE *fp =
+      fopen("/home/mwxhaha/ysyx-workbench/nemu/tools/gen-expr/input", "r");
+  Assert(fp, "file does not exist");
+  while (1) {
+    unsigned result;
+    int ret = fscanf(fp, "%u\n", &result);
+    if (ret == EOF) break;
+    Assert(ret == 1, "read file error");
+    char *ret2 = fgets(buf, 65536, fp);
+    buf[strlen(buf) - 1] = '\0';
+    Assert(ret2, "read file error");
+
+    bool success = true;
+    word_t val = expr(buf, &success);
+    Assert(success, "expression is illegal");
+    printf("%u\n%s\n%u\n", result, buf, val);
+    Assert(result == val, "wrong answer");
+  }
+  fclose(fp);
 }

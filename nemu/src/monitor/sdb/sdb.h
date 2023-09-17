@@ -20,4 +20,8 @@
 
 word_t expr(char *e, bool *success);
 
+void test_expr();
+
+void test_expr_auto();
+
 #endif
