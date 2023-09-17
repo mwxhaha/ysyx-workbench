@@ -14,7 +14,7 @@
  ***************************************************************************************/
 
 #include <common.h>
-bool make_token(char *e);  // debug
+word_t expr(char *e, bool *success);  // debug
 
 void init_monitor(int, char *[]);
 void am_init_monitor();
@@ -31,7 +31,11 @@ int main(int argc, char *argv[]) {
 
   /* Start engine. */
   // engine_start();
-  make_token("111111+2-(9*0)/9==");  // debug
+  bool success = true;
+
+  word_t val = expr("((3)+5)*((10-2)/2)", &success);
+  if (!(success)) return 2147483647;
+  printf("%d\n", val);  // debug
 
   return is_exit_status_bad();
 }
