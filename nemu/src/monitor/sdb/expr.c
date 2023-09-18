@@ -2,30 +2,34 @@
  * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
  *
  * NEMU is licensed under Mulan PSL v2.
-* You can use this software according to the terms and conditions of the Mulan PSL v2.
-* You may obtain a copy of Mulan PSL v2 at:
-*          http://license.coscl.org.cn/MulanPSL2
-*
-* THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-* EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
-* MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-*
-* See the Mulan PSL v2 for more details.
-***************************************************************************************/
+ * You can use this software according to the terms and conditions of the Mulan
+ *PSL v2. You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ *
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ *KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ *NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ *
+ * See the Mulan PSL v2 for more details.
+ ***************************************************************************************/
 
 #include <isa.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
-#include <regex.h>
-#include <string.h>
-#include <debug.h>
-#include <stdbool.h>
 #include <common.h>
+#include <debug.h>
+#include <regex.h>
+#include <stdbool.h>
+#include <string.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUMBER
+  TK_NOTYPE = 256,
+  TK_NUMBER,
+  TK_EQ,
+  TK_NEQ,
+  TK_AND
 
   /* TODO: Add more token types */
 
@@ -36,20 +40,14 @@ static struct rule {
   int token_type;
 } rules[] = {
 
-  /* TODO: Add more rules.
-   * Pay attention to the precedence level of different rules.
-   */
+    /* TODO: Add more rules.
+     * Pay attention to the precedence level of different rules.
+     */
 
-  {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ},        // equal
-  {"-", '-'},         
-  {"\\*", '*'},         
-  {"/", '/'},     
-  {"\\(", '('},     
-  {"\\)", ')'},     
-  {"[0-9]+", TK_NUMBER}
-};
+    {" +", TK_NOTYPE}, {"[0-9]+", TK_NUMBER}, {"\\+", '+'},
+    {"-", '-'},        {"\\*", '*'},          {"/", '/'},
+    {"\\(", '('},      {"\\)", ')'},          {"==", TK_EQ},
+    {"!=", TK_NEQ},    {"&&", TK_AND}};
 
 #define NR_REGEX ARRLEN(rules)
 
@@ -63,7 +61,7 @@ void init_regex() {
   char error_msg[128];
   int ret;
 
-  for (i = 0; i < NR_REGEX; i ++) {
+  for (i = 0; i < NR_REGEX; i++) {
     ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);
     if (ret != 0) {
       regerror(ret, &re[i], error_msg, 128);
@@ -90,13 +88,14 @@ static bool make_token(char *e) {
 
   while (e[position] != '\0') {
     /* Try all rules one by one. */
-    for (i = 0; i < NR_REGEX; i ++) {
-      if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
+    for (i = 0; i < NR_REGEX; i++) {
+      if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 &&
+          pmatch.rm_so == 0) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            i, rules[i].regex, position, substr_len, substr_len, substr_start);
+        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i,
+            rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
 
@@ -174,6 +173,48 @@ static bool check_parentheses(int p, int q, bool *success) {
   }
 }
 
+static int operator_precedence[300];
+
+static bool compare_operator_precedence(int operator1, int operator2) {
+  operator_precedence['*'] = 3;
+  operator_precedence['/'] = 3;
+  operator_precedence['+'] = 4;
+  operator_precedence['-'] = 3;
+  operator_precedence[TK_EQ] = 7;
+  operator_precedence[TK_NEQ] = 7;
+  operator_precedence[TK_AND] = 11;
+  return operator_precedence[operator1] <= operator_precedence[operator2];
+}
+
+static int find_main_op(int p, int q, bool *success) {
+  int main_op = -1;
+  int i = p;
+  while (i <= q) {
+    switch (tokens[i].type) {
+      case '+':
+      case '-':
+      case '*':
+      case '/':
+      case TK_EQ:
+      case TK_NEQ:
+      case TK_AND:
+        if (main_op == -1 ||
+            compare_operator_precedence(tokens[main_op].type, tokens[i].type))
+          main_op = i;
+        i++;
+        break;
+      case '(':
+        i = find_parentheses(i, success) + 1;
+        if (!(*success)) return -1;
+        break;
+      default:
+        i++;
+        break;
+    }
+  }
+  return main_op;
+}
+
 static word_t eval(int p, int q, bool *success) {
   if (p > q) {
     *success = false;
@@ -203,35 +244,8 @@ static word_t eval(int p, int q, bool *success) {
       if (!(*success)) return -1;
       return val;
     } else {
-
-      int main_op = -1;
-      int i = p;
-      while (i <= q) {
-        switch (tokens[i].type) {
-          case '+':
-          case '-':
-            if (main_op == -1 || tokens[main_op].type == '+' ||
-                tokens[main_op].type == '-' || tokens[main_op].type == '*' ||
-                tokens[main_op].type == '/')
-              main_op = i;
-            i++;
-            break;
-          case '*':
-          case '/':
-            if (main_op == -1 || tokens[main_op].type == '*' ||
-                tokens[main_op].type == '/')
-              main_op = i;
-            i++;
-            break;
-          case '(':
-            i = find_parentheses(i, success) + 1;
-            if (!(*success)) return -1;
-            break;
-          default:
-            i++;
-            break;
-        }
-      }
+      int main_op = find_main_op(p, q, success);
+      if (!(*success)) return -1;
       word_t val1 = eval(p, main_op - 1, success);
       if (!(*success)) return -1;
       word_t val2 = eval(main_op + 1, q, success);
@@ -244,12 +258,18 @@ static word_t eval(int p, int q, bool *success) {
       switch (tokens[main_op].type) {
         case '+':
           return val1 + val2;
-        case '-': /* ... */
+        case '-':
           return val1 - val2;
-        case '*': /* ... */
+        case '*':
           return val1 * val2;
-        case '/': /* ... */
+        case '/':
           return val1 / val2;
+        case TK_EQ:
+          return val1 == val2;
+        case TK_NEQ:
+          return val1 != val2;
+        case TK_AND:
+          return val1 && val2;
         default:
           *success = false;
           Log("operator analysis failed");
@@ -274,7 +294,7 @@ word_t expr(char *e, bool *success) {
 
 void test_expr() {
   bool success = true;
-  word_t val = expr("1+1", &success);
+  word_t val = expr("(1!=1)&&(2==1)", &success);
   Assert(success, "expression is illegal");
   printf("%u\n", val);
 }
@@ -290,7 +310,7 @@ void test_expr_auto() {
     int ret = fscanf(fp, "%u\n", &result);
     if (ret == EOF) break;
     Assert(ret == 1, "read file error");
-    char *ret2 = fgets(buf, 65536, fp);
+    char *ret2 = fgets(buf, TOKENS_MAX, fp);
     buf[strlen(buf) - 1] = '\0';
     Assert(ret2, "read file error");
 
