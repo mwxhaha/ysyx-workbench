@@ -14,7 +14,7 @@
  ***************************************************************************************/
 
 #include <common.h>
-void test_expr_auto();  // debug
+void test_expr();  // debug
 
 void init_monitor(int, char *[]);
 void am_init_monitor();
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 
   /* Start engine. */
   engine_start();
-  // test_expr_auto();  // debug
+  test_expr();  // debug
 
   return is_exit_status_bad();
 }

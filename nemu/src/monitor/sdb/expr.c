@@ -20,15 +20,32 @@
 #include <stdbool.h>
 #include <string.h>
 
-enum { TK_NOTYPE = 256, TK_NUMBER, TK_EQ, TK_NEQ, TK_AND };
+enum {
+  TK_NOTYPE = 256,
+  TK_NUMBER,
+  TK_EQ,
+  TK_NEQ,
+  TK_AND,
+  TK_NUMBER_HEX,
+  TK_REG
+};
 
 static struct rule {
   const char *regex;
   int token_type;
-} rules[] = {{" +", TK_NOTYPE}, {"[0-9]+", TK_NUMBER}, {"\\+", '+'},
-             {"-", '-'},        {"\\*", '*'},          {"/", '/'},
-             {"\\(", '('},      {"\\)", ')'},          {"==", TK_EQ},
-             {"!=", TK_NEQ},    {"&&", TK_AND}};
+} rules[] = {{" +", TK_NOTYPE},
+             {"0x[0-9a-fA-F]+", TK_NUMBER_HEX},
+             {"[0-9]+", TK_NUMBER},
+             {"\\+", '+'},
+             {"-", '-'},
+             {"\\*", '*'},
+             {"/", '/'},
+             {"\\(", '('},
+             {"\\)", ')'},
+             {"==", TK_EQ},
+             {"!=", TK_NEQ},
+             {"&&", TK_AND},
+             {"\\$[0-9a-zA-Z\\$]+", TK_REG}};
 
 #define NR_REGEX ARRLEN(rules)
 
@@ -88,11 +105,13 @@ static bool make_token(char *e) {
           case TK_NOTYPE:
             break;
           case TK_NUMBER:
+          case TK_NUMBER_HEX:
+          case TK_REG:
             Assert(substr_len <= sizeof(word_t) * 8, "number is too long");
             Assert(memcpy(tokens[nr_token].str, substr_start, substr_len),
                    "string process error");
             tokens[nr_token].str[substr_len] = '\0';
-            tokens[nr_token].type = TK_NUMBER;
+            tokens[nr_token].type = rules[i].token_type;
             nr_token++;
             break;
           default:
@@ -203,18 +222,42 @@ static word_t eval(int p, int q, bool *success) {
     return -1;
 
   } else if (p == q) {
-    if (tokens[p].type != TK_NUMBER) {
-      *success = false;
-      Log("the number in expression is illegal");
-      return -1;
-    }
     word_t number;
-    if (sscanf(tokens[p].str, FMT_WORD_T, &number) == 1) {
-      return number;
-    } else {
-      *success = false;
-      Log("the number in expression is illegal");
-      return -1;
+    switch (tokens[p].type) {
+      case TK_NUMBER:
+        if (sscanf(tokens[p].str, FMT_WORD_T, &number) == 1) {
+          return number;
+        } else {
+          *success = false;
+          Log("the number in expression is illegal");
+          return -1;
+        }
+        break;
+      case TK_NUMBER_HEX:
+        if (sscanf(tokens[p].str, FMT_WORD, &number) == 1) {
+          return number;
+        } else {
+          *success = false;
+          Log("the number in expression is illegal");
+          return -1;
+        }
+        break;
+      case TK_REG:
+        bool success_tmp = true;
+        number = isa_reg_str2val(tokens[p].str + 1, &success_tmp);
+        if (!success_tmp) {
+          *success = false;
+          Log("the register does not exist");
+          return -1;
+        } else {
+          return number;
+        }
+        break;
+      default:
+        *success = false;
+        Log("expression split failedl");
+        return -1;
+        break;
     }
 
   } else {
@@ -224,6 +267,7 @@ static word_t eval(int p, int q, bool *success) {
       word_t val = eval(p + 1, q - 1, success);
       if (!(*success)) return -1;
       return val;
+
     } else {
       int main_op = find_main_op(p, q, success);
       if (!(*success)) return -1;
@@ -275,7 +319,7 @@ word_t expr(char *e, bool *success) {
 
 void test_expr() {
   bool success = true;
-  word_t val = expr("280639509696-9965/(2904-4322637)", &success);
+  word_t val = expr("   0x80000010 + $t0  ", &success);
   Assert(success, "expression is illegal");
   printf(FMT_WORD_T "\n", val);
 }
