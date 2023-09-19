@@ -13,41 +13,22 @@
  * See the Mulan PSL v2 for more details.
  ***************************************************************************************/
 
-#include <isa.h>
-
-/* We use the POSIX regex functions to process regular expressions.
- * Type 'man regex' for more information about POSIX regex functions.
- */
 #include <common.h>
 #include <debug.h>
+#include <isa.h>
 #include <regex.h>
 #include <stdbool.h>
 #include <string.h>
 
-enum {
-  TK_NOTYPE = 256,
-  TK_NUMBER,
-  TK_EQ,
-  TK_NEQ,
-  TK_AND
-
-  /* TODO: Add more token types */
-
-};
+enum { TK_NOTYPE = 256, TK_NUMBER, TK_EQ, TK_NEQ, TK_AND };
 
 static struct rule {
   const char *regex;
   int token_type;
-} rules[] = {
-
-    /* TODO: Add more rules.
-     * Pay attention to the precedence level of different rules.
-     */
-
-    {" +", TK_NOTYPE}, {"[0-9]+", TK_NUMBER}, {"\\+", '+'},
-    {"-", '-'},        {"\\*", '*'},          {"/", '/'},
-    {"\\(", '('},      {"\\)", ')'},          {"==", TK_EQ},
-    {"!=", TK_NEQ},    {"&&", TK_AND}};
+} rules[] = {{" +", TK_NOTYPE}, {"[0-9]+", TK_NUMBER}, {"\\+", '+'},
+             {"-", '-'},        {"\\*", '*'},          {"/", '/'},
+             {"\\(", '('},      {"\\)", ')'},          {"==", TK_EQ},
+             {"!=", TK_NEQ},    {"&&", TK_AND}};
 
 #define NR_REGEX ARRLEN(rules)
 
@@ -72,7 +53,7 @@ void init_regex() {
 
 typedef struct token {
   int type;
-  char str[sizeof(word_t) + 1];
+  char str[sizeof(word_t) * 8 + 1];
 } Token;
 
 #define TOKENS_MAX 65536
@@ -107,7 +88,7 @@ static bool make_token(char *e) {
           case TK_NOTYPE:
             break;
           case TK_NUMBER:
-            Assert(substr_len <= sizeof(word_t), "number is too large");
+            Assert(substr_len <= sizeof(word_t) * 8, "number is too long");
             Assert(memcpy(tokens[nr_token].str, substr_start, substr_len),
                    "string process error");
             tokens[nr_token].str[substr_len] = '\0';
@@ -179,7 +160,7 @@ static bool compare_operator_precedence(int operator1, int operator2) {
   operator_precedence['*'] = 3;
   operator_precedence['/'] = 3;
   operator_precedence['+'] = 4;
-  operator_precedence['-'] = 3;
+  operator_precedence['-'] = 4;
   operator_precedence[TK_EQ] = 7;
   operator_precedence[TK_NEQ] = 7;
   operator_precedence[TK_AND] = 11;
@@ -228,7 +209,7 @@ static word_t eval(int p, int q, bool *success) {
       return -1;
     }
     word_t number;
-    if (sscanf(tokens[p].str, "%d", &number) == 1) {
+    if (sscanf(tokens[p].str, FMT_WORD_T, &number) == 1) {
       return number;
     } else {
       *success = false;
@@ -294,9 +275,9 @@ word_t expr(char *e, bool *success) {
 
 void test_expr() {
   bool success = true;
-  word_t val = expr("(1!=1)&&(2==1)", &success);
+  word_t val = expr("280639509696-9965/(2904-4322637)", &success);
   Assert(success, "expression is illegal");
-  printf("%u\n", val);
+  printf(FMT_WORD_T "\n", val);
 }
 
 static char buf[TOKENS_MAX];
@@ -306,8 +287,8 @@ void test_expr_auto() {
       fopen("/home/mwxhaha/ysyx-workbench/nemu/tools/gen-expr/input", "r");
   Assert(fp, "file does not exist");
   while (1) {
-    unsigned result;
-    int ret = fscanf(fp, "%u\n", &result);
+    word_t result;
+    int ret = fscanf(fp, FMT_WORD_T "\n", &result);
     if (ret == EOF) break;
     Assert(ret == 1, "read file error");
     char *ret2 = fgets(buf, TOKENS_MAX, fp);
@@ -317,7 +298,7 @@ void test_expr_auto() {
     bool success = true;
     word_t val = expr(buf, &success);
     Assert(success, "expression is illegal");
-    printf("%u\n%s\n%u\n", result, buf, val);
+    printf(FMT_WORD_T "\n%s\n" FMT_WORD_T "\n", result, buf, val);
     Assert(result == val, "wrong answer");
   }
   fclose(fp);

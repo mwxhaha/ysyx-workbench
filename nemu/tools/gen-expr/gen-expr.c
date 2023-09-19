@@ -1,45 +1,64 @@
 /***************************************************************************************
-* Copyright (c) 2014-2022 Zihao Yu, Nanjing University
-*
-* NEMU is licensed under Mulan PSL v2.
-* You can use this software according to the terms and conditions of the Mulan PSL v2.
-* You may obtain a copy of Mulan PSL v2 at:
-*          http://license.coscl.org.cn/MulanPSL2
-*
-* THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-* EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
-* MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-*
-* See the Mulan PSL v2 for more details.
-***************************************************************************************/
+ * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
+ *
+ * NEMU is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan
+ *PSL v2. You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ *
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ *KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ *NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ *
+ * See the Mulan PSL v2 for more details.
+ ***************************************************************************************/
 
+#include <assert.h>
+#include <math.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <assert.h>
 #include <string.h>
-#include <math.h>
-#include <stdbool.h>
+#include <time.h>
 
 // this should be enough
 #define BUF_MAX 65536
+// #define CONFIG_ISA64
+#ifdef CONFIG_ISA64
+typedef uint64_t word_t;
+#define FMT_WORD_T "%lu"
+#else
+typedef uint32_t word_t;
+#define FMT_WORD_T "%u"
+#endif
 static char buf[BUF_MAX] = {};
 static int buf_i = 0;
-static char code_buf[BUF_MAX + 128] = {}; // a little larger than `buf`
+static char code_buf[BUF_MAX + 128] = {};  // a little larger than `buf`
 static char *code_format =
-"#include <stdio.h>\n"
-"int main() { "
-"  unsigned result = %s; "
-"  printf(\"%%u\", result); "
-"  return 0; "
-"}";
+#ifdef CONFIG_ISA64
+    "#include <stdio.h>\n"
+    "#include <stdint.h>\n"
+    "int main() { "
+    "  uint64_t result = %s; "
+    "  printf(\"%%lu\", result); "
+    "  return 0; "
+    "}";
+#else
+    "#include <stdio.h>\n"
+    "#include <stdint.h>\n"
+    "int main() { "
+    "  uint32_t result = %s; "
+    "  printf(\"%%u\", result); "
+    "  return 0; "
+    "}";
+#endif
 
 static int choose(int n) { return rand() % n; }
 
 static bool gen_num() {
-  int number = rand() % 10000;
-  sprintf(buf + buf_i, "%d", number);
+  word_t number = rand() % 10000;
+  sprintf(buf + buf_i, FMT_WORD_T, number);
   if (number != 0)
     buf_i += (int)log10(number) + 1;
   else
@@ -89,6 +108,9 @@ static bool gen_rand_expr() {
       if (!gen_empty()) return false;
       if (!gen_num()) return false;
       if (!gen('u')) return false;
+#ifdef CONFIG_ISA64
+      if (!gen('l')) return false;
+#endif
       if (!gen_empty()) return false;
       break;
     case 1:
@@ -117,9 +139,10 @@ int main(int argc, char *argv[]) {
     sscanf(argv[1], "%d", &loop);
   }
 
-  FILE *fp2 = fopen("/home/mwxhaha/ysyx-workbench/nemu/tools/gen-expr/input", "w");
+  FILE *fp2 =
+      fopen("/home/mwxhaha/ysyx-workbench/nemu/tools/gen-expr/input", "w");
   assert(fp2 != NULL);
-  for (int i = 0; i < loop; i ++) {
+  for (int i = 0; i < loop; i++) {
     buf_i = 0;
     if (!gen_rand_expr()) continue;
     buf[buf_i] = '\0';
@@ -134,17 +157,19 @@ int main(int argc, char *argv[]) {
     if (ret != 0) continue;
     fp = popen("/tmp/.expr", "r");
     assert(fp != NULL);
-    unsigned int result;
-    ret = fscanf(fp, "%u", &result);
+    word_t result;
+    ret = fscanf(fp, FMT_WORD_T, &result);
     if (ret != 1) continue;
     pclose(fp);
 
-    while (buf_i>=0)
-    {
+    while (buf_i >= 0) {
+#ifdef CONFIG_ISA64
+      if (buf[buf_i] == 'l') buf[buf_i] = ' ';
+#endif
       if (buf[buf_i] == 'u') buf[buf_i] = ' ';
       buf_i--;
     }
-    fprintf(fp2,"%u\n%s\n", result, buf);
+    fprintf(fp2, FMT_WORD_T "\n%s\n", result, buf);
   }
   fclose(fp2);
   return 0;
