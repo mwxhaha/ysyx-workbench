@@ -16,6 +16,7 @@
 #include <common.h>
 #include <debug.h>
 #include <isa.h>
+#include <memory/vaddr.h>
 #include <regex.h>
 #include <stdbool.h>
 #include <string.h>
@@ -27,7 +28,9 @@ enum {
   TK_NEQ,
   TK_AND,
   TK_NUMBER_HEX,
-  TK_REG
+  TK_REG,
+  TK_DEREF,
+  TK_MINUS_ONE
 };
 
 static struct rule {
@@ -119,7 +122,6 @@ static bool make_token(char *e) {
             nr_token++;
             break;
         }
-
         break;
       }
     }
@@ -128,6 +130,26 @@ static bool make_token(char *e) {
       Log("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
     }
+  }
+  for (i = 0; i < nr_token; i++) {
+    if (tokens[i].type == '*')
+      if (i == 0 || tokens[i - 1].type == '+' || tokens[i - 1].type == '-' ||
+          tokens[i - 1].type == '*' || tokens[i - 1].type == '/' ||
+          tokens[i - 1].type == '(' || tokens[i - 1].type == TK_EQ ||
+          tokens[i - 1].type == TK_NEQ || tokens[i - 1].type == TK_AND ||
+          tokens[i - 1].type == TK_DEREF ||
+          tokens[i - 1].type == TK_MINUS_ONE) {
+        tokens[i].type = TK_DEREF;
+      }
+    if (tokens[i].type == '-')
+      if (i == 0 || tokens[i - 1].type == '+' || tokens[i - 1].type == '-' ||
+          tokens[i - 1].type == '*' || tokens[i - 1].type == '/' ||
+          tokens[i - 1].type == '(' || tokens[i - 1].type == TK_EQ ||
+          tokens[i - 1].type == TK_NEQ || tokens[i - 1].type == TK_AND ||
+          tokens[i - 1].type == TK_DEREF ||
+          tokens[i - 1].type == TK_MINUS_ONE) {
+        tokens[i].type = TK_MINUS_ONE;
+      }
   }
 
   return true;
@@ -183,6 +205,8 @@ static bool compare_operator_precedence(int operator1, int operator2) {
   operator_precedence[TK_EQ] = 7;
   operator_precedence[TK_NEQ] = 7;
   operator_precedence[TK_AND] = 11;
+  operator_precedence[TK_DEREF] = 2;
+  operator_precedence[TK_MINUS_ONE] = 2;
   return operator_precedence[operator1] <= operator_precedence[operator2];
 }
 
@@ -198,9 +222,13 @@ static int find_main_op(int p, int q, bool *success) {
       case TK_EQ:
       case TK_NEQ:
       case TK_AND:
-        if (main_op == -1 ||
-            compare_operator_precedence(tokens[main_op].type, tokens[i].type))
-          main_op = i;
+      case TK_DEREF:
+      case TK_MINUS_ONE:
+        if (tokens[main_op].type != TK_DEREF &&
+            tokens[main_op].type != TK_MINUS_ONE)
+          if (main_op == -1 ||
+              compare_operator_precedence(tokens[main_op].type, tokens[i].type))
+            main_op = i;
         i++;
         break;
       case '(':
@@ -271,8 +299,12 @@ static word_t eval(int p, int q, bool *success) {
     } else {
       int main_op = find_main_op(p, q, success);
       if (!(*success)) return -1;
-      word_t val1 = eval(p, main_op - 1, success);
-      if (!(*success)) return -1;
+      word_t val1 = 0;
+      if (tokens[main_op].type != TK_DEREF &&
+          tokens[main_op].type != TK_MINUS_ONE) {
+        val1 = eval(p, main_op - 1, success);
+        if (!(*success)) return -1;
+      }
       word_t val2 = eval(main_op + 1, q, success);
       if (!(*success)) return -1;
       if (tokens[main_op].type == '/' && val2 == 0) {
@@ -295,6 +327,10 @@ static word_t eval(int p, int q, bool *success) {
           return val1 != val2;
         case TK_AND:
           return val1 && val2;
+        case TK_DEREF:
+          return vaddr_read(val2, sizeof(word_t));
+        case TK_MINUS_ONE:
+          return -val2;
         default:
           *success = false;
           Log("operator analysis failed");
@@ -319,7 +355,7 @@ word_t expr(char *e, bool *success) {
 
 void test_expr() {
   bool success = true;
-  word_t val = expr("   0x80000010 + $t0  ", &success);
+  word_t val = expr("  **0x80000010", &success);
   Assert(success, "expression is illegal");
   printf(FMT_WORD_T "\n", val);
 }
