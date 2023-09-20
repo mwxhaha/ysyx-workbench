@@ -86,7 +86,7 @@ static int cmd_info(const char *const args) {
           isa_reg_display();
           break;
         case 'w':
-          Log("Not support");
+          printf_watchpoint();
           break;
         default:
           Log("info format error, using like this: info r/w");
@@ -151,7 +151,7 @@ static int cmd_help(const char *const args);
 static struct {
   const char *name;
   const char *description;
-  int (*handler)(const char *const );
+  int (*handler)(const char *const);
 } cmd_table[] = {
     {"help", "Display information about all supported commands", cmd_help},
     {"c", "Continue the execution of the program", cmd_c},

@@ -48,12 +48,12 @@ int new_wp(const char *const e) {
   }
   int i;
   for (i = 0; i < NR_WP; i++) {
-    if (wp_pool[i].used == false) {
+    if (!wp_pool[i].used) {
       wp_pool[i].used = true;
       strcpy(wp_pool[i].e, e);
       bool success = true;
       wp_pool[i].val = expr(wp_pool[i].e, &success);
-      if (success == false) {
+      if (!success) {
         Log("expression is illegal, can not set the watchpoint");
         return 1;
       }
@@ -71,7 +71,7 @@ int free_wp(const int n) {
     Log("the N is out of range");
     return 1;
   }
-  if (wp_pool[n].used == false) {
+  if (!wp_pool[n].used) {
     Log("the watchpoint is orignally free");
     return 1;
   }
@@ -85,10 +85,10 @@ int free_wp(const int n) {
 bool check_watchpoint() {
   bool stop_flag = false;
   for (int i = 0; i < NR_WP; i++)
-    if (wp_pool[i].used == true) {
+    if (wp_pool[i].used) {
       bool success = true;
       word_t new_val = expr(wp_pool[i].e, &success);
-      if (success == false) panic("The expression was illegally modified");
+      if (!success) panic("The expression was illegally modified");
       if (wp_pool[i].val != new_val) {
         Log("watchpoint changes, N: %d, expr: %s, value: " FMT_WORD
             " -> " FMT_WORD,
@@ -98,6 +98,17 @@ bool check_watchpoint() {
       wp_pool[i].val = new_val;
     }
   return stop_flag;
+}
+
+void printf_watchpoint() {
+  bool empty_flag = true;
+  for (int i = 0; i < NR_WP; i++)
+    if (wp_pool[i].used) {
+      printf("watchpoint N: %d, expr: %s, value: " FMT_WORD "\n", i,
+             wp_pool[i].e, wp_pool[i].val);
+      empty_flag = false;
+    }
+  if (empty_flag) printf("watchpoint pool is empty\n");
 }
 
 // typedef struct watchpoint {
