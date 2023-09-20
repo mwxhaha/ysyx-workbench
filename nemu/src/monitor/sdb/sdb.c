@@ -19,6 +19,7 @@
 #include <cpu/cpu.h>
 #include <debug.h>
 #include <isa.h>
+#include <math.h>
 #include <memory/vaddr.h>
 #include <readline/history.h>
 #include <readline/readline.h>
@@ -51,12 +52,20 @@ static char *rl_gets() {
 }
 
 static int cmd_c(const char *const args) {
+  if (args != NULL) {
+    Log("c format error, using like this: c");
+    return 0;
+  }
   cpu_exec(-1);
   return 0;
 }
 
 static int cmd_q(const char *const args) {
   nemu_state.state = NEMU_QUIT;
+  if (args != NULL) {
+    Log("q format error, using like this: q");
+    return 0;
+  }
   return -1;
 }
 
@@ -65,7 +74,10 @@ static int cmd_si(const char *const args) {
     uint64_t number;
     int result = sscanf(args, "%ld", &number);
     if (result == 1) {
-      Assert(number > 0, "step number must be larger than 0");
+      if (number <= 0) {
+        Log("step number must be larger than 0");
+        return 0;
+      }
       cpu_exec(number);
     } else {
       Log("si format error, using like this: si N");
@@ -104,9 +116,16 @@ static int cmd_info(const char *const args) {
 static int cmd_x(const char *const args) {
   if (args) {
     int scan_len;
-    vaddr_t addr;
-    int result = sscanf(args, "%d " FMT_WORD, &scan_len, &addr);
-    if (result == 2) {
+    int result = sscanf(args, "%d", &scan_len);
+    if (result == 1) {
+      if (scan_len <= 0) {
+        Log("scan length must be larger than 0");
+        return 0;
+      }
+      const char *const e = args + (int)log10(scan_len) + 2;
+      bool success = true;
+      vaddr_t addr = expr(e, &success);
+      if (!success) return 0;
       int len = sizeof(word_t);
       for (int i = 0; i < scan_len; i++) {
         printf(FMT_WORD " ", vaddr_read(addr + i * len, len));

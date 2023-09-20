@@ -345,7 +345,6 @@ word_t expr(const char *const e, bool *const success) {
     return -1;
   }
 
-  /* TODO: Insert codes to evaluate the expression. */
   word_t val = eval(0, nr_token - 1, success);
   if (!(*success)) return -1;
 
