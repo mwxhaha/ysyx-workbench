@@ -16,6 +16,7 @@
 #include <debug.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "sdb.h"
 
@@ -37,7 +38,7 @@ void init_wp_pool() {
   }
 }
 
-int new_wp(const char *e) {
+int new_wp(const char *const e) {
   int len = strlen(e);
   if (len >= WP_EXPR_MAX) {
     Log("expression is too long");
@@ -48,7 +49,7 @@ int new_wp(const char *e) {
     if (wp_pool[i].used == false) {
       wp_pool[i].used = true;
       strcpy(wp_pool[i].e, e);
-      Log("successfully set the watchpoint, N: %d, expr: %s", i, wp_pool[i].e);
+      printf("successfully set the watchpoint, N: %d, expr: %s\n", i, wp_pool[i].e);
       return 0;
     }
   }
@@ -56,7 +57,7 @@ int new_wp(const char *e) {
   return 1;
 }
 
-int free_wp(int n) {
+int free_wp(const int n) {
   if (n <= -1 || n >= NR_WP) {
     Log("the N is out of range");
     return 1;
@@ -65,8 +66,8 @@ int free_wp(int n) {
     Log("the watchpoint is orignally free");
     return 1;
   }
-  Log("successfully delete the watchpoint, N: %d, expr: %s", n, wp_pool[n].e);
-  wp_pool[i].used = false;
+  printf("successfully delete the watchpoint, N: %d, expr: %s\n", n, wp_pool[n].e);
+  wp_pool[n].used = false;
   wp_pool[n].e[0] = '\0';
   return 0;
 }

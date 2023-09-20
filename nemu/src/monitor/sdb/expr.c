@@ -80,7 +80,7 @@ typedef struct token {
 static Token tokens[TOKENS_MAX] __attribute__((used)) = {};
 static int nr_token __attribute__((used)) = 0;
 
-static bool make_token(char *e) {
+static bool make_token(const char *const e) {
   int position = 0;
   int i;
   regmatch_t pmatch;
@@ -92,7 +92,7 @@ static bool make_token(char *e) {
     for (i = 0; i < NR_REGEX; i++) {
       if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 &&
           pmatch.rm_so == 0) {
-        char *substr_start = e + position;
+        const char *const substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
         Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i,
@@ -155,7 +155,7 @@ static bool make_token(char *e) {
   return true;
 }
 
-static int find_parentheses(int p, bool *success) {
+static int find_parentheses(int p, bool *const success) {
   if (tokens[p].type != '(') {
     *success = false;
     Log("brackets does not match");
@@ -179,7 +179,7 @@ static int find_parentheses(int p, bool *success) {
   return p - 1;
 }
 
-static bool check_parentheses(int p, int q, bool *success) {
+static bool check_parentheses(const int p, const int q, bool *const success) {
   if (tokens[p].type != '(' || tokens[q].type != ')') return false;
   int q_match = find_parentheses(p, success);
   if (!(*success)) return false;
@@ -210,11 +210,10 @@ static bool compare_operator_precedence(int operator1, int operator2) {
   return operator_precedence[operator1] <= operator_precedence[operator2];
 }
 
-static int find_main_op(int p, int q, bool *success) {
+static int find_main_op(int p, const int q, bool *const success) {
   int main_op = -1;
-  int i = p;
-  while (i <= q) {
-    switch (tokens[i].type) {
+  while (p <= q) {
+    switch (tokens[p].type) {
       case '+':
       case '-':
       case '*':
@@ -227,23 +226,23 @@ static int find_main_op(int p, int q, bool *success) {
         if (tokens[main_op].type != TK_DEREF &&
             tokens[main_op].type != TK_MINUS_ONE)
           if (main_op == -1 ||
-              compare_operator_precedence(tokens[main_op].type, tokens[i].type))
-            main_op = i;
-        i++;
+              compare_operator_precedence(tokens[main_op].type, tokens[p].type))
+            main_op = p;
+        p++;
         break;
       case '(':
-        i = find_parentheses(i, success) + 1;
+        p = find_parentheses(p, success) + 1;
         if (!(*success)) return -1;
         break;
       default:
-        i++;
+        p++;
         break;
     }
   }
   return main_op;
 }
 
-static word_t eval(int p, int q, bool *success) {
+static word_t eval(const int p, const int q, bool *const success) {
   if (p > q) {
     *success = false;
     Log("expression split failed");
@@ -340,7 +339,7 @@ static word_t eval(int p, int q, bool *success) {
   }
 }
 
-word_t expr(char *e, bool *success) {
+word_t expr(const char *const e, bool *const success) {
   if (!make_token(e)) {
     *success = false;
     return -1;

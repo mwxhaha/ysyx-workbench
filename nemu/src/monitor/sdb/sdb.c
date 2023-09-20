@@ -50,17 +50,17 @@ static char *rl_gets() {
   return line_read;
 }
 
-static int cmd_c(char *args) {
+static int cmd_c(const char *const args) {
   cpu_exec(-1);
   return 0;
 }
 
-static int cmd_q(char *args) {
+static int cmd_q(const char *const args) {
   nemu_state.state = NEMU_QUIT;
   return -1;
 }
 
-static int cmd_si(char *args) {
+static int cmd_si(const char *const args) {
   if (args) {
     uint64_t number;
     int result = sscanf(args, "%ld", &number);
@@ -76,7 +76,7 @@ static int cmd_si(char *args) {
   return 0;
 }
 
-static int cmd_info(char *args) {
+static int cmd_info(const char *const args) {
   if (args) {
     char cmd;
     int result = sscanf(args, "%c", &cmd);
@@ -101,7 +101,7 @@ static int cmd_info(char *args) {
   return 0;
 }
 
-static int cmd_x(char *args) {
+static int cmd_x(const char *const args) {
   if (args) {
     int scan_len;
     vaddr_t addr;
@@ -122,7 +122,7 @@ static int cmd_x(char *args) {
   return 0;
 }
 
-static int cmd_w(char *args) {
+static int cmd_w(const char *const args) {
   if (args != NULL) {
     bool success = true;
     expr(args, &success);
@@ -136,7 +136,7 @@ static int cmd_w(char *args) {
   return 0;
 }
 
-static int cmd_d(char *args) {
+static int cmd_d(const char *const args) {
   if (args != NULL) {
     int n;
     int result = sscanf(args, "%d", &n);
@@ -151,12 +151,12 @@ static int cmd_d(char *args) {
   return 0;
 }
 
-static int cmd_help(char *args);
+static int cmd_help(const char *const args);
 
 static struct {
   const char *name;
   const char *description;
-  int (*handler)(char *);
+  int (*handler)(const char *const );
 } cmd_table[] = {
     {"help", "Display information about all supported commands", cmd_help},
     {"c", "Continue the execution of the program", cmd_c},
@@ -172,7 +172,7 @@ static struct {
 
 #define NR_CMD ARRLEN(cmd_table)
 
-static int cmd_help(char *args) {
+static int cmd_help(const char *const args) {
   /* extract the first argument */
   char *arg = strtok(NULL, " ");
   int i;
@@ -189,7 +189,7 @@ static int cmd_help(char *args) {
         return 0;
       }
     }
-    printf("Unknown command '%s'\n", arg);
+    Log("Unknown command '%s'", arg);
   }
   return 0;
 }
@@ -235,7 +235,7 @@ void sdb_mainloop() {
     }
 
     if (i == NR_CMD) {
-      printf("Unknown command '%s'\n", cmd);
+      Log("Unknown command '%s'", cmd);
     }
   }
 }
