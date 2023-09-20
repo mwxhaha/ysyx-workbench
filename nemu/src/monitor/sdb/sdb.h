@@ -21,7 +21,9 @@
 word_t expr(char *e, bool *success);
 
 void test_expr();
-
 void test_expr_auto();
+
+int new_wp(const char *e);
+int free_wp(int n);
 
 #endif

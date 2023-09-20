@@ -122,6 +122,35 @@ static int cmd_x(char *args) {
   return 0;
 }
 
+static int cmd_w(char *args) {
+  if (args != NULL) {
+    bool success = true;
+    expr(args, &success);
+    if (success == false) {
+      return 0;
+    }
+    new_wp(args);
+  } else {
+    Log("w format error, using like this: w EXPR");
+  }
+  return 0;
+}
+
+static int cmd_d(char *args) {
+  if (args != NULL) {
+    int n;
+    int result = sscanf(args, "%d", &n);
+    if (result == 1) {
+      free_wp(n);
+    } else {
+      Log("w format error, using like this: d N");
+    }
+  } else {
+    Log("w format error, using like this: d N");
+  }
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -135,8 +164,9 @@ static struct {
     {"si", "Step in N instruction", cmd_si},
     {"info", "Display the state of register and information of watching point",
      cmd_info},
-    {"x", "scan the memory", cmd_x}
-    /* TODO: Add more commands */
+    {"x", "scan the memory", cmd_x},
+    {"w", "set the watchpoint", cmd_w},
+    {"d", "delete the watchpoint", cmd_d}
 
 };
 
