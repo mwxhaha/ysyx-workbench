@@ -55,6 +55,7 @@ int new_wp(const char *const e) {
       wp_pool[i].val = expr(wp_pool[i].e, &success);
       if (!success) {
         Log("expression is illegal, can not set the watchpoint");
+        wp_pool[i].used = false;
         return 1;
       }
       printf("successfully set the watchpoint, N: %d, expr: %s\n", i,
