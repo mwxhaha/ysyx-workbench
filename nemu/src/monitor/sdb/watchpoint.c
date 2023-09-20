@@ -21,8 +21,8 @@
 
 #include "sdb.h"
 
-#define NR_WP 5
-#define WP_EXPR_MAX 128
+#define NR_WP 32
+#define WP_EXPR_MAX 32
 
 typedef struct watchpoint {
   bool used;
@@ -101,11 +101,11 @@ bool check_watchpoint() {
 }
 
 void printf_watchpoint() {
+  printf("watchpoint                             expr      value\n");
   bool empty_flag = true;
   for (int i = 0; i < NR_WP; i++)
     if (wp_pool[i].used) {
-      printf("watchpoint N: %d, expr: %s, value: " FMT_WORD "\n", i,
-             wp_pool[i].e, wp_pool[i].val);
+      printf("%10d %32s " FMT_WORD "\n", i, wp_pool[i].e, wp_pool[i].val);
       empty_flag = false;
     }
   if (empty_flag) printf("watchpoint pool is empty\n");

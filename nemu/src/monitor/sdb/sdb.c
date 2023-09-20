@@ -141,6 +141,18 @@ static int cmd_x(const char *const args) {
   return 0;
 }
 
+static int cmd_p(const char *const args) {
+  if (args) {
+    bool success = true;
+    word_t val = expr(args, &success);
+    if (!success) return 0;
+    printf("%s = " FMT_WORD_T "\n", args, val);
+  } else {
+    Log("p format error, using like this: p EXPR");
+  }
+  return 0;
+}
+
 static int cmd_w(const char *const args) {
   if (args != NULL) {
     new_wp(args);
@@ -179,6 +191,7 @@ static struct {
     {"info", "Display the state of register and information of watching point",
      cmd_info},
     {"x", "scan the memory", cmd_x},
+    {"p", "print the value of expression", cmd_p},
     {"w", "set the watchpoint", cmd_w},
     {"d", "delete the watchpoint", cmd_d}
 
