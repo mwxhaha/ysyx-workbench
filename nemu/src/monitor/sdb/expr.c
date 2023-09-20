@@ -223,11 +223,15 @@ static int find_main_op(int p, const int q, bool *const success) {
       case TK_AND:
       case TK_DEREF:
       case TK_MINUS_ONE:
-        if (tokens[main_op].type != TK_DEREF &&
-            tokens[main_op].type != TK_MINUS_ONE)
-          if (main_op == -1 ||
-              compare_operator_precedence(tokens[main_op].type, tokens[p].type))
-            main_op = p;
+        if (main_op == -1)
+          main_op = p;
+        else if (compare_operator_precedence(tokens[main_op].type,
+                                             tokens[p].type) &&
+                 !((tokens[main_op].type == TK_DEREF ||
+                    tokens[main_op].type == TK_MINUS_ONE) &&
+                   (tokens[p].type == TK_DEREF ||
+                    tokens[p].type == TK_MINUS_ONE)))
+          main_op = p;
         p++;
         break;
       case '(':
