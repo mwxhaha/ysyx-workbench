@@ -13,10 +13,11 @@
  * See the Mulan PSL v2 for more details.
  ***************************************************************************************/
 
+#include <common.h>
 #include <debug.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "sdb.h"
 
@@ -26,6 +27,7 @@
 typedef struct watchpoint {
   bool used;
   char e[WP_EXPR_MAX + 1];
+  word_t val;
 } WP;
 
 static WP wp_pool[NR_WP] = {};
@@ -49,7 +51,14 @@ int new_wp(const char *const e) {
     if (wp_pool[i].used == false) {
       wp_pool[i].used = true;
       strcpy(wp_pool[i].e, e);
-      printf("successfully set the watchpoint, N: %d, expr: %s\n", i, wp_pool[i].e);
+      bool success = true;
+      wp_pool[i].val = expr(wp_pool[i].e, &success);
+      if (success == false) {
+        Log("expression is illegal, can not set the watchpoint");
+        return 1;
+      }
+      printf("successfully set the watchpoint, N: %d, expr: %s\n", i,
+             wp_pool[i].e);
       return 0;
     }
   }
@@ -66,10 +75,29 @@ int free_wp(const int n) {
     Log("the watchpoint is orignally free");
     return 1;
   }
-  printf("successfully delete the watchpoint, N: %d, expr: %s\n", n, wp_pool[n].e);
+  printf("successfully delete the watchpoint, N: %d, expr: %s\n", n,
+         wp_pool[n].e);
   wp_pool[n].used = false;
   wp_pool[n].e[0] = '\0';
   return 0;
+}
+
+bool check_watchpoint() {
+  bool stop_flag = false;
+  for (int i = 0; i < NR_WP; i++)
+    if (wp_pool[i].used == true) {
+      bool success = true;
+      word_t new_val = expr(wp_pool[i].e, &success);
+      if (success == false) panic("The expression was illegally modified");
+      if (wp_pool[i].val != new_val) {
+        Log("watchpoint changes, N: %d, expr: %s, value: " FMT_WORD
+            " -> " FMT_WORD,
+            i, wp_pool[i].e, wp_pool[i].val, new_val);
+        stop_flag = true;
+      }
+      wp_pool[i].val = new_val;
+    }
+  return stop_flag;
 }
 
 // typedef struct watchpoint {

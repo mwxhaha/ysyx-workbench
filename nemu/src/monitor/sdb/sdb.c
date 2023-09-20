@@ -124,11 +124,6 @@ static int cmd_x(const char *const args) {
 
 static int cmd_w(const char *const args) {
   if (args != NULL) {
-    bool success = true;
-    expr(args, &success);
-    if (success == false) {
-      return 0;
-    }
     new_wp(args);
   } else {
     Log("w format error, using like this: w EXPR");
