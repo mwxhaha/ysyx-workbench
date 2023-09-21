@@ -10,7 +10,7 @@ extern VerilatedContext *contextp;
 extern Vtop *top;
 extern VerilatedVcdC *tfp;
 
-void fsm_bin_sim()
+void sim()
 {
 #ifdef NV_SIM
     while (!contextp->gotFinish())

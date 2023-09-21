@@ -1,31 +1,40 @@
 /***************************************************************************************
-* Copyright (c) 2014-2022 Zihao Yu, Nanjing University
-*
-* NEMU is licensed under Mulan PSL v2.
-* You can use this software according to the terms and conditions of the Mulan PSL v2.
-* You may obtain a copy of Mulan PSL v2 at:
-*          http://license.coscl.org.cn/MulanPSL2
-*
-* THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-* EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
-* MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-*
-* See the Mulan PSL v2 for more details.
-***************************************************************************************/
+ * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
+ *
+ * NEMU is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan
+ *PSL v2. You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ *
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ *KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ *NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ *
+ * See the Mulan PSL v2 for more details.
+ ***************************************************************************************/
 
-#include <isa.h>
-#include <cpu/cpu.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 #include "sdb.h"
+
+#include <common.h>
+#include <cpu/cpu.h>
+#include <debug.h>
+#include <isa.h>
+#include <math.h>
+#include <memory/vaddr.h>
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <utils.h>
 
 static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
 
-/* We use the `readline' library to provide more flexibility to read from stdin. */
-static char* rl_gets() {
+/* We use the `readline' library to provide more flexibility to read from stdin.
+ */
+static char *rl_gets() {
   static char *line_read = NULL;
 
   if (line_read) {
@@ -42,59 +51,177 @@ static char* rl_gets() {
   return line_read;
 }
 
-static int cmd_c(char *args) {
+static int cmd_c(const char *const args) {
+  if (args != NULL) {
+    Log("c format error, using like this: c");
+    return 0;
+  }
   cpu_exec(-1);
   return 0;
 }
 
-
-static int cmd_q(char *args) {
+static int cmd_q(const char *const args) {
+  nemu_state.state = NEMU_QUIT;
+  if (args != NULL) {
+    Log("q format error, using like this: q");
+    return 0;
+  }
   return -1;
 }
 
-static int cmd_help(char *args);
+static int cmd_si(const char *const args) {
+  if (args) {
+    uint64_t number;
+    int result = sscanf(args, "%ld", &number);
+    if (result == 1) {
+      if (number <= 0) {
+        Log("step number must be larger than 0");
+        return 0;
+      }
+      cpu_exec(number);
+    } else {
+      Log("si format error, using like this: si N");
+    }
+  } else {
+    cpu_exec(1);
+  }
+  return 0;
+}
+
+static int cmd_info(const char *const args) {
+  if (args) {
+    char cmd;
+    int result = sscanf(args, "%c", &cmd);
+    if (result == 1) {
+      switch (cmd) {
+        case 'r':
+          isa_reg_display();
+          break;
+        case 'w':
+          printf_watchpoint();
+          break;
+        default:
+          Log("info format error, using like this: info r/w");
+          break;
+      }
+    } else {
+      Log("info format error, using like this: info r/w");
+    }
+  } else {
+    Log("info format error, using like this: info r/w");
+  }
+  return 0;
+}
+
+static int cmd_x(const char *const args) {
+  if (args) {
+    int scan_len;
+    int result = sscanf(args, "%d", &scan_len);
+    if (result == 1) {
+      if (scan_len <= 0) {
+        Log("scan length must be larger than 0");
+        return 0;
+      }
+      const char *const e = args + (int)log10(scan_len) + 2;
+      bool success = true;
+      vaddr_t addr = expr(e, &success);
+      if (!success) return 0;
+      int len = sizeof(word_t);
+      for (int i = 0; i < scan_len; i++) {
+        printf(FMT_WORD " ", vaddr_read(addr + i * len, len));
+        if (i % 4 == 3) printf("\n");
+      }
+      if (scan_len % 4 != 0) printf("\n");
+    } else {
+      Log("x format error, using like this: x N EXPR");
+    }
+  } else {
+    Log("x format error, using like this: x N EXPR");
+  }
+  return 0;
+}
+
+static int cmd_p(const char *const args) {
+  if (args) {
+    bool success = true;
+    word_t val = expr(args, &success);
+    if (!success) return 0;
+    printf("%s = " FMT_WORD_T "\n", args, val);
+  } else {
+    Log("p format error, using like this: p EXPR");
+  }
+  return 0;
+}
+
+static int cmd_w(const char *const args) {
+  if (args != NULL) {
+    new_wp(args);
+  } else {
+    Log("w format error, using like this: w EXPR");
+  }
+  return 0;
+}
+
+static int cmd_d(const char *const args) {
+  if (args != NULL) {
+    int n;
+    int result = sscanf(args, "%d", &n);
+    if (result == 1) {
+      free_wp(n);
+    } else {
+      Log("w format error, using like this: d N");
+    }
+  } else {
+    Log("w format error, using like this: d N");
+  }
+  return 0;
+}
+
+static int cmd_help(const char *const args);
 
 static struct {
   const char *name;
   const char *description;
-  int (*handler) (char *);
-} cmd_table [] = {
-  { "help", "Display information about all supported commands", cmd_help },
-  { "c", "Continue the execution of the program", cmd_c },
-  { "q", "Exit NEMU", cmd_q },
-
-  /* TODO: Add more commands */
+  int (*handler)(const char *const);
+} cmd_table[] = {
+    {"help", "Display information about all supported commands", cmd_help},
+    {"c", "Continue the execution of the program", cmd_c},
+    {"q", "Exit NEMU", cmd_q},
+    {"si", "Step in N instruction", cmd_si},
+    {"info", "Display the state of register and information of watching point",
+     cmd_info},
+    {"x", "scan the memory", cmd_x},
+    {"p", "print the value of expression", cmd_p},
+    {"w", "set the watchpoint", cmd_w},
+    {"d", "delete the watchpoint", cmd_d}
 
 };
 
 #define NR_CMD ARRLEN(cmd_table)
 
-static int cmd_help(char *args) {
+static int cmd_help(const char *const args) {
   /* extract the first argument */
   char *arg = strtok(NULL, " ");
   int i;
 
   if (arg == NULL) {
     /* no argument given */
-    for (i = 0; i < NR_CMD; i ++) {
+    for (i = 0; i < NR_CMD; i++) {
       printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
     }
-  }
-  else {
-    for (i = 0; i < NR_CMD; i ++) {
+  } else {
+    for (i = 0; i < NR_CMD; i++) {
       if (strcmp(arg, cmd_table[i].name) == 0) {
         printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
         return 0;
       }
     }
-    printf("Unknown command '%s'\n", arg);
+    Log("Unknown command '%s'", arg);
   }
   return 0;
 }
 
-void sdb_set_batch_mode() {
-  is_batch_mode = true;
-}
+void sdb_set_batch_mode() { is_batch_mode = true; }
 
 void sdb_mainloop() {
   if (is_batch_mode) {
@@ -102,12 +229,14 @@ void sdb_mainloop() {
     return;
   }
 
-  for (char *str; (str = rl_gets()) != NULL; ) {
+  for (char *str; (str = rl_gets()) != NULL;) {
     char *str_end = str + strlen(str);
 
     /* extract the first token as the command */
     char *cmd = strtok(str, " ");
-    if (cmd == NULL) { continue; }
+    if (cmd == NULL) {
+      continue;
+    }
 
     /* treat the remaining string as the arguments,
      * which may need further parsing
@@ -123,14 +252,18 @@ void sdb_mainloop() {
 #endif
 
     int i;
-    for (i = 0; i < NR_CMD; i ++) {
+    for (i = 0; i < NR_CMD; i++) {
       if (strcmp(cmd, cmd_table[i].name) == 0) {
-        if (cmd_table[i].handler(args) < 0) { return; }
+        if (cmd_table[i].handler(args) < 0) {
+          return;
+        }
         break;
       }
     }
 
-    if (i == NR_CMD) { printf("Unknown command '%s'\n", cmd); }
+    if (i == NR_CMD) {
+      Log("Unknown command '%s'", cmd);
+    }
   }
 }
 

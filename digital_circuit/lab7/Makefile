@@ -14,7 +14,7 @@ TOP_NAME = ps2_keyboard
 BIN = $(BUILD_DIR)/$(PREFIX_NAME)
 MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 WAVE = $(BUILD_DIR)/wave.vcd
-NVBOARD = 0
+NVBOARD = 1
 include ../../Makefile
 
 
@@ -46,7 +46,7 @@ endif
 	@echo "-----verilate------"
 	mkdir -p $(BUILD_DIR)
 ifeq ($(NVBOARD),0)
-	$(VERILATOR) $(VERILATOR_FLAGS) $^ ; echo $$?
+	- $(VERILATOR) $(VERILATOR_FLAGS) $^
 else
 	$(VERILATOR) $(VERILATOR_FLAGS) $(NV_VERILATOR_FLAGS) $^ $(NV_VERILATOR_FLAGS_2) ; echo $$?
 endif
