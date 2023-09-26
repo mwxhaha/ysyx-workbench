@@ -151,9 +151,13 @@ config ITRACE_COND
   string "Only trace instructions when the condition is true"
   default "true"
 
-config WATCHPOINT
+config EXPR_MATCH
   depends on TRACE
-  bool "watchpoint and break"
+  bool "Enable expression matching rules log"
+  default n
+
+config WATCHPOINT
+  bool "Enable watchpoint"
   default y
 
 config DIFFTEST

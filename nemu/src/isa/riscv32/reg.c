@@ -30,6 +30,7 @@ void isa_reg_display() {
     if (i % 4 == 3) printf("\n");
   }
   if (sizeof(regs) / sizeof(regs[0]) % 4 != 0) printf("\n");
+  printf("%s:" FMT_WORD "\n", "pc", cpu.pc);
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
