@@ -48,7 +48,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (check_watchpoint()) {
     printf("watchpoint trigger at:");
     puts(_this->logbuf);
-    nemu_state.state = NEMU_STOP;
+    if (nemu_state.state==NEMU_RUNNING) nemu_state.state = NEMU_STOP;
   }
 #endif
 }
