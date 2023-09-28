@@ -156,6 +156,11 @@ config EXPR_MATCH
   bool "Enable expression matching rules log"
   default n
 
+config DECODE_RESULT
+  depends on TRACE
+  bool "Enable printing decode result"
+  default n
+
 config WATCHPOINT
   bool "Enable watchpoint"
   default y
