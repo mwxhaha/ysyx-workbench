@@ -127,11 +127,12 @@ static int cmd_x(const char *const args) {
       vaddr_t addr = expr(e, &success);
       if (!success) return 0;
       int len = sizeof(word_t);
+      int column_cnt_display = 8;
       for (int i = 0; i < scan_len; i++) {
         printf(FMT_WORD " ", vaddr_read(addr + i * len, len));
-        if (i % 4 == 3) printf("\n");
+        if (i % column_cnt_display == column_cnt_display - 1) printf("\n");
       }
-      if (scan_len % 4 != 0) printf("\n");
+      if (scan_len % column_cnt_display != 0) printf("\n");
     } else {
       Log("x format error, using like this: x N EXPR");
     }
