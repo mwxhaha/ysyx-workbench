@@ -25,11 +25,13 @@ const char *regs[] = {"$0", "ra", "sp",  "gp",  "tp", "t0", "t1", "t2",
                       "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
 
 void isa_reg_display() {
+  int column_cnt_display = 8;
   for (int i = 0; i < sizeof(regs) / sizeof(regs[0]); i++) {
     printf("%s:" FMT_WORD " ", regs[i], cpu.gpr[i]);
-    if (i % 4 == 3) printf("\n");
+    if (i % column_cnt_display == column_cnt_display - 1) printf("\n");
   }
-  if (sizeof(regs) / sizeof(regs[0]) % 4 != 0) printf("\n");
+  if (sizeof(regs) / sizeof(regs[0]) % column_cnt_display != 0) printf("\n");
+  printf("%s:" FMT_WORD "\n", "pc", cpu.pc);
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {

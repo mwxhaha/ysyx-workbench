@@ -91,8 +91,8 @@ bool check_watchpoint() {
       word_t new_val = expr(wp_pool[i].e, &success);
       if (!success) panic("The expression was illegally modified");
       if (wp_pool[i].val != new_val) {
-        Log("watchpoint changes, N: %d, expr: %s, value: " FMT_WORD
-            " -> " FMT_WORD,
+        printf("watchpoint changes, N: %d, expr: %s, value: " FMT_WORD
+            " -> " FMT_WORD "\n",
             i, wp_pool[i].e, wp_pool[i].val, new_val);
         stop_flag = true;
       }
