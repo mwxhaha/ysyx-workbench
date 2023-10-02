@@ -1,6 +1,14 @@
-#include <stdio.h>
+#include "sim_tool.hpp"
 
-int main() {
-  printf("Hello, ysyx!\n");
-  return 0;
+void sim();
+
+int main(int argc, char **argv)
+{
+    sim_init(argc, argv);
+
+    sim();
+
+    sim_exit();
+
+    return 0;
 }
