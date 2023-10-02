@@ -1,12 +1,16 @@
 #ifndef sim_tool_hpp
 #define sim_tool_hpp
 
-#include <iostream>
-#include <cmath>
-#include <bitset>
 #include <verilated.h>
 #include <Vtop.h>
 #include <verilated_vcd_c.h>
+#include <iostream>
+#include <cmath>
+#include <bitset>
+#include <cstdint>
+
+typedef uint32_t word_t;
+#define HIERARCHY_DEEP 100
 
 extern VerilatedContext *contextp;
 extern Vtop *top;
@@ -15,7 +19,7 @@ extern VerilatedVcdC *tfp;
 void sim_init(int argc, char **argv);
 void sim_exit();
 void update(int time = 1);
-void cycle(int cycle_number, int cycle_time = 10);
+void cycle(int cycle_number = 1, int cycle_time = 10);
 void set_pin(auto f, int cycle_time = 10)
 {
     top->clk = 1;
@@ -25,7 +29,7 @@ void set_pin(auto f, int cycle_time = 10)
     top->clk = 0;
     update(cycle_time / 2);
 }
-void reset(int reset_cycle_number, int cycle_time = 10);
+void reset(int reset_cycle_number = 10, int cycle_time = 10);
 void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool unsigned_mode, bool signed_mode)
 {
     if (binary_mode)
@@ -37,5 +41,6 @@ void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool un
     if (signed_mode)
         std::cout << pin - std::pow(2, data_len) << ' ';
 }
+word_t memory_read(word_t addr, int len);
 
 #endif

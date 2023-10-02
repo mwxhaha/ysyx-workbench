@@ -13,20 +13,12 @@ void sim()
         update();
     }
 #else
-    int sim_time = 100;
-    reset(5);
+    int sim_time = 1000;
+    reset();
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
-        set_pin([&]
-                { top->in = 1; });
-        set_pin([&]
-                { top->in = 0; });
-        set_pin([&]
-                { top->in = 1; });
-        cycle(3);
-        set_pin([&]
-                { top->in = 0; });
-        cycle(3);
+        top->pc_memory_read = memory_read(top->pc_out, 4);
+        cycle();
     }
 #endif
 }
