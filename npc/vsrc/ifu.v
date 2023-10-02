@@ -14,7 +14,7 @@ module ifu
             .WIDTH(ISA_WIDTH),
             .RESET_VAL('h80000000)
         )
-        pc
+        reg_pc
         (
             .clk(clk),
             .rst(rst),
