@@ -12,7 +12,7 @@ BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 PREFIX_NAME = Vtop
-TOP_NAME = gpr
+TOP_NAME = ifu
 BIN = $(BUILD_DIR)/$(PREFIX_NAME)
 MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 WAVE = $(BUILD_DIR)/wave.vcd
@@ -42,7 +42,7 @@ else
 VERILATOR_CFLAGS += -I$(NVBOARD_HOME)/include -DNV_SIM
 VERILATOR_LDFLAGS += -lSDL2 -lSDL2_image
 endif
-VERILATOR_FLAGS = --cc --Mdir $(OBJ_DIR) -j 0 --exe -o $(BIN) -Wall -Wpedantic --top-module $(TOP_NAME) --prefix $(PREFIX_NAME) --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) --prefix $(PREFIX_NAME) -o $(BIN) -j 0 -Wall -Wpedantic --top-module $(TOP_NAME) -y $(NPC_HOME) --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
 VERILATOR_FLAGS_LIB = $(addprefix -LDFLAGS , $(VERILATOR_LDFLAGS))
 
 ifeq ($(NVBOARD),0)

@@ -5,6 +5,8 @@
 `define OPCODE_WIDTH 7
 `define IMM_WIDTH 32
 
+`define PC_BASE_ADDR `ISA_WIDTH'h80000000
+
 `define INST_NUM_MAX 2
 `define inv 0
 `define auipc 2

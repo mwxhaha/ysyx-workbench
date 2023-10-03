@@ -11,10 +11,13 @@
 
 typedef uint32_t word_t;
 #define HIERARCHY_DEEP 100
+#define MEM_BASE_ADDR 0x80000000
+#define MEM_MAX 10000
 
 extern VerilatedContext *contextp;
 extern Vtop *top;
 extern VerilatedVcdC *tfp;
+extern uint8_t mem[MEM_MAX];
 
 void sim_init(int argc, char **argv);
 void sim_exit();

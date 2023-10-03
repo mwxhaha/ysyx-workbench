@@ -17,7 +17,6 @@ void sim()
     reset();
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
-        top->pc_memory_read = memory_read(top->pc_out, 4);
         cycle();
     }
 #endif

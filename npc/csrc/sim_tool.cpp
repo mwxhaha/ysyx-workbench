@@ -12,6 +12,7 @@ void nvboard_bind_all_pins(Vtop *top);
 VerilatedContext *contextp;
 Vtop *top;
 VerilatedVcdC *tfp;
+uint8_t mem[MEM_MAX] = {0x10, 0x11, 0x12, 0x13, 0x20, 0x21, 0x22, 0x23, 0x30, 0x31, 0x32, 0x33, 0x40, 0x41, 0x42, 0x43, 0x50, 0x51, 0x52, 0x53};
 
 void sim_init(int argc, char **argv)
 {
@@ -48,6 +49,7 @@ void update(int time)
 {
     while (time > 0)
     {
+        top->pc_mem_read = memory_read(top->pc_out, 4);
         top->eval();
 #ifdef NV_SIM
         nvboard_update();
@@ -82,13 +84,13 @@ void reset(int reset_cycle_number, int cycle_time)
             cycle_time);
 }
 
-static uint8_t memory[10000] = {0x10, 0x11, 0x12, 0x13, 0x20, 0x21, 0x22, 0x23, 0x30, 0x31, 0x32, 0x33, 0x40, 0x41, 0x42, 0x43, 0x50, 0x51, 0x52, 0x53};
-
 word_t memory_read(word_t addr, int len)
 {
-    assert(addr >= 0x80000000);
-    assert(addr < 0x80000000 + 10000);
-    void *addr_real = memory + addr - 0x80000000;
+    if (addr < MEM_BASE_ADDR)
+        addr = MEM_BASE_ADDR;
+    if (addr > MEM_BASE_ADDR + MEM_MAX - 1)
+        addr = MEM_BASE_ADDR + MEM_MAX - 1;
+    void *addr_real = mem + addr - MEM_BASE_ADDR;
     switch (len)
     {
     case 1:
