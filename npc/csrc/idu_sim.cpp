@@ -16,7 +16,17 @@ void sim()
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
         set_pin([&]
-                { top->inst = 0x00009117; });
+                { top->inst = 0x01198cb3; });
+        set_pin([&]
+                { top->inst = 0x80188993; });
+        set_pin([&]
+                { top->inst = 0x833ca8a3; });
+        set_pin([&]
+                { top->inst = 0x839988e3; });
+        set_pin([&]
+                { top->inst = 0x80001897; });
+        set_pin([&]
+                { top->inst = 0x800018ef; });
         set_pin([&]
                 { top->inst = 0x00100073; });
     }

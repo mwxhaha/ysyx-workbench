@@ -7,12 +7,17 @@
 
 `define PC_BASE_ADDR `ISA_WIDTH'h80000000
 
-`define INST_NUM_MAX 2
+`define INST_NUM_MAX 7
 `define inv 0
 `define auipc 2
+`define jal 3
+`define beq 5
+`define sw 20
+`define addi 21
+`define add 31
 `define ebreak 42
 
-`define INST_TYPE_MAX 2
+`define INST_TYPE_MAX 6
 `define N 0
 `define R 1
 `define I 2
