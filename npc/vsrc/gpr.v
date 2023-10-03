@@ -22,6 +22,7 @@ module gpr
         registerfile_gpr
         (
             .clk(clk),
+            .rst(rst),
             .wdata(wdata),
             .waddr(waddr),
             .rdata_1(rdata_1),

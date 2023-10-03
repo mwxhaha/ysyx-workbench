@@ -4,7 +4,7 @@ module RegisterFile
          parameter DATA_WIDTH = 1
      )
      (
-         input wire clk,
+         input wire clk,rst,
          input wire [DATA_WIDTH-1:0] wdata,
          input wire [ADDR_WIDTH-1:0] waddr,
          output wire [DATA_WIDTH-1:0] rdata_1,
