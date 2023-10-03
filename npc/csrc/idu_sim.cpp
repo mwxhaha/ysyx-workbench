@@ -16,9 +16,9 @@ void sim()
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
         set_pin([&]
-                { top->instruction = 0x00009117; });
+                { top->inst = 0x00009117; });
         set_pin([&]
-                { top->instruction = 0x00100073; });
+                { top->inst = 0x00100073; });
     }
 #endif
 }
