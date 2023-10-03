@@ -49,7 +49,7 @@ void update(int time)
 {
     while (time > 0)
     {
-        top->pc_mem_read = memory_read(top->pc_out, 4);
+        // top->pc_mem_read = memory_read(top->pc_out, 4);
         top->eval();
 #ifdef NV_SIM
         nvboard_update();

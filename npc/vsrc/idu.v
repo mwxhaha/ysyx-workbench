@@ -1,10 +1,11 @@
 `include "vsrc/config.v"
+
 module idu
     (
         input wire clk,rst,
         input wire [`ISA_WIDTH-1:0] inst,
-        output wire [`INST_TYPE_WIDTH-1:0] inst_type,
         output wire [`INST_NUM_WIDTH-1:0] inst_num,
+        output wire [`INST_TYPE_WIDTH-1:0] inst_type,
         output wire [`REG_ADDR_WIDTH-1:0] rd,rs1,rs2,
         output wire [`IMM_WIDTH-1:0] imm
     );
