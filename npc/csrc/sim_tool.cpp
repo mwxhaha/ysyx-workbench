@@ -12,7 +12,7 @@ void nvboard_bind_all_pins(Vtop *top);
 VerilatedContext *contextp;
 Vtop *top;
 VerilatedVcdC *tfp;
-uint8_t mem[MEM_MAX] = {0x10, 0x11, 0x12, 0x13, 0x20, 0x21, 0x22, 0x23, 0x30, 0x31, 0x32, 0x33, 0x40, 0x41, 0x42, 0x43, 0x50, 0x51, 0x52, 0x53};
+uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01, 0x93, 0x89, 0x18, 0x80, 0xa3, 0xa8, 0x3c, 0x83, 0xe3, 0x88, 0x99, 0x83, 0x97, 0x18, 0x00, 0x80, 0xef, 0x18, 0x00, 0x80, 0x73, 0x00, 0x10, 0x80};
 
 void sim_init(int argc, char **argv)
 {
@@ -49,7 +49,9 @@ void update(int time)
 {
     while (time > 0)
     {
-        // top->pc_mem_read = memory_read(top->pc_out, 4);
+        top->mem_r_1 = memory_read(top->mem_r_1_addr, 4);
+        top->mem_r_2 = memory_read(top->mem_r_2_addr, 4);
+        top->mem_r_1 = memory_read(top->mem_r_1_addr, 4);
         top->eval();
 #ifdef NV_SIM
         nvboard_update();
@@ -104,6 +106,33 @@ word_t memory_read(word_t addr, int len)
         break;
     case 8:
         return *(uint64_t *)addr_real;
+        break;
+    default:
+        assert(0);
+        break;
+    }
+}
+
+void memory_read(word_t addr, word_t data, int len)
+{
+    if (addr < MEM_BASE_ADDR)
+        addr = MEM_BASE_ADDR;
+    if (addr > MEM_BASE_ADDR + MEM_MAX - 1)
+        addr = MEM_BASE_ADDR + MEM_MAX - 1;
+    void *addr_real = mem + addr - MEM_BASE_ADDR;
+    switch (len)
+    {
+    case 1:
+        *(uint8_t *)addr_real = data;
+        break;
+    case 2:
+        *(uint16_t *)addr_real = data;
+        break;
+    case 4:
+        *(uint32_t *)addr_real = data;
+        break;
+    case 8:
+        *(uint64_t *)addr_real = data;
         break;
     default:
         assert(0);
