@@ -1,4 +1,4 @@
-`include "vsrc/config.v"
+`include "config.v"
 
 module idu
     (
@@ -31,7 +31,6 @@ module idu
                      `OPCODE_WIDTH'b1110011,`INST_NUM_WIDTH'd`ebreak
                  })
         );
-
     MuxKeyWithDefault
         #(
             .NR_KEY(`INST_NUM_MAX),
@@ -54,6 +53,9 @@ module idu
                  })
         );
 
+    assign rd=inst[7+`REG_ADDR_WIDTH-1:7];
+    assign rs1=inst[15+`REG_ADDR_WIDTH-1:15];
+    assign rs2=inst[20+`REG_ADDR_WIDTH-1:20];
     MuxKeyWithDefault
         #(
             .NR_KEY(`INST_TYPE_MAX),
@@ -74,9 +76,5 @@ module idu
                      `INST_TYPE_WIDTH'd`J,{{11{inst[31]}},inst[31:31],inst[19:12],inst[20:20],inst[30:21],1'b0}
                  })
         );
-
-    assign rd=inst[7+`REG_ADDR_WIDTH-1:7];
-    assign rs1=inst[15+`REG_ADDR_WIDTH-1:15];
-    assign rs2=inst[20+`REG_ADDR_WIDTH-1:20];
 
 endmodule

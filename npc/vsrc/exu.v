@@ -1,4 +1,4 @@
-`include "vsrc/config.v"
+`include "config.v"
 
 module exu
     (
@@ -39,7 +39,6 @@ module exu
                   `INST_NUM_WIDTH'd`add,pc_out+`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`ebreak,pc_out+`ISA_WIDTH'd4})
         );
-
     MuxKeyWithDefault
         #(
             .NR_KEY(`INST_TYPE_MAX),
@@ -78,7 +77,6 @@ module exu
                   `INST_NUM_WIDTH'd`add,src1+src2,
                   `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'd0})
         );
-
     MuxKeyWithDefault
         #(
             .NR_KEY(`INST_TYPE_MAX),
@@ -118,7 +116,7 @@ module exu
                   `INST_NUM_WIDTH'd`add,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`ebreak,`BASE_ADDR})
         );
-
+        
     MuxKeyWithDefault
         #(
             .NR_KEY(`INST_NUM_MAX),
@@ -138,7 +136,6 @@ module exu
                   `INST_NUM_WIDTH'd`add,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`ebreak,`BASE_ADDR})
         );
-
     MuxKeyWithDefault
         #(
             .NR_KEY(`INST_NUM_MAX),
@@ -158,7 +155,6 @@ module exu
                   `INST_NUM_WIDTH'd`add,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`ebreak,`BASE_ADDR})
         );
-
     MuxKeyWithDefault
         #(
             .NR_KEY(`INST_TYPE_MAX),

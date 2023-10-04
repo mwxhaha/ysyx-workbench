@@ -1,4 +1,4 @@
-`include "vsrc/config.v"
+`include "config.v"
 
 module pc
     (
