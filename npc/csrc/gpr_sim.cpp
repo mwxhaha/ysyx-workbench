@@ -18,30 +18,30 @@ void sim()
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
         set_pin([&]
-                { top->wen = 1;
-        top->waddr = 0x00;
-        top->wdata = 0x12131415; });
+                { top->gpr_w_en = 1;
+        top->gpr_w_addr = 0x00;
+        top->gpr_w = 0x12131415; });
         set_pin([&]
                 { 
-        top->waddr = 0x01;
-        top->wdata = 0x22232425; });
+        top->gpr_w_addr = 0x01;
+        top->gpr_w = 0x22232425; });
         set_pin([&]
                 { 
-        top->waddr = 0x1e;
-        top->wdata = 0x32333435; });
+        top->gpr_w_addr = 0x1e;
+        top->gpr_w = 0x32333435; });
         set_pin([&]
                 { 
-        top->waddr = 0x1f;
-        top->wdata = 0x42434445; });
+        top->gpr_w_addr = 0x1f;
+        top->gpr_w = 0x42434445; });
         set_pin([&]
                 { 
-        top->wen = 0;
-        top->raddr_1 = 0x00;
-        top->raddr_2 = 0x01; });
+        top->gpr_w_en = 0;
+        top->gpr_r_1_addr = 0x00;
+        top->gpr_r_2_addr = 0x01; });
         set_pin([&]
                 { 
-        top->raddr_1 = 0x1e;
-        top->raddr_2 = 0x1f; });
+        top->gpr_r_1_addr = 0x1e;
+        top->gpr_r_2_addr = 0x1f; });
     }
 #endif
 }

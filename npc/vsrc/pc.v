@@ -1,13 +1,14 @@
 `include "vsrc/config.v"
 
 module pc
-     (
-         input wire clk,rst,wen,
-         input wire [`ISA_WIDTH-1:0] din,
-         output wire [`ISA_WIDTH-1:0] dout
-     );
-     
-     Reg
+    (
+        input wire clk,rst,
+        input wire [`ISA_WIDTH-1:0] pc_in,
+        output wire [`ISA_WIDTH-1:0] pc_out,
+        input wire pc_w_en
+    );
+
+    Reg
         #(
             .WIDTH(`ISA_WIDTH),
             .RESET_VAL(`PC_BASE_ADDR)
@@ -16,9 +17,9 @@ module pc
         (
             .clk(clk),
             .rst(rst),
-            .din(din),
-            .dout(dout),
-            .wen(wen)
+            .din(pc_in),
+            .dout(pc_out),
+            .wen(pc_w_en)
         );
-    
+
 endmodule

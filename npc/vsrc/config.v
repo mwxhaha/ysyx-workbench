@@ -6,7 +6,7 @@
 `define IMM_WIDTH 32
 
 `define BASE_ADDR `ISA_WIDTH'h80000000
-`define PC_BASE_ADDR BASE_ADDR
+`define PC_BASE_ADDR `BASE_ADDR
 
 `define INST_NUM_MAX 7
 `define inv 0

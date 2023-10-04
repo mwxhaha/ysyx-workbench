@@ -18,15 +18,15 @@ void sim()
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
         set_pin([&]
-                { top->din = 1; top->wen = 1; });
+                { top->pc_in = 1; top->pc_w_en = 1; });
         set_pin([&]
-                { top->din = 0; top->wen = 1; });
+                { top->pc_in = 0; top->pc_w_en = 1; });
         set_pin([&]
-                { top->din = 1; top->wen = 0; });
+                { top->pc_in = 1; top->pc_w_en = 0; });
         set_pin([&]
-                { top->din = 1; top->wen = 1; });
+                { top->pc_in = 1; top->pc_w_en = 1; });
         set_pin([&]
-                { top->din = 0; top->wen = 0; });
+                { top->pc_in = 0; top->pc_w_en = 0; });
     }
 #endif
 }

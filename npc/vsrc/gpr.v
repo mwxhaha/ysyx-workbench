@@ -1,16 +1,16 @@
 `include "vsrc/config.v"
 
 module gpr
-     (
-         input wire clk,rst,
-         input wire [`ISA_WIDTH-1:0] wdata,
-         input wire [`REG_ADDR_WIDTH -1:0] waddr,
-         output wire [`ISA_WIDTH-1:0] rdata_1,
-         input wire [`REG_ADDR_WIDTH -1:0] raddr_1,
-         output wire [`ISA_WIDTH-1:0] rdata_2,
-         input wire [`REG_ADDR_WIDTH -1:0] raddr_2,
-         input wire wen
-     );
+    (
+        input wire clk,rst,
+        input wire [`ISA_WIDTH-1:0] gpr_w,
+        input wire [`REG_ADDR_WIDTH -1:0] gpr_w_addr,
+        output wire [`ISA_WIDTH-1:0] gpr_r_1,
+        input wire [`REG_ADDR_WIDTH -1:0] gpr_r_1_addr,
+        output wire [`ISA_WIDTH-1:0] gpr_r_2,
+        input wire [`REG_ADDR_WIDTH -1:0] gpr_r_2_addr,
+        input wire gpr_w_en
+    );
 
     RegisterFile
         #(
@@ -21,13 +21,13 @@ module gpr
         (
             .clk(clk),
             .rst(rst),
-            .wdata(wdata),
-            .waddr(waddr),
-            .rdata_1(rdata_1),
-            .raddr_1(raddr_1),
-            .rdata_2(rdata_2),
-            .raddr_2(raddr_2),
-            .wen(wen)
+            .wdata(gpr_w),
+            .waddr(gpr_w_addr),
+            .rdata_1(gpr_r_1),
+            .raddr_1(gpr_r_1_addr),
+            .rdata_2(gpr_r_2),
+            .raddr_2(gpr_r_2_addr),
+            .wen(gpr_w_en)
         );
 
 endmodule
