@@ -12,7 +12,7 @@ BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 PREFIX_NAME = Vtop
-TOP_NAME = processor_core
+TOP_NAME = alu
 BIN = $(BUILD_DIR)/$(PREFIX_NAME)
 MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 WAVE = $(BUILD_DIR)/wave.vcd

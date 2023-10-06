@@ -45,6 +45,6 @@ void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool un
         std::cout << pin - std::pow(2, data_len) << ' ';
 }
 word_t memory_read(word_t addr, int len);
-void memory_read(word_t addr, word_t data, int len);
+void memory_write(word_t addr, word_t data, int len);
 
 #endif

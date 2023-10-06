@@ -49,9 +49,9 @@ void update(int time)
 {
     while (time > 0)
     {
-        top->mem_r_1 = memory_read(top->mem_r_1_addr, 4);
-        top->mem_r_2 = memory_read(top->mem_r_2_addr, 4);
-        top->mem_r_1 = memory_read(top->mem_r_1_addr, 4);
+        // top->mem_r_1 = memory_read(top->mem_r_1_addr, 4);
+        // top->mem_r_2 = memory_read(top->mem_r_2_addr, 4);
+        // memory_write(top->mem_w_addr, top->mem_w, 4);
         top->eval();
 #ifdef NV_SIM
         nvboard_update();
@@ -113,7 +113,7 @@ word_t memory_read(word_t addr, int len)
     }
 }
 
-void memory_read(word_t addr, word_t data, int len)
+void memory_write(word_t addr, word_t data, int len)
 {
     if (addr < MEM_BASE_ADDR)
         addr = MEM_BASE_ADDR;
