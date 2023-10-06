@@ -2,6 +2,7 @@
 #include <Vtop.h>
 #include <verilated_vcd_c.h>
 #include "sim_tool.hpp"
+#include <iostream>
 
 void sim()
 {
@@ -15,6 +16,7 @@ void sim()
     reset();
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
+        std::cout << contextp->time() << ' ';
         cycle();
     }
 #endif

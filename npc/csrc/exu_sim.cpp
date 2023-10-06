@@ -18,13 +18,15 @@ void sim()
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
         set_pin([&]
-                {top->pc_out=0x80000000;
+                {
             top->inst_num = 2;
             top->inst_type = 5;
             top->imm = 1;
+            top->pc_out=0x80000000;
             top->src1 = 2;
             top->src2 = 3;
-            top->mem_r = 4; });
+            top->mem_r = 4;
+            top->alu_result = 5; });
         set_pin([&]
                 {top->inst_num = 3;
             top->inst_type = 6; });

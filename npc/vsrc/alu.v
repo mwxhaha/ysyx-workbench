@@ -3,9 +3,9 @@
 module alu
     (
         input wire clk,rst,
-        input wire [`ISA_WIDTH-1:0] a,b,
-        input wire [`ALU_FUNC_WIDTH-1:0] func,
-        output wire [`ISA_WIDTH-1:0] result
+        input wire [`ISA_WIDTH-1:0] alu_a,alu_b,
+        input wire [`ALU_FUNC_WIDTH-1:0] alu_func,
+        output wire [`ISA_WIDTH-1:0] alu_result
     );
 
     wire add_or_sub;
@@ -18,7 +18,7 @@ module alu
         muxkeywithdefault_add_or_sub
         (
             .out         	( add_or_sub          ),
-            .key         	( func          ),
+            .key         	( alu_func          ),
             .default_out 	( 1'b0  ),
             .lut ({`ALU_FUNC_WIDTH'd`ADD_S,1'b0,
                    `ALU_FUNC_WIDTH'd`SUB_S,1'b1,
@@ -38,8 +38,8 @@ module alu
         )
         adder_suber_1
         (
-            .a        	( a                     ),
-            .b        	( b                     ),
+            .a        	( alu_a                     ),
+            .b        	( alu_b                     ),
             .add_or_sub ( add_or_sub            ),
             .result   	( adder_suber_1_result  ),
             .carry    	( carry                 ),
@@ -55,17 +55,17 @@ module alu
         )
         muxkeywithdefault_result
         (
-            .out         	( result          ),
-            .key         	( func          ),
+            .out         	( alu_result          ),
+            .key         	( alu_func          ),
             .default_out 	( `ISA_WIDTH'b0 ),
             .lut ({`ALU_FUNC_WIDTH'd`ADD_S,adder_suber_1_result,
                    `ALU_FUNC_WIDTH'd`SUB_S,adder_suber_1_result,
                    `ALU_FUNC_WIDTH'd`ADD_U,adder_suber_1_result,
                    `ALU_FUNC_WIDTH'd`SUB_U,adder_suber_1_result,
-                   `ALU_FUNC_WIDTH'd`NOT,~a,
-                   `ALU_FUNC_WIDTH'd`AND,a&b,
-                   `ALU_FUNC_WIDTH'd`OR,a|b,
-                   `ALU_FUNC_WIDTH'd`XOR,a^b})
+                   `ALU_FUNC_WIDTH'd`NOT,~alu_a,
+                   `ALU_FUNC_WIDTH'd`AND,alu_a&alu_b,
+                   `ALU_FUNC_WIDTH'd`OR,alu_a|alu_b,
+                   `ALU_FUNC_WIDTH'd`XOR,alu_a^alu_b})
         );
 
 endmodule

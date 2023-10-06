@@ -62,20 +62,34 @@ module processor_core
             .gpr_w_en     	( gpr_w_en      )
         );
 
+    wire [`ISA_WIDTH-1:0] 	alu_result;
+    alu alu_1
+    (
+        .clk     	    ( clk      ),
+        .rst     	    ( rst      ),
+        .alu_a      	( alu_a       ),
+        .alu_b      	( alu_b       ),
+        .alu_func   	( alu_func    ),
+        .alu_result 	( alu_result  )
+    );
+
     wire [`ISA_WIDTH-1:0]       	pc_in;
     wire                        	pc_w_en;
     wire [`ISA_WIDTH-1:0]       	srd;
     wire                        	gpr_w_en;
+    wire [`ISA_WIDTH-1:0]           alu_a;
+    wire [`ISA_WIDTH-1:0]           alu_b;
+    wire [`ALU_FUNC_WIDTH-1:0]      alu_func;
     exu exu_1
     (
             .clk        	( clk         ),
             .rst        	( rst         ),
-            .pc_out     	( pc_out      ),
-            .pc_in      	( pc_in       ),
-            .pc_w_en    	( pc_w_en     ),
             .inst_num   	( inst_num    ),
             .inst_type  	( inst_type   ),
             .imm        	( imm         ),
+            .pc_out     	( pc_out      ),
+            .pc_in      	( pc_in       ),
+            .pc_w_en    	( pc_w_en     ),
             .srd        	( srd         ),
             .src1       	( src1        ),
             .src2       	( src2        ),
@@ -84,7 +98,11 @@ module processor_core
             .mem_r_addr 	( mem_r_2_addr  ),
             .mem_w      	( mem_w       ),
             .mem_w_addr 	( mem_w_addr  ),
-            .mem_w_en   	( mem_w_en    )
+            .mem_w_en   	( mem_w_en    ),
+            .alu_result 	( alu_result  ),
+            .alu_a      	( alu_a       ),
+            .alu_b 	        ( alu_b  ),
+            .alu_func   	( alu_func    )
         );
 
 endmodule

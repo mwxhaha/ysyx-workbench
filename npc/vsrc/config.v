@@ -29,6 +29,7 @@
 
 `define ALU_FUNC_WIDTH 4
 `define ALU_FUNC_MAX 8
+`define NO_FUNC 0
 `define ADD_S 0
 `define SUB_S 1
 `define ADD_U 2

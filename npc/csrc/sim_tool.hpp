@@ -32,7 +32,7 @@ void set_pin(auto f, int cycle_time = 10)
     top->clk = 0;
     update(cycle_time / 2);
 }
-void reset(int reset_cycle_number = 10, int cycle_time = 10);
+void reset(int reset_cycle_number = 3, int cycle_time = 10);
 void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool unsigned_mode, bool signed_mode)
 {
     if (binary_mode)
