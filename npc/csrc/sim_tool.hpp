@@ -18,6 +18,7 @@ extern VerilatedContext *contextp;
 extern Vtop *top;
 extern VerilatedVcdC *tfp;
 extern uint8_t mem[MEM_MAX];
+extern int ebreak_flag;
 
 void sim_init(int argc, char **argv);
 void sim_exit();

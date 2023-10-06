@@ -14,7 +14,7 @@ void sim()
 #else
     int sim_time = 1000;
     reset();
-    while (contextp->time() < sim_time && !contextp->gotFinish())
+    while (contextp->time() < sim_time && !contextp->gotFinish() && ebreak_flag)
     {
         std::cout << contextp->time() << ' ';
         cycle();

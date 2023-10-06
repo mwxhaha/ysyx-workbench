@@ -2,6 +2,7 @@
 #include <verilated.h>
 #include <Vtop.h>
 #include <verilated_vcd_c.h>
+#include <Vtop__Dpi.h>
 #ifdef NV_SIM
 #include <nvboard.h>
 void nvboard_bind_all_pins(Vtop *top);
@@ -13,6 +14,7 @@ VerilatedContext *contextp;
 Vtop *top;
 VerilatedVcdC *tfp;
 uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01, 0x93, 0x89, 0x18, 0x80, 0xa3, 0xa8, 0x3c, 0x83, 0xe3, 0x88, 0x99, 0x83, 0x97, 0x18, 0x00, 0x80, 0xef, 0x08, 0x40, 0x00, 0x73, 0x00, 0x10, 0x80};
+int ebreak_flag = 1;
 
 void sim_init(int argc, char **argv)
 {
@@ -139,4 +141,10 @@ void memory_write(word_t addr, word_t data, int len)
         assert(0);
         break;
     }
+}
+
+int ebreak_dpic()
+{
+    ebreak_flag = 0;
+    return 0;
 }
