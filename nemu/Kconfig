@@ -161,6 +161,11 @@ config DECODE_RESULT
   bool "Enable printing decode result"
   default n
 
+config MTRACE
+  depends on TRACE
+  bool "Enable memory trace"
+  default n
+
 config WATCHPOINT
   bool "Enable watchpoint"
   default y
