@@ -53,7 +53,7 @@ static char *rl_gets() {
 
 static int cmd_c(const char *const args) {
   if (args != NULL) {
-    Log("c format error, using like this: c");
+    Warning("c format error, using like this: c");
     return 0;
   }
   cpu_exec(-1);
@@ -63,7 +63,7 @@ static int cmd_c(const char *const args) {
 static int cmd_q(const char *const args) {
   nemu_state.state = NEMU_QUIT;
   if (args != NULL) {
-    Log("q format error, using like this: q");
+    Warning("q format error, using like this: q");
     return 0;
   }
   return -1;
@@ -75,12 +75,12 @@ static int cmd_si(const char *const args) {
     int result = sscanf(args, "%ld", &number);
     if (result == 1) {
       if (number <= 0) {
-        Log("step number must be larger than 0");
+        Warning("step number must be larger than 0");
         return 0;
       }
       cpu_exec(number);
     } else {
-      Log("si format error, using like this: si N");
+      Warning("si format error, using like this: si N");
     }
   } else {
     cpu_exec(1);
@@ -101,14 +101,14 @@ static int cmd_info(const char *const args) {
           printf_watchpoint();
           break;
         default:
-          Log("info format error, using like this: info r/w");
+          Warning("info format error, using like this: info r/w");
           break;
       }
     } else {
-      Log("info format error, using like this: info r/w");
+      Warning("info format error, using like this: info r/w");
     }
   } else {
-    Log("info format error, using like this: info r/w");
+    Warning("info format error, using like this: info r/w");
   }
   return 0;
 }
@@ -119,7 +119,7 @@ static int cmd_x(const char *const args) {
     int result = sscanf(args, "%d", &scan_len);
     if (result == 1) {
       if (scan_len <= 0) {
-        Log("scan length must be larger than 0");
+        Warning("scan length must be larger than 0");
         return 0;
       }
       const char *const e = args + (int)log10(scan_len) + 2;
@@ -134,10 +134,10 @@ static int cmd_x(const char *const args) {
       }
       if (scan_len % column_cnt_display != 0) printf("\n");
     } else {
-      Log("x format error, using like this: x N EXPR");
+      Warning("x format error, using like this: x N EXPR");
     }
   } else {
-    Log("x format error, using like this: x N EXPR");
+    Warning("x format error, using like this: x N EXPR");
   }
   return 0;
 }
@@ -149,7 +149,7 @@ static int cmd_p(const char *const args) {
     if (!success) return 0;
     printf("%s = " FMT_WORD_T "\n", args, val);
   } else {
-    Log("p format error, using like this: p EXPR");
+    Warning("p format error, using like this: p EXPR");
   }
   return 0;
 }
@@ -158,7 +158,7 @@ static int cmd_w(const char *const args) {
   if (args != NULL) {
     new_wp(args);
   } else {
-    Log("w format error, using like this: w EXPR");
+    Warning("w format error, using like this: w EXPR");
   }
   return 0;
 }
@@ -170,10 +170,10 @@ static int cmd_d(const char *const args) {
     if (result == 1) {
       free_wp(n);
     } else {
-      Log("w format error, using like this: d N");
+      Warning("w format error, using like this: d N");
     }
   } else {
-    Log("w format error, using like this: d N");
+    Warning("w format error, using like this: d N");
   }
   return 0;
 }
@@ -217,7 +217,7 @@ static int cmd_help(const char *const args) {
         return 0;
       }
     }
-    Log("Unknown command '%s'", arg);
+    Warning("Unknown command '%s'", arg);
   }
   return 0;
 }
@@ -263,7 +263,7 @@ void sdb_mainloop() {
     }
 
     if (i == NR_CMD) {
-      Log("Unknown command '%s'", cmd);
+      Warning("Unknown command '%s'", cmd);
     }
   }
 }

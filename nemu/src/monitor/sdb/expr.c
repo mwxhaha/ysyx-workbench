@@ -160,7 +160,7 @@ static bool make_token(const char *const e) {
 static int find_parentheses(int p, bool *const success) {
   if (tokens[p].type != '(') {
     *success = false;
-    Log("brackets does not match");
+    Warning("brackets does not match");
     return -1;
   }
 
@@ -175,7 +175,7 @@ static int find_parentheses(int p, bool *const success) {
   }
   if (p == nr_token && cnt != 0) {
     *success = false;
-    Log("brackets does not match");
+    Warning("brackets does not match");
     return -1;
   }
   return p - 1;
@@ -192,7 +192,7 @@ static bool check_parentheses(const int p, const int q, bool *const success) {
     return false;
   else {
     *success = false;
-    Log("brackets does not match");
+    Warning("brackets does not match");
     return false;
   }
 }
@@ -251,7 +251,7 @@ static int find_main_op(int p, const int q, bool *const success) {
 static word_t eval(const int p, const int q, bool *const success) {
   if (p > q) {
     *success = false;
-    Log("expression split failed");
+    Warning("expression split failed");
     return -1;
 
   } else if (p == q) {
@@ -262,7 +262,7 @@ static word_t eval(const int p, const int q, bool *const success) {
           return number;
         } else {
           *success = false;
-          Log("the number in expression is illegal");
+          Warning("the number in expression is illegal");
           return -1;
         }
         break;
@@ -271,7 +271,7 @@ static word_t eval(const int p, const int q, bool *const success) {
           return number;
         } else {
           *success = false;
-          Log("the number in expression is illegal");
+          Warning("the number in expression is illegal");
           return -1;
         }
         break;
@@ -280,7 +280,7 @@ static word_t eval(const int p, const int q, bool *const success) {
         number = isa_reg_str2val(tokens[p].str + 1, &success_tmp);
         if (!success_tmp) {
           *success = false;
-          Log("the register does not exist");
+          Warning("the register does not exist");
           return -1;
         } else {
           return number;
@@ -288,7 +288,7 @@ static word_t eval(const int p, const int q, bool *const success) {
         break;
       default:
         *success = false;
-        Log("expression split failedl");
+        Warning("expression split failed");
         return -1;
         break;
     }
@@ -314,7 +314,7 @@ static word_t eval(const int p, const int q, bool *const success) {
       if (!(*success)) return -1;
       if (tokens[main_op].type == '/' && val2 == 0) {
         *success = false;
-        Log("div 0");
+        Warning("do not div 0");
         return -1;
       }
       switch (tokens[main_op].type) {
@@ -338,7 +338,7 @@ static word_t eval(const int p, const int q, bool *const success) {
           return -val2;
         default:
           *success = false;
-          Log("operator analysis failed");
+          Warning("operator analysis failed");
           return -1;
       }
     }
