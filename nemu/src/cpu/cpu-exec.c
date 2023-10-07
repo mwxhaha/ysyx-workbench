@@ -17,6 +17,8 @@
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
 #include <locale.h>
+#include <stdbool.h>
+#include <string.h>
 #include <utils.h>
 bool check_watchpoint();
 
@@ -26,13 +28,46 @@ bool check_watchpoint();
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 10
+#define IRINGBUF_MAX 10
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0;  // unit: us
 static bool g_print_step = false;
+static int iringbuf_ptr = 0;
+static bool iringbuf_full = false;
+static char iringbuf[IRINGBUF_MAX][128];
 
 void device_update();
+
+static void add_iringbuf(const char *inst) {
+  strcpy(iringbuf[iringbuf_ptr], inst);
+  iringbuf_ptr++;
+  if (iringbuf_ptr == IRINGBUF_MAX) {
+    iringbuf_ptr = 0;
+    iringbuf_full = true;
+  }
+}
+
+static void print_iringbuf() {
+  if (iringbuf_full) {
+    int i = iringbuf_ptr;
+    puts(iringbuf[i]);
+    i++;
+    if (i == IRINGBUF_MAX) i = 0;
+    while (i != iringbuf_ptr) {
+      puts(iringbuf[i]);
+      i++;
+      if (i == IRINGBUF_MAX) i = 0;
+    }
+  } else {
+    int i = 0;
+    while (i != iringbuf_ptr) {
+      puts(iringbuf[i]);
+      i++;
+    }
+  }
+}
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
@@ -43,6 +78,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (g_print_step) {
     IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
   }
+  add_iringbuf(_this->logbuf);
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
   if (check_watchpoint()) {
@@ -111,6 +147,7 @@ static void statistic() {
 
 void assert_fail_msg() {
   isa_reg_display();
+  print_iringbuf();
   statistic();
 }
 
@@ -149,6 +186,10 @@ void cpu_exec(uint64_t n) {
                       ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)
                       : ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
           nemu_state.halt_pc);
+      if (nemu_state.state != NEMU_END || nemu_state.halt_ret != 0) {
+        isa_reg_display();
+        print_iringbuf();
+      }
       // fall through
     case NEMU_QUIT:
       statistic();
