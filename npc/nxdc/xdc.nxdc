@@ -1,0 +1,6 @@
+top=top
+
+clk (SW0)
+rst (SW1)
+in (SW2)
+q (LD0)
