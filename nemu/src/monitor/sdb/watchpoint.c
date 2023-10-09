@@ -43,7 +43,7 @@ void init_wp_pool() {
 int new_wp(const char *const e) {
   int len = strlen(e);
   if (len >= WP_EXPR_MAX) {
-    Warning("expression is too long");
+    printf("expression is too long\n");
     return 1;
   }
   int i;
@@ -54,7 +54,7 @@ int new_wp(const char *const e) {
       bool success = true;
       wp_pool[i].val = expr(wp_pool[i].e, &success);
       if (!success) {
-        Warning("expression is illegal, can not set the watchpoint");
+        printf("expression is illegal, can not set the watchpoint\n");
         wp_pool[i].used = false;
         return 1;
       }
@@ -63,17 +63,17 @@ int new_wp(const char *const e) {
       return 0;
     }
   }
-  Warning("there is no free watchpoint");
+  printf("there is no free watchpoint\n");
   return 1;
 }
 
 int free_wp(const int n) {
   if (n <= -1 || n >= NR_WP) {
-    Warning("the N is out of range");
+    printf("the N is out of range\n");
     return 1;
   }
   if (!wp_pool[n].used) {
-    Warning("the watchpoint is orignally free");
+    printf("the watchpoint is orignally free\n");
     return 1;
   }
   printf("successfully delete the watchpoint, N: %d, expr: %s\n", n,
@@ -92,8 +92,8 @@ bool check_watchpoint() {
       if (!success) panic("The expression was illegally modified");
       if (wp_pool[i].val != new_val) {
         printf("watchpoint changes, N: %d, expr: %s, value: " FMT_WORD
-            " -> " FMT_WORD "\n",
-            i, wp_pool[i].e, wp_pool[i].val, new_val);
+               " -> " FMT_WORD "\n",
+               i, wp_pool[i].e, wp_pool[i].val, new_val);
         stop_flag = true;
       }
       wp_pool[i].val = new_val;

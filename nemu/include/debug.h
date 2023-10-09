@@ -43,14 +43,4 @@
 
 #define TODO() panic("please implement me")
 
-#define Warningif(cond, format, ...)         \
-  do {                                       \
-    if (!(cond)) {                           \
-      printf(format "\n", ##__VA_ARGS__);    \
-      log_write(format "\n", ##__VA_ARGS__); \
-    }                                        \
-  } while (0)
-
-#define Warning(format, ...) Warningif(0, format, ##__VA_ARGS__)
-
 #endif

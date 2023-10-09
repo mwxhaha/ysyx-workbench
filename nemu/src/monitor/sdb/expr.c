@@ -20,6 +20,7 @@
 #include <regex.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
 
 enum {
   TK_NOTYPE = 256,
@@ -96,16 +97,12 @@ static bool make_token(const char *const e) {
         int substr_len = pmatch.rm_eo;
 
 #ifdef CONFIG_EXPR_MATCH
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i,
+        printf("match rules[%d] = \"%s\" at position %d with len %d: %.*s\n", i,
             rules[i].regex, position, substr_len, substr_len, substr_start);
 #endif
 
         position += substr_len;
 
-        /* TODO: Now a new token is recognized with rules[i]. Add codes
-         * to record the token in the array `tokens'. For certain types
-         * of tokens, some extra actions should be performed.
-         */
         switch (rules[i].token_type) {
           case TK_NOTYPE:
             break;
@@ -160,7 +157,7 @@ static bool make_token(const char *const e) {
 static int find_parentheses(int p, bool *const success) {
   if (tokens[p].type != '(') {
     *success = false;
-    Warning("brackets does not match");
+    printf("brackets does not match\n");
     return -1;
   }
 
@@ -175,7 +172,7 @@ static int find_parentheses(int p, bool *const success) {
   }
   if (p == nr_token && cnt != 0) {
     *success = false;
-    Warning("brackets does not match");
+    printf("brackets does not match\n");
     return -1;
   }
   return p - 1;
@@ -192,7 +189,7 @@ static bool check_parentheses(const int p, const int q, bool *const success) {
     return false;
   else {
     *success = false;
-    Warning("brackets does not match");
+    printf("brackets does not match\n");
     return false;
   }
 }
@@ -251,7 +248,7 @@ static int find_main_op(int p, const int q, bool *const success) {
 static word_t eval(const int p, const int q, bool *const success) {
   if (p > q) {
     *success = false;
-    Warning("expression split failed");
+    printf("expression split failed\n");
     return -1;
 
   } else if (p == q) {
@@ -262,7 +259,7 @@ static word_t eval(const int p, const int q, bool *const success) {
           return number;
         } else {
           *success = false;
-          Warning("the number in expression is illegal");
+          printf("the number in expression is illegal\n");
           return -1;
         }
         break;
@@ -271,7 +268,7 @@ static word_t eval(const int p, const int q, bool *const success) {
           return number;
         } else {
           *success = false;
-          Warning("the number in expression is illegal");
+          printf("the number in expression is illegal\n");
           return -1;
         }
         break;
@@ -280,7 +277,7 @@ static word_t eval(const int p, const int q, bool *const success) {
         number = isa_reg_str2val(tokens[p].str + 1, &success_tmp);
         if (!success_tmp) {
           *success = false;
-          Warning("the register does not exist");
+          printf("the register does not exist\n");
           return -1;
         } else {
           return number;
@@ -288,7 +285,7 @@ static word_t eval(const int p, const int q, bool *const success) {
         break;
       default:
         *success = false;
-        Warning("expression split failed");
+        printf("expression split failed\n");
         return -1;
         break;
     }
@@ -314,7 +311,7 @@ static word_t eval(const int p, const int q, bool *const success) {
       if (!(*success)) return -1;
       if (tokens[main_op].type == '/' && val2 == 0) {
         *success = false;
-        Warning("do not div 0");
+        printf("do not div 0\n");
         return -1;
       }
       switch (tokens[main_op].type) {
@@ -338,7 +335,7 @@ static word_t eval(const int p, const int q, bool *const success) {
           return -val2;
         default:
           *success = false;
-          Warning("operator analysis failed");
+          printf("operator analysis failed\n");
           return -1;
       }
     }
