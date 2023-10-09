@@ -18,6 +18,7 @@
 #include <memory/paddr.h>
 #include <stdio.h>
 #include <utils.h>
+#include <monitor.h>
 
 void init_rand();
 void init_log(const char *log_file);
@@ -142,8 +143,6 @@ static void load_elf() {
       func_infos[func_infos_max].start_addr = sym_tab[i].st_value;
       func_infos[func_infos_max].end_addr =
           sym_tab[i].st_value + sym_tab[i].st_size;
-      printf("%x %x\n", sym_tab[i].st_name,
-             section_headers[e_strndx].sh_offset + sym_tab[i].st_name);
       fseek(fp, section_headers[e_strndx].sh_offset + sym_tab[i].st_name,
             SEEK_SET);
       char *ret1 =

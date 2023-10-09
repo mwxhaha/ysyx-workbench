@@ -21,6 +21,7 @@
 #include <isa.h>
 #include <math.h>
 #include <memory/vaddr.h>
+#include <monitor.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdint.h>

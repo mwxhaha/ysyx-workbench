@@ -17,10 +17,11 @@
 #include <debug.h>
 #include <isa.h>
 #include <memory/vaddr.h>
+#include <monitor.h>
 #include <regex.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
 enum {
   TK_NOTYPE = 256,
@@ -98,7 +99,7 @@ static bool make_token(const char *const e) {
 
 #ifdef CONFIG_EXPR_MATCH
         printf("match rules[%d] = \"%s\" at position %d with len %d: %.*s\n", i,
-            rules[i].regex, position, substr_len, substr_len, substr_start);
+               rules[i].regex, position, substr_len, substr_len, substr_start);
 #endif
 
         position += substr_len;

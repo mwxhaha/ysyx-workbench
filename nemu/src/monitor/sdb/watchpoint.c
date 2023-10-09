@@ -15,11 +15,10 @@
 
 #include <common.h>
 #include <debug.h>
+#include <monitor.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-
-#include "sdb.h"
 
 #define NR_WP 32
 #define WP_EXPR_MAX 32
