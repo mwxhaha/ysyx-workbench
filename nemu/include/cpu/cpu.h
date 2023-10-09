@@ -17,6 +17,7 @@
 #define __CPU_CPU_H__
 
 #include <common.h>
+#include <cpu/decode.h>
 
 void cpu_exec(uint64_t n);
 
@@ -30,5 +31,6 @@ void add_iringbuf(const char *inst);
 void print_iringbuf();
 
 void load_elf(const char *elf_file);
+void ftrace_record(Decode *s, int call_or_ret);
 
 #endif

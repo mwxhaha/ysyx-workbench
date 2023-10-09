@@ -1,4 +1,6 @@
+#include <common.h>
 #include <cpu/cpu.h>
+#include <cpu/decode.h>
 #include <elf.h>
 
 typedef Elf32_Ehdr Elf_Ehdr;
@@ -16,8 +18,8 @@ static char shstr[SYM_NAME_MAX];
 #define FUNC_NAME_MAX 100
 #define FUNC_INFOS_MAX 100
 typedef struct {
-  Elf32_Addr start_addr;
-  Elf32_Addr end_addr;
+  vaddr_t start_addr;
+  vaddr_t end_addr;
   char func_name[FUNC_NAME_MAX];
 } func_info_t;
 static func_info_t func_infos[FUNC_INFOS_MAX];
@@ -74,6 +76,37 @@ void load_elf(const char *elf_file) {
   fclose(fp);
 }
 
-void jal_trace() {
-    
+typedef struct {
+  vaddr_t pc;
+  int func_num;
+  vaddr_t npc;
+  int nfunc_num;
+  int call_or_ret;
+} ftrace_t;
+#define FTRACES_MAX 1000
+ftrace_t ftraces[FTRACES_MAX];
+int ftraces_max = 0;
+
+void ftrace_record(Decode *s, int call_or_ret) {
+  int func_num = -1;
+  int nfunc_num = -1;
+  for (int i = 0; i < func_infos_max; i++) {
+    if (func_infos[i].start_addr <= s->pc && func_infos[i].end_addr >= s->pc)
+      func_num = i;
+    if (call_or_ret == 0) {
+      if (func_infos[i].start_addr == s->dnpc) nfunc_num = i;
+    } else {
+      if (func_infos[i].start_addr <= s->dnpc &&
+          func_infos[i].end_addr >= s->dnpc)
+        nfunc_num = i;
+    }
+  }
+  if (func_num != -1 && nfunc_num != -1) {
+    ftraces[ftraces_max].pc = s->pc;
+    ftraces[ftraces_max].func_num = func_num;
+    ftraces[ftraces_max].npc = s->dnpc;
+    ftraces[ftraces_max].nfunc_num = nfunc_num;
+    ftraces[ftraces_max].call_or_ret = call_or_ret;
+    ftraces_max++;
+  }
 }
