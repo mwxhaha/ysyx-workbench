@@ -2,10 +2,17 @@
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
 #include <elf.h>
+#include <stdio.h>
 
+#ifdef CONFIG_ISA64
+typedef Elf64_Ehdr Elf_Ehdr;
+typedef Elf64_Shdr Elf_Shdr;
+typedef Elf64_Sym Elf_Sym;
+#else
 typedef Elf32_Ehdr Elf_Ehdr;
 typedef Elf32_Shdr Elf_Shdr;
 typedef Elf32_Sym Elf_Sym;
+#endif
 
 #define SECTION_HEADERS_MAX 100
 static Elf_Shdr section_headers[SECTION_HEADERS_MAX];
@@ -87,7 +94,9 @@ typedef struct {
 ftrace_t ftraces[FTRACES_MAX];
 int ftraces_max = 0;
 
-void ftrace_record(Decode *s, int call_or_ret) {
+void ftrace_record(Decode *s) {
+  int call_or_ret = 0;
+  if (s->isa.inst.val == 0x00008067) call_or_ret = 1;
   int func_num = -1;
   int nfunc_num = -1;
   for (int i = 0; i < func_infos_max; i++) {
@@ -108,5 +117,23 @@ void ftrace_record(Decode *s, int call_or_ret) {
     ftraces[ftraces_max].nfunc_num = nfunc_num;
     ftraces[ftraces_max].call_or_ret = call_or_ret;
     ftraces_max++;
+  }
+}
+
+void print_ftrace() {
+  int func_stack = 0;
+  for (int i = 0; i < ftraces_max; i++) {
+    printf(FMT_WORD ":", ftraces[i].pc);
+    if (ftraces[i].call_or_ret == 1) func_stack--;
+    for (int j = 0; j < func_stack; j++) printf("|   ");
+    if (ftraces[i].call_or_ret == 0) {
+      printf("%s call %s " FMT_WORD, func_infos[ftraces[i].func_num].func_name,
+             func_infos[ftraces[i].nfunc_num].func_name, ftraces[i].npc);
+      func_stack++;
+    } else {
+      printf("%s ret %s " FMT_WORD, func_infos[ftraces[i].func_num].func_name,
+             func_infos[ftraces[i].nfunc_num].func_name, ftraces[i].npc);
+    }
+    printf("\n");
   }
 }

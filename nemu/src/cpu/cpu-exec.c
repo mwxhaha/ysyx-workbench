@@ -114,6 +114,7 @@ static void statistic() {
 void assert_fail_msg() {
   isa_reg_display();
   print_iringbuf();
+  print_ftrace();
   statistic();
 }
 
@@ -155,6 +156,7 @@ void cpu_exec(uint64_t n) {
       if (nemu_state.state != NEMU_END || nemu_state.halt_ret != 0) {
         isa_reg_display();
         print_iringbuf();
+        print_ftrace();
       }
       // fall through
     case NEMU_QUIT:

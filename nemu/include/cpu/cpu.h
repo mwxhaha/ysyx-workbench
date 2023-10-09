@@ -31,6 +31,7 @@ void add_iringbuf(const char *inst);
 void print_iringbuf();
 
 void load_elf(const char *elf_file);
-void ftrace_record(Decode *s, int call_or_ret);
+void ftrace_record(Decode *s);
+void print_ftrace();
 
 #endif
