@@ -29,4 +29,6 @@ void invalid_inst(vaddr_t thispc);
 void add_iringbuf(const char *inst);
 void print_iringbuf();
 
+void load_elf(const char *elf_file);
+
 #endif
