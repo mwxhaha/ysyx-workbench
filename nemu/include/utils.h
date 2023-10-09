@@ -73,5 +73,6 @@ uint64_t get_time();
     log_write(__VA_ARGS__); \
   } while (0)
 
+char *fgetstr(char *s, int n, FILE *stream);
 
 #endif

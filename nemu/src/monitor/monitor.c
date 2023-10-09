@@ -15,6 +15,9 @@
 
 #include <isa.h>
 #include <memory/paddr.h>
+#include <elf.h>
+#include <stdio.h>
+#include <utils.h>
 
 void init_rand();
 void init_log(const char *log_file);
@@ -66,6 +69,86 @@ static long load_img() {
 
   fclose(fp);
   return size;
+}
+
+typedef Elf32_Ehdr Elf_Ehdr;
+typedef Elf32_Shdr Elf_Shdr;
+typedef Elf32_Sym Elf_Sym;
+
+#define ELF_FILE_MAX 100
+char elf_file[ELF_FILE_MAX];
+
+#define SECTION_HEADERS_MAX 100
+Elf_Shdr section_headers[SECTION_HEADERS_MAX];
+
+#define SYM_NAME_MAX 100
+#define SYM_TAB_MAX 100
+Elf_Sym sym_tab[SYM_TAB_MAX];
+char shstr[SYM_NAME_MAX];
+
+#define FUNC_NAME_MAX 100
+#define FUNC_INFOS_MAX 100
+typedef struct {
+Elf32_Addr start_addr;
+Elf32_Addr end_addr;
+char func_name[FUNC_NAME_MAX];
+} func_info_t;
+func_info_t func_infos[FUNC_INFOS_MAX];
+int func_infos_max=0;
+
+static void load_elf() {
+  strcpy(elf_file, img_file);
+  elf_file[strlen(elf_file)-1] = 'f';
+  elf_file[strlen(elf_file)-2] = 'l';
+  elf_file[strlen(elf_file)-3] = 'e';
+  FILE *fp = fopen(elf_file, "rb");
+  Assert(fp, "Can not open '%s'", elf_file);
+
+  Elf_Ehdr elf_header;
+  int ret = fread(&elf_header, sizeof(Elf_Ehdr), 1, fp);
+  Assert(ret == 1,"elf_header read failed");
+  
+  fseek(fp, elf_header.e_shoff, SEEK_SET);
+  Assert(elf_header.e_shnum <= SECTION_HEADERS_MAX, "too many sections");
+  ret = fread(&section_headers, sizeof(Elf_Shdr), elf_header.e_shnum, fp);
+  Assert(ret == elf_header.e_shnum,"section_headers read failed");
+
+  int sym_tab_max=0;
+  int e_strndx=0;
+  for (int i = 0; i < elf_header.e_shnum; i++) {
+    fseek(fp,
+          section_headers[elf_header.e_shstrndx].sh_offset +
+              section_headers[i].sh_name,
+          SEEK_SET);
+    char *ret1 = fgetstr(shstr,SYM_NAME_MAX,fp);
+    Assert(ret1,"shstr read failed");
+
+    if (strcmp(shstr,".symtab")==0) {
+      sym_tab_max = section_headers[i].sh_size / sizeof(Elf_Sym);
+      Assert(sym_tab_max < SYM_TAB_MAX,"too many symbols");
+      fseek(fp, section_headers[i].sh_offset, SEEK_SET);
+      ret = fread(sym_tab, sizeof(Elf_Sym), sym_tab_max, fp);
+      Assert(ret == sym_tab_max,"sym_tab read failed");
+   
+    } else if (strcmp(shstr, ".strtab")==0)
+      e_strndx = i;
+  }
+
+  for (int i = 0; i < sym_tab_max;i++) {
+    if ((sym_tab[i].st_info & 0xf)==STT_FUNC) {
+      func_infos[func_infos_max].start_addr = sym_tab[i].st_value;
+      func_infos[func_infos_max].end_addr = sym_tab[i].st_value+sym_tab[i].st_size;
+      printf("%x %x\n", sym_tab[i].st_name,
+             section_headers[e_strndx].sh_offset + sym_tab[i].st_name);
+      fseek(fp, section_headers[e_strndx].sh_offset + sym_tab[i].st_name,
+            SEEK_SET);
+      char *ret1 = fgetstr(func_infos[func_infos_max].func_name,SYM_NAME_MAX,fp);
+      Assert(ret1,"func_name read failed");
+      func_infos_max++;
+    }
+  }
+
+  fclose(fp);
 }
 
 static int parse_args(int argc, char *argv[]) {
@@ -121,6 +204,8 @@ void init_monitor(int argc, char *argv[]) {
 
   /* Load the image to memory. This will overwrite the built-in image. */
   long img_size = load_img();
+
+  load_elf();
 
   /* Initialize differential testing. */
   init_difftest(diff_so_file, img_size, difftest_port);
