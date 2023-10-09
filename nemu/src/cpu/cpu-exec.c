@@ -18,7 +18,6 @@
 #include <cpu/difftest.h>
 #include <locale.h>
 #include <stdbool.h>
-#include <string.h>
 #include <utils.h>
 bool check_watchpoint();
 
@@ -28,46 +27,13 @@ bool check_watchpoint();
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 10
-#define IRINGBUF_MAX 10
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0;  // unit: us
 static bool g_print_step = false;
-static int iringbuf_ptr = 0;
-static bool iringbuf_full = false;
-static char iringbuf[IRINGBUF_MAX][128];
 
 void device_update();
-
-static void add_iringbuf(const char *inst) {
-  strcpy(iringbuf[iringbuf_ptr], inst);
-  iringbuf_ptr++;
-  if (iringbuf_ptr == IRINGBUF_MAX) {
-    iringbuf_ptr = 0;
-    iringbuf_full = true;
-  }
-}
-
-static void print_iringbuf() {
-  if (iringbuf_full) {
-    int i = iringbuf_ptr;
-    puts(iringbuf[i]);
-    i++;
-    if (i == IRINGBUF_MAX) i = 0;
-    while (i != iringbuf_ptr) {
-      puts(iringbuf[i]);
-      i++;
-      if (i == IRINGBUF_MAX) i = 0;
-    }
-  } else {
-    int i = 0;
-    while (i != iringbuf_ptr) {
-      puts(iringbuf[i]);
-      i++;
-    }
-  }
-}
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
