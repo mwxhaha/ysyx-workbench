@@ -9,15 +9,41 @@ void nvboard_bind_all_pins(Vtop *top);
 #endif
 #include <cassert>
 #include <cstdint>
+#include <cstring>
+#include <iostream>
+#include <fstream>
 
 VerilatedContext *contextp;
 Vtop *top;
 VerilatedVcdC *tfp;
-uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01, 0x93, 0x89, 0x18, 0x80, 0xa3, 0xa8, 0x3c, 0x83, 0xe3, 0x88, 0x99, 0x83, 0x97, 0x18, 0x00, 0x80, 0xef, 0x08, 0x40, 0x00, 0x73, 0x00, 0x10, 0x80};
+uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01,
+                        0x93, 0x89, 0x18, 0x80,
+                        0xa3, 0xa8, 0x3c, 0x83,
+                        0xe3, 0x88, 0x99, 0x83,
+                        0x97, 0x18, 0x00, 0x80,
+                        0xef, 0x08, 0x40, 0x00,
+                        0x73, 0x00, 0x10, 0x80};
 int ebreak_flag = 1;
+
+static void load_img(int argc, char **argv)
+{
+    for (int i = 0; i < argc;i++)
+        if (strcmp(argv[i], "-i") == 0)
+        {
+            const char *img_file = argv[2];
+            std::cout << "use image" << img_file << std::endl;
+            std::ifstream fin;
+            fin.open(img_file, std::ios::in);
+            fin.read(reinterpret_cast<char *>(mem), MEM_MAX);
+            fin.close();
+            argc -= 2;
+            return;
+        }
+}
 
 void sim_init(int argc, char **argv)
 {
+    load_img(argc, argv);
     contextp = new VerilatedContext;
     contextp->commandArgs(argc, argv);
     top = new Vtop{contextp};

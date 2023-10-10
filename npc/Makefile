@@ -68,10 +68,11 @@ $(BIN): verilate
 
 
 include ../Makefile
+override NPC_FLAGS +=
 
 sim: $(BIN)
 	@echo "-----simulate------"
-	$(BIN)
+	$(BIN) $(NPC_FLAGS)
 ifeq ($(NVBOARD),0)
 	$(WAVE_READER) $(WAVE)
 endif

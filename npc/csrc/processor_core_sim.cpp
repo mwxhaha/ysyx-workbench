@@ -16,7 +16,6 @@ void sim()
     reset();
     while (contextp->time() < sim_time && !contextp->gotFinish() && ebreak_flag)
     {
-        std::cout << contextp->time() << ' ';
         cycle();
     }
 #endif
