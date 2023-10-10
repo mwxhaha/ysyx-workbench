@@ -3,6 +3,7 @@
 #include <cpu/decode.h>
 #include <elf.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #ifdef CONFIG_ISA64
 typedef Elf64_Ehdr Elf_Ehdr;
@@ -31,8 +32,15 @@ typedef struct {
 } func_info_t;
 static func_info_t func_infos[FUNC_INFOS_MAX];
 static int func_infos_max = 0;
+static bool open_ftrace = true;
 
 void load_elf(const char *elf_file) {
+  if (elf_file == NULL) {
+    Log("No elf is given. ftrace will not work.");
+    open_ftrace = false;
+    return;
+  }
+
   FILE *fp = fopen(elf_file, "rb");
   Assert(fp, "Can not open '%s'", elf_file);
 
@@ -95,6 +103,7 @@ ftrace_t ftraces[FTRACES_MAX];
 int ftraces_max = 0;
 
 void ftrace_record(Decode *s) {
+  if (!open_ftrace) return;
   int call_or_ret = 0;
   if (s->isa.inst.val == 0x00008067) call_or_ret = 1;
   int func_num = -1;
