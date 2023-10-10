@@ -17,8 +17,9 @@
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
 #include <locale.h>
+#include <monitor.h>
+#include <stdbool.h>
 #include <utils.h>
-bool check_watchpoint();
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -43,6 +44,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (g_print_step) {
     IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
   }
+  add_iringbuf(_this->logbuf);
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
   if (check_watchpoint()) {
@@ -111,6 +113,8 @@ static void statistic() {
 
 void assert_fail_msg() {
   isa_reg_display();
+  print_iringbuf();
+  print_ftrace();
   statistic();
 }
 
@@ -149,6 +153,11 @@ void cpu_exec(uint64_t n) {
                       ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)
                       : ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
           nemu_state.halt_pc);
+      if (nemu_state.state != NEMU_END || nemu_state.halt_ret != 0) {
+        isa_reg_display();
+        print_iringbuf();
+        print_ftrace();
+      }
       // fall through
     case NEMU_QUIT:
       statistic();
