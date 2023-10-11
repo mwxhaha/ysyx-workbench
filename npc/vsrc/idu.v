@@ -10,16 +10,84 @@ module idu
         output wire [`IMM_WIDTH-1:0] imm
     );
 
-    wire [`INST_NUM_WIDTH-1:0] inst_0110011_num;
+    wire [`INST_NUM_WIDTH-1:0] inst_beq_num;
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_0110011_NUM_MAX-`INST_000_0110011_NUM_MAX+1),
+            .NR_KEY(`INST_beq_NUM_MAX),
             .KEY_LEN(`FUNCT3_WIDTH),
             .DATA_LEN(`INST_NUM_WIDTH)
         )
-        muxkeywithdefault_inst_0110011_num
+        muxkeywithdefault_inst_beq_num
         (
-            .out(inst_0110011_num),
+            .out(inst_beq_num),
+            .key(inst[12+`FUNCT3_WIDTH-1:12]),
+            .default_out(`INST_NUM_WIDTH'd`inv),
+            .lut({
+                     `FUNCT3_WIDTH'b000,`INST_NUM_WIDTH'd`beq
+                 })
+        );
+
+    wire [`INST_NUM_WIDTH-1:0] inst_lb_num;
+    MuxKeyWithDefault
+        #(
+            .NR_KEY(`INST_lb_NUM_MAX),
+            .KEY_LEN(`FUNCT3_WIDTH),
+            .DATA_LEN(`INST_NUM_WIDTH)
+        )
+        muxkeywithdefault_inst_lb_num
+        (
+            .out(inst_lb_num),
+            .key(inst[12+`FUNCT3_WIDTH-1:12]),
+            .default_out(`INST_NUM_WIDTH'd`inv),
+            .lut({
+                     `FUNCT3_WIDTH'b010,`INST_NUM_WIDTH'd`lw
+                 })
+        );
+
+    wire [`INST_NUM_WIDTH-1:0] inst_sb_num;
+    MuxKeyWithDefault
+        #(
+            .NR_KEY(`INST_sb_NUM_MAX),
+            .KEY_LEN(`FUNCT3_WIDTH),
+            .DATA_LEN(`INST_NUM_WIDTH)
+        )
+        muxkeywithdefault_inst_sb_num
+        (
+            .out(inst_sb_num),
+            .key(inst[12+`FUNCT3_WIDTH-1:12]),
+            .default_out(`INST_NUM_WIDTH'd`inv),
+            .lut({
+                     `FUNCT3_WIDTH'b010,`INST_NUM_WIDTH'd`sw
+                 })
+        );
+
+    wire [`INST_NUM_WIDTH-1:0] inst_addi_num;
+    MuxKeyWithDefault
+        #(
+            .NR_KEY(`INST_addi_NUM_MAX),
+            .KEY_LEN(`FUNCT3_WIDTH),
+            .DATA_LEN(`INST_NUM_WIDTH)
+        )
+        muxkeywithdefault_inst_addi_num
+        (
+            .out(inst_addi_num),
+            .key(inst[12+`FUNCT3_WIDTH-1:12]),
+            .default_out(`INST_NUM_WIDTH'd`inv),
+            .lut({
+                     `FUNCT3_WIDTH'b000,`INST_NUM_WIDTH'd`addi
+                 })
+        );
+
+    wire [`INST_NUM_WIDTH-1:0] inst_add_num;
+    MuxKeyWithDefault
+        #(
+            .NR_KEY(`INST_add_NUM_MAX-`INST_add_add_NUM_MAX+1),
+            .KEY_LEN(`FUNCT3_WIDTH),
+            .DATA_LEN(`INST_NUM_WIDTH)
+        )
+        muxkeywithdefault_inst_add_num
+        (
+            .out(inst_add_num),
             .key(inst[12+`FUNCT3_WIDTH-1:12]),
             .default_out(`INST_NUM_WIDTH'd`inv),
             .lut({
@@ -29,7 +97,7 @@ module idu
 
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_NUM_MAX-`INST_0110011_NUM_MAX+1),
+            .NR_KEY(`INST_NUM_IDU_MAX),
             .KEY_LEN(`OPCODE_WIDTH),
             .DATA_LEN(`INST_NUM_WIDTH)
         )
@@ -42,18 +110,18 @@ module idu
                      `OPCODE_WIDTH'b0010111,`INST_NUM_WIDTH'd`auipc,
                      `OPCODE_WIDTH'b1101111,`INST_NUM_WIDTH'd`jal,
                      `OPCODE_WIDTH'b1100111,`INST_NUM_WIDTH'd`jalr,
-                     `OPCODE_WIDTH'b1100011,`INST_NUM_WIDTH'd`beq,
-                     `OPCODE_WIDTH'b0000011,`INST_NUM_WIDTH'd`lw,
-                     `OPCODE_WIDTH'b0100011,`INST_NUM_WIDTH'd`sw,
-                     `OPCODE_WIDTH'b0010011,`INST_NUM_WIDTH'd`addi,
-                     `OPCODE_WIDTH'b0110011,inst_0110011_num,
+                     `OPCODE_WIDTH'b1100011,inst_beq_num,
+                     `OPCODE_WIDTH'b0000011,inst_lb_num,
+                     `OPCODE_WIDTH'b0100011,inst_sb_num,
+                     `OPCODE_WIDTH'b0010011,inst_addi_num,
+                     `OPCODE_WIDTH'b0110011,inst_add_num,
                      `OPCODE_WIDTH'b1110011,`INST_NUM_WIDTH'd`ebreak
                  })
         );
 
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_NUM_MAX-`INST_0110011_NUM_MAX+1),
+            .NR_KEY(`INST_NUM_IDU_MAX),
             .KEY_LEN(`OPCODE_WIDTH),
             .DATA_LEN(`INST_TYPE_WIDTH)
         )
