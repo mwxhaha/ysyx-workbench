@@ -7,7 +7,7 @@ VSRC = $(shell find $(VSRC_DIR) -name "*.v")
 CSRC_DIR = $(ROOT_DIR)/csrc
 CSRC = $(shell find $(CSRC_DIR) -name "main.cpp" -or -name "sim*.cpp" -or -name "$(TOP_NAME)_sim.cpp")
 NXDC_DIR = $(ROOT_DIR)/nxdc
-NXDC = $(wildcard $(NXDC_DIR)/*.nxdc)
+NXDC = $(shell find $(NXDC_DIR) -name "*.v")
 BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
