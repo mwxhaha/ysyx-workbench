@@ -74,19 +74,8 @@ module exu_pc
             .cout 	( adder_pc_cout  )
         );
 
-    MuxKeyWithDefault
-        #(
-            .NR_KEY(1),
-            .KEY_LEN(`INST_NUM_WIDTH),
-            .DATA_LEN(`ISA_WIDTH)
-        )
-        muxkeywithdefault_adder_pc_s
-        (
-            .out(pc_in),
-            .key(inst_num),
-            .default_out(adder_pc_s),
-            .lut({`INST_NUM_WIDTH'd`jalr,adder_pc_s&{{`ISA_WIDTH-1{1'b1}},1'b0}})
-        );
+    wire is_not_jalr=|(inst_num^`INST_NUM_WIDTH'd`jalr);
+    assign pc_in={adder_pc_s[`ISA_WIDTH-1:1],is_not_jalr&adder_pc_s[0]};
 
     MuxKeyWithDefault
         #(

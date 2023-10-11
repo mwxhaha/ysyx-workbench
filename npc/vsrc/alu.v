@@ -67,7 +67,7 @@ module alu
                    `ALU_FUNC_WIDTH'd`AND,alu_a&alu_b,
                    `ALU_FUNC_WIDTH'd`OR,alu_a|alu_b,
                    `ALU_FUNC_WIDTH'd`XOR,alu_a^alu_b,
-                   `ALU_FUNC_WIDTH'd`EQ,~(alu_a^alu_b)})
+                   `ALU_FUNC_WIDTH'd`EQ,{`ISA_WIDTH{~(|(alu_a^alu_b))}}})
         );
 
 endmodule
