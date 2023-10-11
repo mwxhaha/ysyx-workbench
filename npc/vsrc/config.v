@@ -2,12 +2,20 @@
 `define REG_ADDR_WIDTH 5
 `define OPCODE_WIDTH 7
 `define IMM_WIDTH 32
+`define FUNCT3_WIDTH 3
+`define FUNCT7_WIDTH 7
 
 `define BASE_ADDR `ISA_WIDTH'h80000000
 `define PC_BASE_ADDR `BASE_ADDR
 
+`define INST_000_0110011_NUM_MAX 2
+`define add 31
+`define sub 32
+
+`define INST_0110011_NUM_MAX 2
+
 `define INST_NUM_WIDTH 8
-`define INST_NUM_MAX 9
+`define INST_NUM_MAX 10
 `define inv 0
 `define auipc 2
 `define jal 3
@@ -16,7 +24,6 @@
 `define lw 13
 `define sw 20
 `define addi 21
-`define add 31
 `define ebreak 42
 
 `define INST_TYPE_WIDTH 3

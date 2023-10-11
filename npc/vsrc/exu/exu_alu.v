@@ -35,6 +35,7 @@ module exu_alu
                   `INST_NUM_WIDTH'd`sw,src1,
                   `INST_NUM_WIDTH'd`addi,src1,
                   `INST_NUM_WIDTH'd`add,src1,
+                  `INST_NUM_WIDTH'd`sub,src1,
                   `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'b0})
         );
 
@@ -57,6 +58,7 @@ module exu_alu
                   `INST_NUM_WIDTH'd`sw,imm,
                   `INST_NUM_WIDTH'd`addi,imm,
                   `INST_NUM_WIDTH'd`add,src2,
+                  `INST_NUM_WIDTH'd`sub,src2,
                   `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'b0})
         );
 
@@ -79,6 +81,7 @@ module exu_alu
                   `INST_NUM_WIDTH'd`sw,`ALU_FUNC_WIDTH'd`ADD_S,
                   `INST_NUM_WIDTH'd`addi,`ALU_FUNC_WIDTH'd`ADD_S,
                   `INST_NUM_WIDTH'd`add,`ALU_FUNC_WIDTH'd`ADD_S,
+                  `INST_NUM_WIDTH'd`sub,`ALU_FUNC_WIDTH'd`SUB_S,
                   `INST_NUM_WIDTH'd`ebreak,`ALU_FUNC_WIDTH'd`NO_FUNC})
         );
 

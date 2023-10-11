@@ -10,9 +10,26 @@ module idu
         output wire [`IMM_WIDTH-1:0] imm
     );
 
+    wire [`INST_NUM_WIDTH-1:0] inst_0110011_num;
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_NUM_MAX),
+            .NR_KEY(`INST_0110011_NUM_MAX-`INST_000_0110011_NUM_MAX+1),
+            .KEY_LEN(`FUNCT3_WIDTH),
+            .DATA_LEN(`INST_NUM_WIDTH)
+        )
+        muxkeywithdefault_inst_0110011_num
+        (
+            .out(inst_0110011_num),
+            .key(inst[12+`FUNCT3_WIDTH-1:12]),
+            .default_out(`INST_NUM_WIDTH'd`inv),
+            .lut({
+                     `FUNCT3_WIDTH'b000,(`INST_NUM_WIDTH'd`add&{`INST_NUM_WIDTH{~inst[30]}})|(`INST_NUM_WIDTH'd`sub&{`INST_NUM_WIDTH{inst[30]}})
+                 })
+        );
+
+    MuxKeyWithDefault
+        #(
+            .NR_KEY(`INST_NUM_MAX-`INST_0110011_NUM_MAX+1),
             .KEY_LEN(`OPCODE_WIDTH),
             .DATA_LEN(`INST_NUM_WIDTH)
         )
@@ -29,13 +46,14 @@ module idu
                      `OPCODE_WIDTH'b0000011,`INST_NUM_WIDTH'd`lw,
                      `OPCODE_WIDTH'b0100011,`INST_NUM_WIDTH'd`sw,
                      `OPCODE_WIDTH'b0010011,`INST_NUM_WIDTH'd`addi,
-                     `OPCODE_WIDTH'b0110011,`INST_NUM_WIDTH'd`add,
+                     `OPCODE_WIDTH'b0110011,inst_0110011_num,
                      `OPCODE_WIDTH'b1110011,`INST_NUM_WIDTH'd`ebreak
                  })
         );
+
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_NUM_MAX),
+            .NR_KEY(`INST_NUM_MAX-`INST_0110011_NUM_MAX+1),
             .KEY_LEN(`OPCODE_WIDTH),
             .DATA_LEN(`INST_TYPE_WIDTH)
         )
