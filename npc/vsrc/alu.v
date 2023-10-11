@@ -27,7 +27,8 @@ module alu
                    `ALU_FUNC_WIDTH'd`NOT,1'b0,
                    `ALU_FUNC_WIDTH'd`AND,1'b0,
                    `ALU_FUNC_WIDTH'd`OR,1'b0,
-                   `ALU_FUNC_WIDTH'd`XOR,1'b0})
+                   `ALU_FUNC_WIDTH'd`XOR,1'b0,
+                   `ALU_FUNC_WIDTH'd`EQ,1'b0})
         );
 
     wire [`ISA_WIDTH-1:0] adder_suber_1_result;
@@ -65,7 +66,8 @@ module alu
                    `ALU_FUNC_WIDTH'd`NOT,~alu_a,
                    `ALU_FUNC_WIDTH'd`AND,alu_a&alu_b,
                    `ALU_FUNC_WIDTH'd`OR,alu_a|alu_b,
-                   `ALU_FUNC_WIDTH'd`XOR,alu_a^alu_b})
+                   `ALU_FUNC_WIDTH'd`XOR,alu_a^alu_b,
+                   `ALU_FUNC_WIDTH'd`EQ,~(alu_a^alu_b)})
         );
 
 endmodule

@@ -50,7 +50,7 @@ module exu_pc
             .lut({`INST_NUM_WIDTH'd`auipc,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`jal,imm,
                   `INST_NUM_WIDTH'd`jalr,imm,
-                  `INST_NUM_WIDTH'd`beq,({`ISA_WIDTH{~alu_result[0]}}&imm)|({`ISA_WIDTH{alu_result[0]}}&`ISA_WIDTH'd4),
+                  `INST_NUM_WIDTH'd`beq,({`ISA_WIDTH{alu_result[0]}}&imm)|({`ISA_WIDTH{~alu_result[0]}}&`ISA_WIDTH'd4),
                   `INST_NUM_WIDTH'd`sw,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`addi,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`add,`ISA_WIDTH'd4,

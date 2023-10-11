@@ -29,13 +29,14 @@
 `define J 6
 
 `define ALU_FUNC_WIDTH 4
-`define ALU_FUNC_MAX 8
+`define ALU_FUNC_MAX 9
 `define NO_FUNC 0
-`define ADD_S 0
-`define SUB_S 1
-`define ADD_U 2
-`define SUB_U 3
-`define NOT 4
-`define AND 5
-`define OR 6
-`define XOR 7
+`define ADD_S 1
+`define SUB_S 2
+`define ADD_U 3
+`define SUB_U 4
+`define NOT 5
+`define AND 6
+`define OR 7
+`define XOR 8
+`define EQ 9
