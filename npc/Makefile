@@ -17,6 +17,7 @@ BIN = $(BUILD_DIR)/$(PREFIX_NAME)
 MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 WAVE = $(BUILD_DIR)/wave.vcd
 NVBOARD = 0
+DISPLAY_WAVE = 0
 .DEFAULT_GOAL = sim
 
 
@@ -33,7 +34,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 
 
-VERILATOR_CFLAGS = -std=c++20 -Wall -Wpedantic -Wextra -g -DTOP_NAME=$(TOP_NAME)
+VERILATOR_CFLAGS = -std=c++20 -Wall -DTOP_NAME=$(TOP_NAME)
 VERILATOR_LDFLAGS = 
 ifeq ($(NVBOARD),0)
 VERILATOR_CFLAGS +=
@@ -42,7 +43,7 @@ else
 VERILATOR_CFLAGS += -I$(NVBOARD_HOME)/include -DNV_SIM
 VERILATOR_LDFLAGS += -lSDL2 -lSDL2_image
 endif
-VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) --prefix $(PREFIX_NAME) -o $(BIN) -j 0 -Wall -Wpedantic --top-module $(TOP_NAME) -y $(VSRC_DIR) --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) --prefix $(PREFIX_NAME) -o $(BIN) -j 0 -Wall --top-module $(TOP_NAME) -y $(VSRC_DIR) --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
 VERILATOR_FLAGS_LIB = $(addprefix -LDFLAGS , $(VERILATOR_LDFLAGS))
 
 ifeq ($(NVBOARD),0)
@@ -74,7 +75,9 @@ sim: $(BIN)
 	@echo "-----simulate------"
 	$(BIN) $(NPC_FLAGS)
 ifeq ($(NVBOARD),0)
+ifeq ($(DISPLAY_WAVE),1)
 	$(WAVE_READER) $(WAVE)
+endif
 endif
 	$(call git_commit, "sim RTL") 
 	@echo "-----simulate done------"

@@ -1,5 +1,5 @@
 `include "config.v"
-import "DPI-C" function int ebreak_dpic();
+import "DPI-C" function void ebreak_dpic();
 
 module exu
     (
@@ -37,7 +37,7 @@ module exu
             .a    	( adder_pc_a     ),
             .b    	( adder_pc_b     ),
             .cin  	( 1'b0   ),
-            .s    	( pc_in ),
+            .s    	( adder_pc_s ),
             .cout 	(   )
         );
     MuxKeyWithDefault

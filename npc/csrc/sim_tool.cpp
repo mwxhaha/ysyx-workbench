@@ -169,8 +169,7 @@ void memory_write(word_t addr, word_t data, int len)
     }
 }
 
-int ebreak_dpic()
+void ebreak_dpic()
 {
     ebreak_flag = 0;
-    return 0;
 }

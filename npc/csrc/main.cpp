@@ -1,14 +1,14 @@
 #include "sim_tool.hpp"
 
-void sim();
+int sim();
 
 int main(int argc, char **argv)
 {
     sim_init(argc, argv);
 
-    sim();
+    int ret = sim();
 
     sim_exit();
 
-    return 0;
+    return ret;
 }
