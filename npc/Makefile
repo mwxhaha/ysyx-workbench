@@ -68,7 +68,7 @@ $(BIN): verilate
 
 
 include ../Makefile
-override NPC_FLAGS +=
+NPC_FLAGS =
 
 sim: $(BIN)
 	@echo "-----simulate------"
