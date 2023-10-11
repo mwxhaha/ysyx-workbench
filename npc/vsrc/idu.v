@@ -24,6 +24,7 @@ module idu
             .lut({
                      `OPCODE_WIDTH'b0010111,`INST_NUM_WIDTH'd`auipc,
                      `OPCODE_WIDTH'b1101111,`INST_NUM_WIDTH'd`jal,
+                     `OPCODE_WIDTH'b1100111,`INST_NUM_WIDTH'd`jalr,
                      `OPCODE_WIDTH'b1100011,`INST_NUM_WIDTH'd`beq,
                      `OPCODE_WIDTH'b0100011,`INST_NUM_WIDTH'd`sw,
                      `OPCODE_WIDTH'b0010011,`INST_NUM_WIDTH'd`addi,
@@ -45,6 +46,7 @@ module idu
             .lut({
                      `OPCODE_WIDTH'b0010111,`INST_TYPE_WIDTH'd`U,
                      `OPCODE_WIDTH'b1101111,`INST_TYPE_WIDTH'd`J,
+                     `OPCODE_WIDTH'b1100111,`INST_TYPE_WIDTH'd`I,
                      `OPCODE_WIDTH'b1100011,`INST_TYPE_WIDTH'd`B,
                      `OPCODE_WIDTH'b0100011,`INST_TYPE_WIDTH'd`S,
                      `OPCODE_WIDTH'b0010011,`INST_TYPE_WIDTH'd`I,

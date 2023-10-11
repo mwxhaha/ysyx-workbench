@@ -7,10 +7,11 @@
 `define PC_BASE_ADDR `BASE_ADDR
 
 `define INST_NUM_WIDTH 8
-`define INST_NUM_MAX 7
+`define INST_NUM_MAX 8
 `define inv 0
 `define auipc 2
 `define jal 3
+`define jalr 4
 `define beq 5
 `define sw 20
 `define addi 21

@@ -25,18 +25,40 @@ module exu
         output wire [`ALU_FUNC_WIDTH-1:0] alu_func
     );
 
+    wire [`ISA_WIDTH-1:0] 	adder_pc_a;
     wire [`ISA_WIDTH-1:0] 	adder_pc_b;
+    wire [`ISA_WIDTH-1:0] 	adder_pc_s;
     adder
         #(
             .data_len(`ISA_WIDTH)
         )
         adder_pc
         (
-            .a    	( pc_out     ),
+            .a    	( adder_pc_a     ),
             .b    	( adder_pc_b     ),
             .cin  	( 1'b0   ),
             .s    	( pc_in ),
             .cout 	(   )
+        );
+    MuxKeyWithDefault
+        #(
+            .NR_KEY(`INST_NUM_MAX),
+            .KEY_LEN(`INST_NUM_WIDTH),
+            .DATA_LEN(`ISA_WIDTH)
+        )
+        muxkeywithdefault_adder_pc_a
+        (
+            .out(adder_pc_a),
+            .key(inst_num),
+            .default_out(pc_out),
+            .lut({`INST_NUM_WIDTH'd`auipc,pc_out,
+                  `INST_NUM_WIDTH'd`jal,pc_out,
+                  `INST_NUM_WIDTH'd`jalr,src1,
+                  `INST_NUM_WIDTH'd`beq,pc_out,
+                  `INST_NUM_WIDTH'd`sw,pc_out,
+                  `INST_NUM_WIDTH'd`addi,pc_out,
+                  `INST_NUM_WIDTH'd`add,pc_out,
+                  `INST_NUM_WIDTH'd`ebreak,pc_out})
         );
     MuxKeyWithDefault
         #(
@@ -51,11 +73,25 @@ module exu
             .default_out(`ISA_WIDTH'd4),
             .lut({`INST_NUM_WIDTH'd`auipc,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`jal,imm,
+                  `INST_NUM_WIDTH'd`jalr,imm,
                   `INST_NUM_WIDTH'd`beq,({`ISA_WIDTH{~alu_result[0]}}&imm)|({`ISA_WIDTH{alu_result[0]}}&`ISA_WIDTH'd4),
                   `INST_NUM_WIDTH'd`sw,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`addi,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`add,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'd4})
+        );
+    MuxKeyWithDefault
+        #(
+            .NR_KEY(1),
+            .KEY_LEN(`INST_NUM_WIDTH),
+            .DATA_LEN(`ISA_WIDTH)
+        )
+        muxkeywithdefault_adder_pc_s
+        (
+            .out(pc_in),
+            .key(inst_num),
+            .default_out(adder_pc_s),
+            .lut({`INST_NUM_WIDTH'd`jalr,adder_pc_s&{{`ISA_WIDTH-1{1'b1}},1'b0}})
         );
     MuxKeyWithDefault
         #(
@@ -89,6 +125,7 @@ module exu
             .default_out(`ISA_WIDTH'b0),
             .lut({`INST_NUM_WIDTH'd`auipc,alu_result,
                   `INST_NUM_WIDTH'd`jal,alu_result,
+                  `INST_NUM_WIDTH'd`jalr,alu_result,
                   `INST_NUM_WIDTH'd`beq,`ISA_WIDTH'b0,
                   `INST_NUM_WIDTH'd`sw,`ISA_WIDTH'b0,
                   `INST_NUM_WIDTH'd`addi,alu_result,
@@ -128,6 +165,7 @@ module exu
             .default_out(`BASE_ADDR),
             .lut({`INST_NUM_WIDTH'd`auipc,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`jal,`BASE_ADDR,
+                  `INST_NUM_WIDTH'd`jalr,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`beq,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`sw,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`addi,`BASE_ADDR,
@@ -145,14 +183,15 @@ module exu
         (
             .out(mem_w),
             .key(inst_num),
-            .default_out(`BASE_ADDR),
-            .lut({`INST_NUM_WIDTH'd`auipc,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`jal,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`beq,`BASE_ADDR,
+            .default_out(`ISA_WIDTH'b0),
+            .lut({`INST_NUM_WIDTH'd`auipc,`ISA_WIDTH'b0,
+                  `INST_NUM_WIDTH'd`jal,`ISA_WIDTH'b0,
+                  `INST_NUM_WIDTH'd`jalr,`ISA_WIDTH'b0,
+                  `INST_NUM_WIDTH'd`beq,`ISA_WIDTH'b0,
                   `INST_NUM_WIDTH'd`sw,src2,
-                  `INST_NUM_WIDTH'd`addi,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`add,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`ebreak,`BASE_ADDR})
+                  `INST_NUM_WIDTH'd`addi,`ISA_WIDTH'b0,
+                  `INST_NUM_WIDTH'd`add,`ISA_WIDTH'b0,
+                  `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'b0})
         );
     MuxKeyWithDefault
         #(
@@ -167,6 +206,7 @@ module exu
             .default_out(`BASE_ADDR),
             .lut({`INST_NUM_WIDTH'd`auipc,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`jal,`BASE_ADDR,
+                  `INST_NUM_WIDTH'd`jalr,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`beq,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`sw,alu_result,
                   `INST_NUM_WIDTH'd`addi,`BASE_ADDR,
@@ -205,6 +245,7 @@ module exu
             .default_out(`ISA_WIDTH'b0),
             .lut({`INST_NUM_WIDTH'd`auipc,pc_out,
                   `INST_NUM_WIDTH'd`jal,pc_out,
+                  `INST_NUM_WIDTH'd`jalr,pc_out,
                   `INST_NUM_WIDTH'd`beq,src1,
                   `INST_NUM_WIDTH'd`sw,src1,
                   `INST_NUM_WIDTH'd`addi,src1,
@@ -224,6 +265,7 @@ module exu
             .default_out(`ISA_WIDTH'b0),
             .lut({`INST_NUM_WIDTH'd`auipc,imm,
                   `INST_NUM_WIDTH'd`jal,`ISA_WIDTH'd4,
+                  `INST_NUM_WIDTH'd`jal,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`beq,src2,
                   `INST_NUM_WIDTH'd`sw,imm,
                   `INST_NUM_WIDTH'd`addi,imm,
@@ -242,6 +284,7 @@ module exu
             .key(inst_num),
             .default_out(`ALU_FUNC_WIDTH'd`NO_FUNC),
             .lut({`INST_NUM_WIDTH'd`auipc,`ALU_FUNC_WIDTH'd`ADD_S,
+                  `INST_NUM_WIDTH'd`jal,`ALU_FUNC_WIDTH'd`ADD_S,
                   `INST_NUM_WIDTH'd`jal,`ALU_FUNC_WIDTH'd`ADD_S,
                   `INST_NUM_WIDTH'd`beq,`ALU_FUNC_WIDTH'd`XOR,
                   `INST_NUM_WIDTH'd`sw,`ALU_FUNC_WIDTH'd`ADD_S,
