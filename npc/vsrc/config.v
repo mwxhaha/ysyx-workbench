@@ -25,6 +25,13 @@
 `define sub 32
 
 `define INST_add_NUM_MAX 2
+`define INST_add_NUM_IDU_MAX `INST_add_NUM_MAX-`INST_add_add_NUM_MAX+1
+
+`define INST_ebreak_ebreak_NUM_MAX 1
+`define ebreak 42
+
+`define INST_ebreak_NUM_MAX 1
+`define INST_ebreak_NUM_IDU_MAX `INST_ebreak_NUM_MAX-`INST_ebreak_ebreak_NUM_MAX+1
 
 `define INST_NUM_WIDTH 8
 `define INST_NUM_MAX 10
@@ -33,7 +40,6 @@
 `define auipc 2
 `define jal 3
 `define jalr 4
-`define ebreak 42
 
 `define INST_TYPE_WIDTH 3
 `define INST_TYPE_MAX 6

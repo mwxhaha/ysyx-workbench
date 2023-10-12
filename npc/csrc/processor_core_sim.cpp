@@ -21,7 +21,6 @@ void pmem_read(int raddr, int *rdata)
 
 void pmem_write(int waddr, int wdata, char wmask)
 {
-    std::cout << (vaddr_t)waddr << ' ' << (vaddr_t)wdata << std::endl;
     assert((vaddr_t)waddr >= MEM_BASE_ADDR);
     assert((vaddr_t)waddr <= MEM_BASE_ADDR + MEM_MAX - 1);
     // if ((vaddr_t)waddr < MEM_BASE_ADDR)
