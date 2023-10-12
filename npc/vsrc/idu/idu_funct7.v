@@ -12,7 +12,7 @@ module idu_funct7
 
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_add_add_NUM_MAX),
+            .NR_KEY(`INST_ADD_ADD_NUM_MAX),
             .KEY_LEN(`FUNCT7_WIDTH),
             .DATA_LEN(`INST_NUM_WIDTH)
         )

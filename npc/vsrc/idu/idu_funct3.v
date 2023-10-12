@@ -16,7 +16,7 @@ module idu_funct3
 
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_beq_NUM_MAX),
+            .NR_KEY(`INST_BEQ_NUM_MAX),
             .KEY_LEN(`FUNCT3_WIDTH),
             .DATA_LEN(`INST_NUM_WIDTH)
         )
@@ -32,7 +32,7 @@ module idu_funct3
 
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_lb_NUM_MAX),
+            .NR_KEY(`INST_LB_NUM_MAX),
             .KEY_LEN(`FUNCT3_WIDTH),
             .DATA_LEN(`INST_NUM_WIDTH)
         )
@@ -48,7 +48,7 @@ module idu_funct3
 
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_sb_NUM_MAX),
+            .NR_KEY(`INST_SB_NUM_MAX),
             .KEY_LEN(`FUNCT3_WIDTH),
             .DATA_LEN(`INST_NUM_WIDTH)
         )
@@ -64,7 +64,7 @@ module idu_funct3
 
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_addi_NUM_MAX),
+            .NR_KEY(`INST_ADDI_NUM_MAX),
             .KEY_LEN(`FUNCT3_WIDTH),
             .DATA_LEN(`INST_NUM_WIDTH)
         )
@@ -81,7 +81,7 @@ module idu_funct3
 
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_add_NUM_IDU_MAX),
+            .NR_KEY(`INST_ADD_NUM_IDU_MAX),
             .KEY_LEN(`FUNCT3_WIDTH),
             .DATA_LEN(`INST_NUM_WIDTH)
         )
@@ -97,7 +97,7 @@ module idu_funct3
 
     MuxKeyWithDefault
         #(
-            .NR_KEY(`INST_ebreak_NUM_IDU_MAX),
+            .NR_KEY(`INST_EBREAK_NUM_IDU_MAX),
             .KEY_LEN(`FUNCT3_WIDTH),
             .DATA_LEN(`INST_NUM_WIDTH)
         )
