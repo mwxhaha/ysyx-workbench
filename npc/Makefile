@@ -35,6 +35,9 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 
 VERILATOR_CFLAGS = -std=c++20 -Wall -DTOP_NAME=$(TOP_NAME)
+ifeq ($(TOP_NAME),processor_core)
+VERILATOR_CFLAGS += -DSIM_ALL
+endif
 VERILATOR_LDFLAGS = 
 ifeq ($(NVBOARD),0)
 VERILATOR_CFLAGS +=

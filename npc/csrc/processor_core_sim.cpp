@@ -11,10 +11,6 @@ void pmem_read(int raddr, int *rdata)
 {
     assert((vaddr_t)raddr >= MEM_BASE_ADDR);
     assert((vaddr_t)raddr <= MEM_BASE_ADDR + MEM_MAX - 1);
-    // if ((vaddr_t)raddr < MEM_BASE_ADDR)
-    //     raddr = MEM_BASE_ADDR;
-    // if ((vaddr_t)raddr > MEM_BASE_ADDR + MEM_MAX - 1)
-    //     raddr = MEM_BASE_ADDR + MEM_MAX - 1;
     void *addr_real = (vaddr_t)raddr - MEM_BASE_ADDR + mem;
     *rdata = *(word_t *)addr_real;
 }
@@ -23,10 +19,6 @@ void pmem_write(int waddr, int wdata, char wmask)
 {
     assert((vaddr_t)waddr >= MEM_BASE_ADDR);
     assert((vaddr_t)waddr <= MEM_BASE_ADDR + MEM_MAX - 1);
-    // if ((vaddr_t)waddr < MEM_BASE_ADDR)
-    //     waddr = MEM_BASE_ADDR;
-    // if ((vaddr_t)waddr > MEM_BASE_ADDR + MEM_MAX - 1)
-    //     waddr = MEM_BASE_ADDR + MEM_MAX - 1;
     void *addr_real = (vaddr_t)waddr - MEM_BASE_ADDR + mem;
     switch (wmask)
     {
@@ -48,12 +40,9 @@ void pmem_write(int waddr, int wdata, char wmask)
 void sim()
 {
 #ifdef NV_SIM
-    while (!contextp->gotFinish())
-    {
-        update();
-    }
+    assert(0);
 #else
-    int sim_time = 1000;
+    int sim_time = 100000;
     reset();
     while (contextp->time() < sim_time && !contextp->gotFinish() && npc_state.state == run)
     {
