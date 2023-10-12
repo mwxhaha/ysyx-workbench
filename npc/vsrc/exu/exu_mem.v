@@ -35,6 +35,7 @@ module exu_mem
                   `INST_NUM_WIDTH'd`lw,`ISA_WIDTH'b0,
                   `INST_NUM_WIDTH'd`sw,src2,
                   `INST_NUM_WIDTH'd`addi,`ISA_WIDTH'b0,
+                  `INST_NUM_WIDTH'd`sltiu,`ISA_WIDTH'b0,
                   `INST_NUM_WIDTH'd`add,`ISA_WIDTH'b0,
                   `INST_NUM_WIDTH'd`sub,`ISA_WIDTH'b0,
                   `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'b0})
@@ -58,6 +59,7 @@ module exu_mem
                   `INST_NUM_WIDTH'd`lw,alu_result,
                   `INST_NUM_WIDTH'd`sw,alu_result,
                   `INST_NUM_WIDTH'd`addi,`BASE_ADDR,
+                  `INST_NUM_WIDTH'd`sltiu,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`add,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`sub,`BASE_ADDR,
                   `INST_NUM_WIDTH'd`ebreak,`BASE_ADDR})
@@ -81,6 +83,7 @@ module exu_mem
                   `INST_NUM_WIDTH'd`lw,1'b1,
                   `INST_NUM_WIDTH'd`sw,1'b0,
                   `INST_NUM_WIDTH'd`addi,1'b0,
+                  `INST_NUM_WIDTH'd`sltiu,1'b0,
                   `INST_NUM_WIDTH'd`add,1'b0,
                   `INST_NUM_WIDTH'd`sub,1'b0,
                   `INST_NUM_WIDTH'd`ebreak,1'b0})

@@ -33,6 +33,7 @@ module exu_gpr
                   `INST_NUM_WIDTH'd`lw,mem_r,
                   `INST_NUM_WIDTH'd`sw,`ISA_WIDTH'b0,
                   `INST_NUM_WIDTH'd`addi,alu_result,
+                  `INST_NUM_WIDTH'd`sltiu,alu_result,
                   `INST_NUM_WIDTH'd`add,alu_result,
                   `INST_NUM_WIDTH'd`sub,alu_result,
                   `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'b0})

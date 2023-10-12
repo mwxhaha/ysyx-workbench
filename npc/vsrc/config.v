@@ -8,6 +8,13 @@
 `define BASE_ADDR `ISA_WIDTH'h80000000
 `define PC_BASE_ADDR `BASE_ADDR
 
+`define INST_add_add_NUM_MAX 2
+`define add 31
+`define sub 32
+
+`define INST_ebreak_ebreak_NUM_MAX 1
+`define ebreak 42
+
 `define INST_beq_NUM_MAX 1
 `define beq 5
 
@@ -17,24 +24,18 @@
 `define INST_sb_NUM_MAX 1
 `define sw 20
 
-`define INST_addi_NUM_MAX 1
+`define INST_addi_NUM_MAX 2
 `define addi 21
-
-`define INST_add_add_NUM_MAX 2
-`define add 31
-`define sub 32
+`define sltiu 23
 
 `define INST_add_NUM_MAX 2
 `define INST_add_NUM_IDU_MAX `INST_add_NUM_MAX-`INST_add_add_NUM_MAX+1
-
-`define INST_ebreak_ebreak_NUM_MAX 1
-`define ebreak 42
 
 `define INST_ebreak_NUM_MAX 1
 `define INST_ebreak_NUM_IDU_MAX `INST_ebreak_NUM_MAX-`INST_ebreak_ebreak_NUM_MAX+1
 
 `define INST_NUM_WIDTH 8
-`define INST_NUM_MAX 10
+`define INST_NUM_MAX 11
 `define INST_NUM_IDU_MAX `INST_NUM_MAX-`INST_beq_NUM_MAX+1-`INST_lb_NUM_MAX+1-`INST_sb_NUM_MAX+1-`INST_addi_NUM_MAX+1-`INST_add_NUM_MAX+1
 `define inv 0
 `define auipc 2
@@ -52,10 +53,10 @@
 `define J 6
 
 `define ALU_FUNC_WIDTH 4
-`define ALU_FUNC_MAX 9
+`define ALU_FUNC_MAX 10
 `define NO_FUNC 0
-`define ADD_S 1
-`define SUB_S 2
+`define ADD 1
+`define SUB 2
 `define ADD_U 3
 `define SUB_U 4
 `define NOT 5
@@ -63,3 +64,4 @@
 `define OR 7
 `define XOR 8
 `define EQ 9
+`define LESS_U 10

@@ -20,15 +20,18 @@ module alu
             .out         	( add_or_sub          ),
             .key         	( alu_func          ),
             .default_out 	( 1'b0  ),
-            .lut ({`ALU_FUNC_WIDTH'd`ADD_S,1'b0,
-                   `ALU_FUNC_WIDTH'd`SUB_S,1'b1,
-                   `ALU_FUNC_WIDTH'd`ADD_U,1'b0,
-                   `ALU_FUNC_WIDTH'd`SUB_U,1'b1,
-                   `ALU_FUNC_WIDTH'd`NOT,1'b0,
-                   `ALU_FUNC_WIDTH'd`AND,1'b0,
-                   `ALU_FUNC_WIDTH'd`OR,1'b0,
-                   `ALU_FUNC_WIDTH'd`XOR,1'b0,
-                   `ALU_FUNC_WIDTH'd`EQ,1'b0})
+            .lut ({
+                      `ALU_FUNC_WIDTH'd`ADD,1'b0,
+                      `ALU_FUNC_WIDTH'd`SUB,1'b1,
+                      `ALU_FUNC_WIDTH'd`ADD_U,1'b0,
+                      `ALU_FUNC_WIDTH'd`SUB_U,1'b1,
+                      `ALU_FUNC_WIDTH'd`NOT,1'b0,
+                      `ALU_FUNC_WIDTH'd`AND,1'b0,
+                      `ALU_FUNC_WIDTH'd`OR,1'b0,
+                      `ALU_FUNC_WIDTH'd`XOR,1'b0,
+                      `ALU_FUNC_WIDTH'd`EQ,1'b0,
+                      `ALU_FUNC_WIDTH'd`LESS_U,1'b1
+                  })
         );
 
     wire [`ISA_WIDTH-1:0] adder_suber_1_result;
@@ -59,15 +62,18 @@ module alu
             .out         	( alu_result          ),
             .key         	( alu_func          ),
             .default_out 	( `ISA_WIDTH'b0 ),
-            .lut ({`ALU_FUNC_WIDTH'd`ADD_S,adder_suber_1_result,
-                   `ALU_FUNC_WIDTH'd`SUB_S,adder_suber_1_result,
-                   `ALU_FUNC_WIDTH'd`ADD_U,adder_suber_1_result,
-                   `ALU_FUNC_WIDTH'd`SUB_U,adder_suber_1_result,
-                   `ALU_FUNC_WIDTH'd`NOT,~alu_a,
-                   `ALU_FUNC_WIDTH'd`AND,alu_a&alu_b,
-                   `ALU_FUNC_WIDTH'd`OR,alu_a|alu_b,
-                   `ALU_FUNC_WIDTH'd`XOR,alu_a^alu_b,
-                   `ALU_FUNC_WIDTH'd`EQ,{`ISA_WIDTH{~(|(alu_a^alu_b))}}})
+            .lut ({
+                      `ALU_FUNC_WIDTH'd`ADD,adder_suber_1_result,
+                      `ALU_FUNC_WIDTH'd`SUB,adder_suber_1_result,
+                      `ALU_FUNC_WIDTH'd`ADD_U,adder_suber_1_result,
+                      `ALU_FUNC_WIDTH'd`SUB_U,adder_suber_1_result,
+                      `ALU_FUNC_WIDTH'd`NOT,~alu_a,
+                      `ALU_FUNC_WIDTH'd`AND,alu_a&alu_b,
+                      `ALU_FUNC_WIDTH'd`OR,alu_a|alu_b,
+                      `ALU_FUNC_WIDTH'd`XOR,alu_a^alu_b,
+                      `ALU_FUNC_WIDTH'd`EQ,{{`ISA_WIDTH-1{1'b0}},~(|(alu_a^alu_b))},
+                      `ALU_FUNC_WIDTH'd`LESS_U,{{`ISA_WIDTH-1{1'b0}},carry}
+                  })
         );
 
 endmodule

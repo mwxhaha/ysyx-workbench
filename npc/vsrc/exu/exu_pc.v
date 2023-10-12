@@ -33,6 +33,7 @@ module exu_pc
                   `INST_NUM_WIDTH'd`lw,pc_out,
                   `INST_NUM_WIDTH'd`sw,pc_out,
                   `INST_NUM_WIDTH'd`addi,pc_out,
+                  `INST_NUM_WIDTH'd`sltiu,pc_out,
                   `INST_NUM_WIDTH'd`add,pc_out,
                   `INST_NUM_WIDTH'd`sub,pc_out,
                   `INST_NUM_WIDTH'd`ebreak,pc_out})
@@ -56,6 +57,7 @@ module exu_pc
                   `INST_NUM_WIDTH'd`lw,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`sw,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`addi,`ISA_WIDTH'd4,
+                  `INST_NUM_WIDTH'd`sltiu,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`add,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`sub,`ISA_WIDTH'd4,
                   `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'd4})
