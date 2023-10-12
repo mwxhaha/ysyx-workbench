@@ -9,7 +9,8 @@
 #include <bitset>
 #include <cstdint>
 
-typedef uint32_t word_t;
+using word_t = uint32_t;
+using vaddr_t = word_t;
 #define HIERARCHY_DEEP 100
 #define MEM_BASE_ADDR 0x80000000
 #define MEM_MAX 10000
@@ -18,7 +19,19 @@ extern VerilatedContext *contextp;
 extern Vtop *top;
 extern VerilatedVcdC *tfp;
 extern uint8_t mem[MEM_MAX];
-extern int ebreak_flag;
+enum state_t
+{
+    run,
+    absort,
+    end
+};
+typedef struct npc_state_t
+{
+    word_t ret;
+    state_t state;
+    vaddr_t pc;
+} npc_state_t;
+extern npc_state_t npc_state;
 
 void sim_init(int argc, char **argv);
 void sim_exit();

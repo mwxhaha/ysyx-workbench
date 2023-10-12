@@ -1,14 +1,14 @@
 #include "sim_tool.hpp"
 
-int sim();
+void sim();
 
 int main(int argc, char **argv)
 {
     sim_init(argc, argv);
 
-    int ret = sim();
+    sim();
 
     sim_exit();
 
-    return ret;
+    return (npc_state.state==end&&npc_state.ret==0)?0:1;
 }

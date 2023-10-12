@@ -1,5 +1,4 @@
 `include "config.v"
-import "DPI-C" function void ebreak_dpic();
 
 module exu
     (
@@ -91,11 +90,5 @@ module exu
                 .alu_b(alu_b),
                 .alu_func(alu_func)
             );
-
-    always@(posedge clk)
-    begin
-        if (inst_num==`INST_NUM_WIDTH'd`ebreak)
-            ebreak_dpic();
-    end
 
 endmodule

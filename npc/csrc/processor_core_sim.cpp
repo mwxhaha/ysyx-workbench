@@ -5,7 +5,7 @@
 #include <iostream>
 #include <Vtop___024root.h>
 
-int sim()
+void sim()
 {
 #ifdef NV_SIM
     while (!contextp->gotFinish())
@@ -15,19 +15,9 @@ int sim()
 #else
     int sim_time = 1000;
     reset();
-    while (contextp->time() < sim_time && !contextp->gotFinish() && ebreak_flag)
+    while (contextp->time() < sim_time && !contextp->gotFinish() && npc_state.state==run)
     {
         cycle();
-    }
-    if (!ebreak_flag && top->rootp->processor_core__DOT__gpr_1__DOT__registerfile_gpr__DOT__rf[10] == 0)
-    {
-        std::cout << "HIT GOOD TRAP" << std::endl;
-        return 0;
-    }
-    else
-    {
-        std::cout << "HIT BAD TRAP" << std::endl;
-        return 1;
     }
 #endif
 }

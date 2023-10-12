@@ -1,3 +1,7 @@
+`include "config.v"
+import "DPI-C" function void absort_dpic(input int pc);
+import "DPI-C" function void ebreak_dpic(input int ret,input int pc);
+
 module processor_core
     (
         input wire clk,rst,
@@ -104,5 +108,17 @@ module processor_core
             .alu_b 	        ( alu_b  ),
             .alu_func   	( alu_func    )
         );
+    
+    always@(posedge clk)
+    begin
+        if (inst_num==`inv||inst_type==`N)
+          absort_dpic(pc_out);
+    end
+
+    always@(posedge clk)
+    begin
+        if (inst_num==`ebreak)
+          ebreak_dpic(gpr_1.registerfile_gpr.rf[10],pc_out);
+    end
 
 endmodule

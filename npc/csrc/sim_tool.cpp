@@ -23,7 +23,7 @@ uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01,
                         0x97, 0x18, 0x00, 0x80,
                         0xef, 0x08, 0x40, 0x00,
                         0x73, 0x00, 0x10, 0x80};
-int ebreak_flag = 1;
+npc_state_t npc_state={0,run,MEM_BASE_ADDR};
 
 static void load_img(int argc, char **argv)
 {
@@ -169,7 +169,16 @@ void memory_write(word_t addr, word_t data, int len)
     }
 }
 
-void ebreak_dpic()
+void absort_dpic(int pc)
 {
-    ebreak_flag = 0;
+    npc_state.ret = 1;
+    npc_state.state = absort;
+    npc_state.pc = pc;
+}
+
+void ebreak_dpic(int ret,int pc)
+{
+    npc_state.ret = ret;
+    npc_state.state = end;
+    npc_state.pc = pc;
 }
