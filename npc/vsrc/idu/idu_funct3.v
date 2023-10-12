@@ -26,7 +26,8 @@ module idu_funct3
             .key(inst[12+`FUNCT3_WIDTH-1:12]),
             .default_out(`INST_NUM_WIDTH'd`inv),
             .lut({
-                     `FUNCT3_WIDTH'b000,`INST_NUM_WIDTH'd`beq
+                     `FUNCT3_WIDTH'b000,`INST_NUM_WIDTH'd`beq,
+                     `FUNCT3_WIDTH'b001,`INST_NUM_WIDTH'd`bne
                  })
         );
 
@@ -75,7 +76,7 @@ module idu_funct3
             .default_out(`INST_NUM_WIDTH'd`inv),
             .lut({
                      `FUNCT3_WIDTH'b000,`INST_NUM_WIDTH'd`addi,
-                     `FUNCT3_WIDTH'b011,inst_add_add_num
+                     `FUNCT3_WIDTH'b011,`INST_NUM_WIDTH'd`sltiu
                  })
         );
 

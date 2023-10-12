@@ -30,6 +30,7 @@ module exu_gpr
                   `INST_NUM_WIDTH'd`jal,alu_result,
                   `INST_NUM_WIDTH'd`jalr,alu_result,
                   `INST_NUM_WIDTH'd`beq,`ISA_WIDTH'b0,
+                  `INST_NUM_WIDTH'd`bne,`ISA_WIDTH'b0,
                   `INST_NUM_WIDTH'd`lw,mem_r,
                   `INST_NUM_WIDTH'd`sw,`ISA_WIDTH'b0,
                   `INST_NUM_WIDTH'd`addi,alu_result,

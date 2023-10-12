@@ -30,6 +30,7 @@ module alu
                       `ALU_FUNC_WIDTH'd`OR,1'b0,
                       `ALU_FUNC_WIDTH'd`XOR,1'b0,
                       `ALU_FUNC_WIDTH'd`EQ,1'b0,
+                      `ALU_FUNC_WIDTH'd`NE,1'b0,
                       `ALU_FUNC_WIDTH'd`LESS_U,1'b1
                   })
         );
@@ -72,6 +73,7 @@ module alu
                       `ALU_FUNC_WIDTH'd`OR,alu_a|alu_b,
                       `ALU_FUNC_WIDTH'd`XOR,alu_a^alu_b,
                       `ALU_FUNC_WIDTH'd`EQ,{{`ISA_WIDTH-1{1'b0}},~(|(alu_a^alu_b))},
+                      `ALU_FUNC_WIDTH'd`NE,{{`ISA_WIDTH-1{1'b0}},|(alu_a^alu_b)},
                       `ALU_FUNC_WIDTH'd`LESS_U,{{`ISA_WIDTH-1{1'b0}},carry}
                   })
         );
