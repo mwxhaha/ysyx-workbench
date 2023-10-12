@@ -28,18 +28,20 @@ module exu_mem
             .out(mem_w),
             .key(inst_num),
             .default_out(`ISA_WIDTH'b0),
-            .lut({`INST_NUM_WIDTH'd`auipc,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`jal,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`jalr,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`beq,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`bne,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`lw,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`sw,src2,
-                  `INST_NUM_WIDTH'd`addi,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`sltiu,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`add,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`sub,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'b0})
+            .lut({
+                     `INST_NUM_WIDTH'd`auipc,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`jal,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`jalr,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`beq,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`bne,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`lw,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`sw,src2,
+                     `INST_NUM_WIDTH'd`addi,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`sltiu,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`add,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`sub,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'b0
+                 })
         );
 
     MuxKeyWithDefault
@@ -53,18 +55,20 @@ module exu_mem
             .out(mem_addr),
             .key(inst_num),
             .default_out(`BASE_ADDR),
-            .lut({`INST_NUM_WIDTH'd`auipc,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`jal,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`jalr,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`beq,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`bne,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`lw,alu_result,
-                  `INST_NUM_WIDTH'd`sw,alu_result,
-                  `INST_NUM_WIDTH'd`addi,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`sltiu,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`add,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`sub,`BASE_ADDR,
-                  `INST_NUM_WIDTH'd`ebreak,`BASE_ADDR})
+            .lut({
+                     `INST_NUM_WIDTH'd`auipc,`BASE_ADDR,
+                     `INST_NUM_WIDTH'd`jal,`BASE_ADDR,
+                     `INST_NUM_WIDTH'd`jalr,`BASE_ADDR,
+                     `INST_NUM_WIDTH'd`beq,`BASE_ADDR,
+                     `INST_NUM_WIDTH'd`bne,`BASE_ADDR,
+                     `INST_NUM_WIDTH'd`lw,alu_result,
+                     `INST_NUM_WIDTH'd`sw,alu_result,
+                     `INST_NUM_WIDTH'd`addi,`BASE_ADDR,
+                     `INST_NUM_WIDTH'd`sltiu,`BASE_ADDR,
+                     `INST_NUM_WIDTH'd`add,`BASE_ADDR,
+                     `INST_NUM_WIDTH'd`sub,`BASE_ADDR,
+                     `INST_NUM_WIDTH'd`ebreak,`BASE_ADDR
+                 })
         );
 
     MuxKeyWithDefault
@@ -78,18 +82,20 @@ module exu_mem
             .out(mem_r_en),
             .key(inst_num),
             .default_out(1'b0),
-            .lut({`INST_NUM_WIDTH'd`auipc,1'b0,
-                  `INST_NUM_WIDTH'd`jal,1'b0,
-                  `INST_NUM_WIDTH'd`jalr,1'b0,
-                  `INST_NUM_WIDTH'd`beq,1'b0,
-                  `INST_NUM_WIDTH'd`bne,1'b0,
-                  `INST_NUM_WIDTH'd`lw,1'b1,
-                  `INST_NUM_WIDTH'd`sw,1'b0,
-                  `INST_NUM_WIDTH'd`addi,1'b0,
-                  `INST_NUM_WIDTH'd`sltiu,1'b0,
-                  `INST_NUM_WIDTH'd`add,1'b0,
-                  `INST_NUM_WIDTH'd`sub,1'b0,
-                  `INST_NUM_WIDTH'd`ebreak,1'b0})
+            .lut({
+                     `INST_NUM_WIDTH'd`auipc,1'b0,
+                     `INST_NUM_WIDTH'd`jal,1'b0,
+                     `INST_NUM_WIDTH'd`jalr,1'b0,
+                     `INST_NUM_WIDTH'd`beq,1'b0,
+                     `INST_NUM_WIDTH'd`bne,1'b0,
+                     `INST_NUM_WIDTH'd`lw,1'b1,
+                     `INST_NUM_WIDTH'd`sw,1'b0,
+                     `INST_NUM_WIDTH'd`addi,1'b0,
+                     `INST_NUM_WIDTH'd`sltiu,1'b0,
+                     `INST_NUM_WIDTH'd`add,1'b0,
+                     `INST_NUM_WIDTH'd`sub,1'b0,
+                     `INST_NUM_WIDTH'd`ebreak,1'b0
+                 })
         );
 
     MuxKeyWithDefault
@@ -103,12 +109,14 @@ module exu_mem
             .out(mem_w_en),
             .key(inst_type),
             .default_out(1'b0),
-            .lut({`INST_TYPE_WIDTH'd`R,1'b0,
-                  `INST_TYPE_WIDTH'd`I,1'b0,
-                  `INST_TYPE_WIDTH'd`S,1'b1,
-                  `INST_TYPE_WIDTH'd`B,1'b0,
-                  `INST_TYPE_WIDTH'd`U,1'b0,
-                  `INST_TYPE_WIDTH'd`J,1'b0})
+            .lut({
+                     `INST_TYPE_WIDTH'd`R,1'b0,
+                     `INST_TYPE_WIDTH'd`I,1'b0,
+                     `INST_TYPE_WIDTH'd`S,1'b1,
+                     `INST_TYPE_WIDTH'd`B,1'b0,
+                     `INST_TYPE_WIDTH'd`U,1'b0,
+                     `INST_TYPE_WIDTH'd`J,1'b0
+                 })
         );
 
 endmodule

@@ -26,18 +26,20 @@ module exu_gpr
             .out(srd),
             .key(inst_num),
             .default_out(`ISA_WIDTH'b0),
-            .lut({`INST_NUM_WIDTH'd`auipc,alu_result,
-                  `INST_NUM_WIDTH'd`jal,alu_result,
-                  `INST_NUM_WIDTH'd`jalr,alu_result,
-                  `INST_NUM_WIDTH'd`beq,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`bne,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`lw,mem_r,
-                  `INST_NUM_WIDTH'd`sw,`ISA_WIDTH'b0,
-                  `INST_NUM_WIDTH'd`addi,alu_result,
-                  `INST_NUM_WIDTH'd`sltiu,alu_result,
-                  `INST_NUM_WIDTH'd`add,alu_result,
-                  `INST_NUM_WIDTH'd`sub,alu_result,
-                  `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'b0})
+            .lut({
+                     `INST_NUM_WIDTH'd`auipc,alu_result,
+                     `INST_NUM_WIDTH'd`jal,alu_result,
+                     `INST_NUM_WIDTH'd`jalr,alu_result,
+                     `INST_NUM_WIDTH'd`beq,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`bne,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`lw,mem_r,
+                     `INST_NUM_WIDTH'd`sw,`ISA_WIDTH'b0,
+                     `INST_NUM_WIDTH'd`addi,alu_result,
+                     `INST_NUM_WIDTH'd`sltiu,alu_result,
+                     `INST_NUM_WIDTH'd`add,alu_result,
+                     `INST_NUM_WIDTH'd`sub,alu_result,
+                     `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'b0
+                 })
         );
 
     MuxKeyWithDefault
@@ -51,12 +53,14 @@ module exu_gpr
             .out(gpr_w_en),
             .key(inst_type),
             .default_out(1'b0),
-            .lut({`INST_TYPE_WIDTH'd`R,1'b1,
-                  `INST_TYPE_WIDTH'd`I,1'b1,
-                  `INST_TYPE_WIDTH'd`S,1'b0,
-                  `INST_TYPE_WIDTH'd`B,1'b0,
-                  `INST_TYPE_WIDTH'd`U,1'b1,
-                  `INST_TYPE_WIDTH'd`J,1'b1})
+            .lut({
+                     `INST_TYPE_WIDTH'd`R,1'b1,
+                     `INST_TYPE_WIDTH'd`I,1'b1,
+                     `INST_TYPE_WIDTH'd`S,1'b0,
+                     `INST_TYPE_WIDTH'd`B,1'b0,
+                     `INST_TYPE_WIDTH'd`U,1'b1,
+                     `INST_TYPE_WIDTH'd`J,1'b1
+                 })
 
         );
 

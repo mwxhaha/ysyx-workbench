@@ -26,18 +26,20 @@ module exu_pc
             .out(adder_pc_a),
             .key(inst_num),
             .default_out(pc_out),
-            .lut({`INST_NUM_WIDTH'd`auipc,pc_out,
-                  `INST_NUM_WIDTH'd`jal,pc_out,
-                  `INST_NUM_WIDTH'd`jalr,src1,
-                  `INST_NUM_WIDTH'd`beq,pc_out,
-                  `INST_NUM_WIDTH'd`bne,pc_out,
-                  `INST_NUM_WIDTH'd`lw,pc_out,
-                  `INST_NUM_WIDTH'd`sw,pc_out,
-                  `INST_NUM_WIDTH'd`addi,pc_out,
-                  `INST_NUM_WIDTH'd`sltiu,pc_out,
-                  `INST_NUM_WIDTH'd`add,pc_out,
-                  `INST_NUM_WIDTH'd`sub,pc_out,
-                  `INST_NUM_WIDTH'd`ebreak,pc_out})
+            .lut({
+                     `INST_NUM_WIDTH'd`auipc,pc_out,
+                     `INST_NUM_WIDTH'd`jal,pc_out,
+                     `INST_NUM_WIDTH'd`jalr,src1,
+                     `INST_NUM_WIDTH'd`beq,pc_out,
+                     `INST_NUM_WIDTH'd`bne,pc_out,
+                     `INST_NUM_WIDTH'd`lw,pc_out,
+                     `INST_NUM_WIDTH'd`sw,pc_out,
+                     `INST_NUM_WIDTH'd`addi,pc_out,
+                     `INST_NUM_WIDTH'd`sltiu,pc_out,
+                     `INST_NUM_WIDTH'd`add,pc_out,
+                     `INST_NUM_WIDTH'd`sub,pc_out,
+                     `INST_NUM_WIDTH'd`ebreak,pc_out
+                 })
         );
 
     MuxKeyWithDefault
@@ -51,18 +53,20 @@ module exu_pc
             .out(adder_pc_b),
             .key(inst_num),
             .default_out(`ISA_WIDTH'd4),
-            .lut({`INST_NUM_WIDTH'd`auipc,`ISA_WIDTH'd4,
-                  `INST_NUM_WIDTH'd`jal,imm,
-                  `INST_NUM_WIDTH'd`jalr,imm,
-                  `INST_NUM_WIDTH'd`beq,({`ISA_WIDTH{alu_result[0]}}&imm)|({`ISA_WIDTH{~alu_result[0]}}&`ISA_WIDTH'd4),
-                  `INST_NUM_WIDTH'd`bne,({`ISA_WIDTH{alu_result[0]}}&imm)|({`ISA_WIDTH{~alu_result[0]}}&`ISA_WIDTH'd4),
-                  `INST_NUM_WIDTH'd`lw,`ISA_WIDTH'd4,
-                  `INST_NUM_WIDTH'd`sw,`ISA_WIDTH'd4,
-                  `INST_NUM_WIDTH'd`addi,`ISA_WIDTH'd4,
-                  `INST_NUM_WIDTH'd`sltiu,`ISA_WIDTH'd4,
-                  `INST_NUM_WIDTH'd`add,`ISA_WIDTH'd4,
-                  `INST_NUM_WIDTH'd`sub,`ISA_WIDTH'd4,
-                  `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'd4})
+            .lut({
+                     `INST_NUM_WIDTH'd`auipc,`ISA_WIDTH'd4,
+                     `INST_NUM_WIDTH'd`jal,imm,
+                     `INST_NUM_WIDTH'd`jalr,imm,
+                     `INST_NUM_WIDTH'd`beq,({`ISA_WIDTH{alu_result[0]}}&imm)|({`ISA_WIDTH{~alu_result[0]}}&`ISA_WIDTH'd4),
+                     `INST_NUM_WIDTH'd`bne,({`ISA_WIDTH{alu_result[0]}}&imm)|({`ISA_WIDTH{~alu_result[0]}}&`ISA_WIDTH'd4),
+                     `INST_NUM_WIDTH'd`lw,`ISA_WIDTH'd4,
+                     `INST_NUM_WIDTH'd`sw,`ISA_WIDTH'd4,
+                     `INST_NUM_WIDTH'd`addi,`ISA_WIDTH'd4,
+                     `INST_NUM_WIDTH'd`sltiu,`ISA_WIDTH'd4,
+                     `INST_NUM_WIDTH'd`add,`ISA_WIDTH'd4,
+                     `INST_NUM_WIDTH'd`sub,`ISA_WIDTH'd4,
+                     `INST_NUM_WIDTH'd`ebreak,`ISA_WIDTH'd4
+                 })
         );
 
     wire [`ISA_WIDTH-1:0] 	adder_pc_a;
@@ -96,12 +100,14 @@ module exu_pc
             .out(pc_w_en),
             .key(inst_type),
             .default_out(1'b0),
-            .lut({`INST_TYPE_WIDTH'd`R,1'b1,
-                  `INST_TYPE_WIDTH'd`I,1'b1,
-                  `INST_TYPE_WIDTH'd`S,1'b1,
-                  `INST_TYPE_WIDTH'd`B,1'b1,
-                  `INST_TYPE_WIDTH'd`U,1'b1,
-                  `INST_TYPE_WIDTH'd`J,1'b1})
+            .lut({
+                     `INST_TYPE_WIDTH'd`R,1'b1,
+                     `INST_TYPE_WIDTH'd`I,1'b1,
+                     `INST_TYPE_WIDTH'd`S,1'b1,
+                     `INST_TYPE_WIDTH'd`B,1'b1,
+                     `INST_TYPE_WIDTH'd`U,1'b1,
+                     `INST_TYPE_WIDTH'd`J,1'b1
+                 })
         );
 
 endmodule
