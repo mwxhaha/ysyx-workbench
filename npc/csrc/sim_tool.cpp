@@ -2,7 +2,6 @@
 #include <verilated.h>
 #include <Vtop.h>
 #include <verilated_vcd_c.h>
-#include <Vtop__Dpi.h>
 #ifdef NV_SIM
 #include <nvboard.h>
 void nvboard_bind_all_pins(Vtop *top);
@@ -10,6 +9,7 @@ void nvboard_bind_all_pins(Vtop *top);
 #include <cassert>
 #include <cstdint>
 #include <cstring>
+#include <Vtop__Dpi.h>
 #include <iostream>
 #include <fstream>
 
@@ -77,10 +77,6 @@ void update(int time)
 {
     while (time > 0)
     {
-        top->mem_r_1 = memory_read(top->mem_r_1_addr, 4);
-        top->mem_r_2 = memory_read(top->mem_r_2_addr, 4);
-        if (top->mem_w_en == 1)
-            memory_write(top->mem_w_addr, top->mem_w, 4);
         top->eval();
 #ifdef NV_SIM
         nvboard_update();
@@ -106,67 +102,11 @@ void cycle(int cycle_number, int cycle_time)
 
 void reset(int reset_cycle_number, int cycle_time)
 {
-    set_pin([&]
-            { top->rst = 1; },
-            cycle_time);
-    cycle(reset_cycle_number - 1, cycle_time);
+    top->rst = 1;
+    cycle(reset_cycle_number, cycle_time);
     set_pin([&]
             { top->rst = 0; },
             cycle_time);
-}
-
-word_t memory_read(word_t addr, int len)
-{
-    if (addr < MEM_BASE_ADDR)
-        addr = MEM_BASE_ADDR;
-    if (addr > MEM_BASE_ADDR + MEM_MAX - 1)
-        addr = MEM_BASE_ADDR + MEM_MAX - 1;
-    void *addr_real = mem + addr - MEM_BASE_ADDR;
-    switch (len)
-    {
-    case 1:
-        return *(uint8_t *)addr_real;
-        break;
-    case 2:
-        return *(uint16_t *)addr_real;
-        break;
-    case 4:
-        return *(uint32_t *)addr_real;
-        break;
-    case 8:
-        return *(uint64_t *)addr_real;
-        break;
-    default:
-        assert(0);
-        break;
-    }
-}
-
-void memory_write(word_t addr, word_t data, int len)
-{
-    if (addr < MEM_BASE_ADDR)
-        addr = MEM_BASE_ADDR;
-    if (addr > MEM_BASE_ADDR + MEM_MAX - 1)
-        addr = MEM_BASE_ADDR + MEM_MAX - 1;
-    void *addr_real = mem + addr - MEM_BASE_ADDR;
-    switch (len)
-    {
-    case 1:
-        *(uint8_t *)addr_real = data;
-        break;
-    case 2:
-        *(uint16_t *)addr_real = data;
-        break;
-    case 4:
-        *(uint32_t *)addr_real = data;
-        break;
-    case 8:
-        *(uint64_t *)addr_real = data;
-        break;
-    default:
-        assert(0);
-        break;
-    }
 }
 
 void absort_dpic(int pc)

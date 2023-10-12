@@ -14,9 +14,9 @@ module exu
         output wire [`ISA_WIDTH-1:0] srd,
         output wire gpr_w_en,
         input wire [`ISA_WIDTH-1:0] mem_r,
-        output wire [`ISA_WIDTH-1:0] mem_r_addr,
         output wire [`ISA_WIDTH-1:0] mem_w,
-        output wire [`ISA_WIDTH-1:0] mem_w_addr,
+        output wire [`ISA_WIDTH-1:0] mem_addr,
+        output wire mem_r_en,
         output wire mem_w_en,
         input wire [`ISA_WIDTH-1:0] alu_result,
         output wire [`ISA_WIDTH-1:0] alu_a,
@@ -67,9 +67,9 @@ module exu
                 .src1(src1),
                 .src2(src2),
                 .mem_r(mem_r),
-                .mem_r_addr(mem_r_addr),
                 .mem_w(mem_w),
-                .mem_w_addr(mem_w_addr),
+                .mem_addr(mem_addr),
+                .mem_r_en(mem_r_en),
                 .mem_w_en(mem_w_en),
                 .alu_result(alu_result)
             );

@@ -13,7 +13,7 @@ using word_t = uint32_t;
 using vaddr_t = word_t;
 #define HIERARCHY_DEEP 100
 #define MEM_BASE_ADDR 0x80000000
-#define MEM_MAX 10000
+#define MEM_MAX 1000000
 
 extern VerilatedContext *contextp;
 extern Vtop *top;
@@ -58,7 +58,5 @@ void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool un
     if (signed_mode)
         std::cout << pin - std::pow(2, data_len) << ' ';
 }
-word_t memory_read(word_t addr, int len);
-void memory_write(word_t addr, word_t data, int len);
 
 #endif
