@@ -28,8 +28,9 @@
 `define sltiu 23
 `define andi 26
 
-`define INST_ADD_NUM_MAX 5
+`define INST_ADD_NUM_MAX 6
 `define INST_ADD_NUM_IDU_MAX `INST_ADD_NUM_MAX-`INST_ADD_ADD_NUM_MAX+1
+`define sll 33
 `define sltu 35
 `define ixor 36
 `define ior 37
@@ -40,7 +41,7 @@
 
 
 `define INST_NUM_WIDTH 8
-`define INST_NUM_MAX 19
+`define INST_NUM_MAX 20
 `define INST_NUM_IDU_MAX `INST_NUM_MAX-`INST_BEQ_NUM_MAX+1-`INST_LB_NUM_MAX+1-`INST_SB_NUM_MAX+1-`INST_ADDI_NUM_MAX+1-`INST_ADD_NUM_MAX+1
 `define inv 0
 `define auipc 2

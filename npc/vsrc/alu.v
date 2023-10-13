@@ -42,6 +42,8 @@ module alu (
             1'b0,
             `ALU_FUNCT_WIDTH'd`LESS_U,
             1'b1,
+            `ALU_FUNCT_WIDTH'd`SHIFT_L_L,
+            1'b0,
             `ALU_FUNCT_WIDTH'd`SHIFT_R_A,
             1'b0
         })
@@ -93,6 +95,8 @@ module alu (
             1'b0,
             `ALU_FUNCT_WIDTH'd`LESS_U,
             1'b0,
+            `ALU_FUNCT_WIDTH'd`SHIFT_L_L,
+            1'b0,
             `ALU_FUNCT_WIDTH'd`SHIFT_R_A,
             1'b1
         })
@@ -130,6 +134,8 @@ module alu (
             1'b0,
             `ALU_FUNCT_WIDTH'd`LESS_U,
             1'b0,
+            `ALU_FUNCT_WIDTH'd`SHIFT_L_L,
+            1'b1,
             `ALU_FUNCT_WIDTH'd`SHIFT_R_A,
             1'b0
         })
@@ -177,6 +183,8 @@ module alu (
             {{`ISA_WIDTH - 1{1'b0}}, |(alu_a ^ alu_b)},
             `ALU_FUNCT_WIDTH'd`LESS_U,
             {{`ISA_WIDTH - 1{1'b0}}, carry},
+            `ALU_FUNCT_WIDTH'd`SHIFT_L_L,
+            barrel_shifter_1_result,
             `ALU_FUNCT_WIDTH'd`SHIFT_R_A,
             barrel_shifter_1_result
         })
