@@ -23,7 +23,7 @@ uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01,
                         0x97, 0x18, 0x00, 0x80,
                         0xef, 0x08, 0x40, 0x00,
                         0x73, 0x00, 0x10, 0x80};
-npc_state_t npc_state={0,run,MEM_BASE_ADDR};
+npc_state_t npc_state={0,running,MEM_BASE_ADDR};
 
 static void load_img(int argc, char **argv)
 {

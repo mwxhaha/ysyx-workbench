@@ -1,5 +1,5 @@
-#ifndef sim_tool_hpp
-#define sim_tool_hpp
+#ifndef SIM_TOOL_HPP
+#define SIM_TOOL_HPP
 
 #include <verilated.h>
 #include <Vtop.h>
@@ -9,11 +9,22 @@
 #include <bitset>
 #include <cstdint>
 
+// #define ISA64
+
+#ifdef ISA64
+using word_t = uint63_t;
+using vaddr_t = word_t;
+#define FMT_WORD "0x%016x"
+#define FMT_WORD_T "%lu"
+#define FMT_SWORD_T "%ld"
+#else
 using word_t = uint32_t;
 using vaddr_t = word_t;
 #define FMT_WORD "0x%08x"
 #define FMT_WORD_T "%u"
 #define FMT_SWORD_T "%d"
+#endif
+
 #define HIERARCHY_DEEP 100
 #define MEM_BASE_ADDR 0x80000000
 #define MEM_MAX 1000000
@@ -24,9 +35,11 @@ extern VerilatedVcdC *tfp;
 extern uint8_t mem[MEM_MAX];
 enum state_t
 {
-    run,
+    running,
+    stop,
+    end,
     absort,
-    end
+    quit
 };
 typedef struct npc_state_t
 {

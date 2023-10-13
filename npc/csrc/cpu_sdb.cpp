@@ -1,5 +1,6 @@
-#include <sim_tool.hpp>
 #include <cpu_sdb.hpp>
+#include <sim_tool.hpp>
+#include <cpu_cpu_exec.hpp>
 #include <Vtop__Dpi.h>
 #include <math.h>
 #include <readline/history.h>
@@ -37,7 +38,7 @@ static int cmd_c(const char *const args)
     printf("c format error, using like this: c\n");
     return 0;
   }
-  // cpu_exec(-1);
+  cpu_exec(-1);
   return 0;
 }
 
@@ -64,7 +65,7 @@ static int cmd_si(const char *const args)
         printf("step number must be larger than 0\n");
         return 0;
       }
-      //   cpu_exec(number);
+        cpu_exec(number);
     }
     else
     {
@@ -73,7 +74,7 @@ static int cmd_si(const char *const args)
   }
   else
   {
-    // cpu_exec(1);
+    cpu_exec(1);
   }
   return 0;
 }
@@ -127,7 +128,7 @@ static int cmd_x(const char *const args)
       const char *const e = args + (int)log10(scan_len) + 2;
       bool success = true;
       // vaddr_t addr = expr(e, &success);
-      vaddr_t addr = 0;
+      vaddr_t addr = 0x80000000;
       if (!success)
         return 0;
       int len = sizeof(word_t);
@@ -135,7 +136,7 @@ static int cmd_x(const char *const args)
       for (int i = 0; i < scan_len; i++)
       {
         word_t val;
-        pmem_read(addr + i * len, (int *)&val);
+        // pmem_read(addr + i * len, (int *)&val);
         printf(FMT_WORD " ", val);
         if (i % column_cnt_display == column_cnt_display - 1)
           printf("\n");
