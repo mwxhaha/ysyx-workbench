@@ -12,7 +12,7 @@ BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 PREFIX_NAME = Vtop
-TOP_NAME = processor_core
+TOP_NAME = exu
 BIN = $(BUILD_DIR)/$(PREFIX_NAME)
 MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 WAVE = $(BUILD_DIR)/wave.vcd
@@ -46,16 +46,20 @@ else
 VERILATOR_CFLAGS += -I$(NVBOARD_HOME)/include -DNV_SIM
 VERILATOR_LDFLAGS += -lSDL2 -lSDL2_image
 endif
-VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) --prefix $(PREFIX_NAME) -o $(BIN) -j 0 -Wall --top-module $(TOP_NAME) -y $(VSRC_DIR) --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) -y $(VSRC_DIR) --prefix $(PREFIX_NAME) --top-module $(TOP_NAME) -o $(BIN) -j 0 -Wall -Wno-UNUSEDSIGNAL --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
 VERILATOR_FLAGS_LIB = $(addprefix -LDFLAGS , $(VERILATOR_LDFLAGS))
+VERILATE = $(OBJ_DIR)/verilate.txt
+
+verilate: $(VERILATE)
 
 ifeq ($(NVBOARD),0)
-verilate: $(VSRC) $(CSRC)
+$(VERILATE): $(VSRC) $(CSRC)
 else
-verilate: $(VSRC) $(CSRC) $(NVBOARD_ARCHIVE)
+$(VERILATE): $(VSRC) $(CSRC) $(NVBOARD_ARCHIVE)
 endif
 	@echo "-----verilate------"
-	- $(VERILATOR) $(VERILATOR_FLAGS) $^ $(VERILATOR_FLAGS_LIB)
+	$(VERILATOR) $(VERILATOR_FLAGS) $^ $(VERILATOR_FLAGS_LIB)
+	touch $(VERILATE)
 	@echo "-----verilate done------"
 
 
@@ -64,7 +68,7 @@ MAKE_FLAGS = -C $(OBJ_DIR) -f $(MAKE_FILE) -j $(shell nproc)
 
 build: $(BIN)
 
-$(BIN): verilate
+$(BIN): $(VERILATE)
 	@echo "-----build------"
 	$(BUILD_TOOL) $(MAKE_FLAGS) $(BIN)
 	@echo "-----build done------"
