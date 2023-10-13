@@ -1,4 +1,5 @@
-`include "config.v"
+`include "config.vh"
+`include "inst.vh"
 import "DPI-C" function void absort_dpic(input int pc);
 import "DPI-C" function void ebreak_dpic(
     input int ret,

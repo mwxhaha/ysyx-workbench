@@ -1,4 +1,5 @@
-`include "config.v"
+`include "config.vh"
+`include "inst.vh"
 
 module alu (
     input wire clk,

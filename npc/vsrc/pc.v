@@ -1,4 +1,4 @@
-`include "config.v"
+`include "config.vh"
 
 module pc (
     input wire clk,

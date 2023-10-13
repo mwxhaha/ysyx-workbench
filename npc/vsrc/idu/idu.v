@@ -1,4 +1,5 @@
-`include "config.v"
+`include "config.vh"
+`include "inst.vh"
 
 module idu (
     input wire clk,

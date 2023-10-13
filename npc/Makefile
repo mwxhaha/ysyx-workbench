@@ -8,6 +8,8 @@ CSRC_DIR = $(ROOT_DIR)/csrc
 CSRC = $(shell find $(CSRC_DIR) -name "main.cpp" -or -name "sim*.cpp" -or -name "$(TOP_NAME)_sim.cpp")
 NXDC_DIR = $(ROOT_DIR)/nxdc
 NXDC = $(shell find $(NXDC_DIR) -name "*.v")
+INCLUDE_DIR = $(ROOT_DIR)/include
+INCLUDE = $(shell find $(INCLUDE_DIR) -name "*.vh" -or -name "sim*.h" -or -name "*.hpp")
 BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
@@ -46,7 +48,7 @@ else
 VERILATOR_CFLAGS += -I$(NVBOARD_HOME)/include -DNV_SIM
 VERILATOR_LDFLAGS += -lSDL2 -lSDL2_image
 endif
-VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) -y $(VSRC_DIR) --prefix $(PREFIX_NAME) --top-module $(TOP_NAME) -o $(BIN) -j 0 -Wall -Wno-UNUSEDSIGNAL --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) -y $(INCLUDE_DIR) --prefix $(PREFIX_NAME) --top-module $(TOP_NAME) -o $(BIN) -j 0 -Wall -Wno-UNUSEDSIGNAL --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
 VERILATOR_FLAGS_LIB = $(addprefix -LDFLAGS , $(VERILATOR_LDFLAGS))
 VERILATE = $(OBJ_DIR)/verilate.txt
 
