@@ -102,7 +102,9 @@ module idu_funct3 (
             `FUNCT3_WIDTH'b100,
             `INST_NUM_WIDTH'd`ixor,
             `FUNCT3_WIDTH'b110,
-            `INST_NUM_WIDTH'd`ior
+            `INST_NUM_WIDTH'd`ior,
+            `FUNCT3_WIDTH'b111,
+            `INST_NUM_WIDTH'd`iand
         })
     );
 
