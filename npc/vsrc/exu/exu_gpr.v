@@ -51,6 +51,8 @@ module exu_gpr (
             alu_result,
             `INST_NUM_WIDTH'd`ixor,
             alu_result,
+            `INST_NUM_WIDTH'd`ior,
+            alu_result,
             `INST_NUM_WIDTH'd`ebreak,
             `ISA_WIDTH'b0
         })

@@ -53,6 +53,8 @@ module exu_mem (
             `ISA_WIDTH'b0,
             `INST_NUM_WIDTH'd`ixor,
             `ISA_WIDTH'b0,
+            `INST_NUM_WIDTH'd`ior,
+            `ISA_WIDTH'b0,
             `INST_NUM_WIDTH'd`ebreak,
             `ISA_WIDTH'b0
         })
@@ -93,6 +95,8 @@ module exu_mem (
             `BASE_ADDR,
             `INST_NUM_WIDTH'd`ixor,
             `BASE_ADDR,
+            `INST_NUM_WIDTH'd`ior,
+            `BASE_ADDR,
             `INST_NUM_WIDTH'd`ebreak,
             `BASE_ADDR
         })
@@ -132,6 +136,8 @@ module exu_mem (
             `INST_NUM_WIDTH'd`sltu,
             1'b0,
             `INST_NUM_WIDTH'd`ixor,
+            1'b0,
+            `INST_NUM_WIDTH'd`ior,
             1'b0,
             `INST_NUM_WIDTH'd`ebreak,
             1'b0
