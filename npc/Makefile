@@ -32,7 +32,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 
 PREFIX_NAME = Vtop
-TOP_NAME = cpu
+TOP_NAME = alu
 BIN = $(BUILD_DIR)/$(PREFIX_NAME)
 VERILATOR_CFLAGS = -std=c++20 -Wall -DTOP_NAME=$(TOP_NAME) -I$(INCLUDE_DIR)
 VERILATOR_LDFLAGS = 

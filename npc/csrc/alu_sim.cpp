@@ -11,16 +11,16 @@ void sim()
         update();
     }
 #else
-    unsigned int sim_time = 4000;
+    unsigned int sim_time = 10000;
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
-        for (unsigned int i = 0; i <= 7; ++i)
+        for (unsigned int i = 0; i <= 15; ++i)
             for (unsigned int j = 0; j <= 15; ++j)
                 for (unsigned int k = 0; k <= 15; ++k)
                 {
-                    top->a = j;
-                    top->b = k;
-                    top->func = i;
+                    top->alu_a = j;
+                    top->alu_b = k;
+                    top->alu_func = i;
                     update();
                 }
     }

@@ -38,10 +38,12 @@ module alu (
             1'b0,
             `ALU_FUNC_WIDTH'd`EQ,
             1'b0,
-            `ALU_FUNC_WIDTH'd`NE,
+            `ALU_FUNC_WIDTH'd`NEQ,
             1'b0,
             `ALU_FUNC_WIDTH'd`LESS_U,
-            1'b1
+            1'b1,
+            `ALU_FUNC_WIDTH'd`SHIFT_R_A,
+            1'b0
         })
     );
 
@@ -57,6 +59,91 @@ module alu (
         .carry     (carry),
         .zero      (zero),
         .overflow  (overflow)
+    );
+
+    wire left_or_right;
+    MuxKeyWithDefault #(
+        .NR_KEY  (`ALU_FUNC_MAX),
+        .KEY_LEN (`ALU_FUNC_WIDTH),
+        .DATA_LEN(1)
+    ) muxkeywithdefault_left_or_right (
+        .out(left_or_right),
+        .key(alu_func),
+        .default_out(1'b0),
+        .lut({
+            `ALU_FUNC_WIDTH'd`ADD,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`SUB,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`ADD_U,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`SUB_U,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`NOT,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`AND,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`OR,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`XOR,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`EQ,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`NEQ,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`LESS_U,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`SHIFT_R_A,
+            1'b1
+        })
+    );
+
+    wire algorism_or_logic;
+    MuxKeyWithDefault #(
+        .NR_KEY  (`ALU_FUNC_MAX),
+        .KEY_LEN (`ALU_FUNC_WIDTH),
+        .DATA_LEN(1)
+    ) muxkeywithdefault_algorism_or_logic (
+        .out(algorism_or_logic),
+        .key(alu_func),
+        .default_out(1'b0),
+        .lut({
+            `ALU_FUNC_WIDTH'd`ADD,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`SUB,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`ADD_U,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`SUB_U,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`NOT,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`AND,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`OR,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`XOR,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`EQ,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`NEQ,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`LESS_U,
+            1'b0,
+            `ALU_FUNC_WIDTH'd`SHIFT_R_A,
+            1'b0
+        })
+    );
+
+    wire [`ISA_WIDTH-1:0] barrel_shifter_1_result;
+    barrel_shifter #(
+        .data_len(`ISA_WIDTH)
+    ) barrel_shifter_1 (
+        .din(alu_a),
+        .shamt(alu_b[5:0]),
+        .left_or_right(left_or_right),
+        .algorism_or_logic(algorism_or_logic),
+        .dout(barrel_shifter_1_result)
     );
 
     MuxKeyWithDefault #(
@@ -86,10 +173,12 @@ module alu (
             alu_a ^ alu_b,
             `ALU_FUNC_WIDTH'd`EQ,
             {{`ISA_WIDTH - 1{1'b0}}, ~(|(alu_a ^ alu_b))},
-            `ALU_FUNC_WIDTH'd`NE,
+            `ALU_FUNC_WIDTH'd`NEQ,
             {{`ISA_WIDTH - 1{1'b0}}, |(alu_a ^ alu_b)},
             `ALU_FUNC_WIDTH'd`LESS_U,
-            {{`ISA_WIDTH - 1{1'b0}}, carry}
+            {{`ISA_WIDTH - 1{1'b0}}, carry},
+            `ALU_FUNC_WIDTH'd`SHIFT_R_A,
+            barrel_shifter_1_result
         })
     );
 

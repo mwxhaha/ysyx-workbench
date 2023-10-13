@@ -124,7 +124,7 @@ module exu_alu
             `INST_NUM_WIDTH'd`beq,
             `ALU_FUNC_WIDTH'd`EQ,
             `INST_NUM_WIDTH'd`bne,
-            `ALU_FUNC_WIDTH'd`NE,
+            `ALU_FUNC_WIDTH'd`NEQ,
             `INST_NUM_WIDTH'd`lw,
             `ALU_FUNC_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`sh,
