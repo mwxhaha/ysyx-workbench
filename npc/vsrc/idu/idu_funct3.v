@@ -78,6 +78,8 @@ module idu_funct3 (
             `FUNCT3_WIDTH'b011,
             `INST_NUM_WIDTH'd`sltiu,
             `FUNCT3_WIDTH'b111,
+            `INST_NUM_WIDTH'd`xori,
+            `FUNCT3_WIDTH'b100,
             `INST_NUM_WIDTH'd`andi,
             `FUNCT3_WIDTH'b101,
             inst_srli_addi_num
