@@ -49,6 +49,8 @@ module exu_pc (
             pc_out,
             `INST_NUM_WIDTH'd`sltu,
             pc_out,
+            `INST_NUM_WIDTH'd`ixor,
+            pc_out,
             `INST_NUM_WIDTH'd`ebreak,
             pc_out
         })
@@ -86,6 +88,8 @@ module exu_pc (
             `INST_NUM_WIDTH'd`sub,
             `ISA_WIDTH'd4,
             `INST_NUM_WIDTH'd`sltu,
+            `ISA_WIDTH'd4,
+            `INST_NUM_WIDTH'd`ixor,
             `ISA_WIDTH'd4,
             `INST_NUM_WIDTH'd`ebreak,
             `ISA_WIDTH'd4
