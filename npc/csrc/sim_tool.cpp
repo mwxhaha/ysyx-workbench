@@ -1,4 +1,4 @@
-#include "sim_tool.hpp"
+#include <sim_tool.hpp>
 #include <verilated.h>
 #include <Vtop.h>
 #include <verilated_vcd_c.h>
