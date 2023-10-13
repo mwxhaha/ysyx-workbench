@@ -11,7 +11,8 @@ int main(int argc, char **argv)
     sim_exit();
 
 #ifdef SIM_ALL
-    return (npc_state.state==end&&npc_state.ret==0)?0:1;
+    pin_output(npc_state.pc, 32, 0, 1, 0, 0);
+    return (npc_state.state == end && npc_state.ret == 0) ? 0 : 1;
 #else
     return 0;
 #endif

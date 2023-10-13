@@ -84,7 +84,9 @@ module idu_funct3 (
         .default_out(`INST_NUM_WIDTH'd`inv),
         .lut({
             `FUNCT3_WIDTH'b000,
-            inst_add_add_num
+            inst_add_add_num,
+            `FUNCT3_WIDTH'b011,
+            `INST_NUM_WIDTH'd`sltu
         })
     );
 

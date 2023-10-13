@@ -48,6 +48,8 @@ module exu_alu
             src1,
             `INST_NUM_WIDTH'd`sub,
             src1,
+            `INST_NUM_WIDTH'd`sltu,
+            src1,
             `INST_NUM_WIDTH'd`ebreak,
             `ISA_WIDTH'b0
         })
@@ -83,6 +85,8 @@ module exu_alu
             `INST_NUM_WIDTH'd`add,
             src2,
             `INST_NUM_WIDTH'd`sub,
+            src2,
+            `INST_NUM_WIDTH'd`sltu,
             src2,
             `INST_NUM_WIDTH'd`ebreak,
             `ISA_WIDTH'b0
@@ -120,6 +124,8 @@ module exu_alu
             `ALU_FUNC_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`sub,
             `ALU_FUNC_WIDTH'd`SUB,
+            `INST_NUM_WIDTH'd`sltu,
+            `ALU_FUNC_WIDTH'd`LESS_U,
             `INST_NUM_WIDTH'd`ebreak,
             `ALU_FUNC_WIDTH'd`NO_FUNC
         })

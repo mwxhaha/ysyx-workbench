@@ -57,6 +57,7 @@ void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool un
         std::cout << static_cast<unsigned long long>(pin) << ' ';
     if (signed_mode)
         std::cout << pin - std::pow(2, data_len) << ' ';
+    std::cout << std::endl;
 }
 
 #endif
