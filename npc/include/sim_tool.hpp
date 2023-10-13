@@ -11,6 +11,9 @@
 
 using word_t = uint32_t;
 using vaddr_t = word_t;
+#define FMT_WORD "0x%08x"
+#define FMT_WORD_T "%u"
+#define FMT_SWORD_T "%d"
 #define HIERARCHY_DEEP 100
 #define MEM_BASE_ADDR 0x80000000
 #define MEM_MAX 1000000
