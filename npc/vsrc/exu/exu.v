@@ -22,7 +22,7 @@ module exu (
     input wire [`ISA_WIDTH-1:0] alu_result,
     output wire [`ISA_WIDTH-1:0] alu_a,
     output wire [`ISA_WIDTH-1:0] alu_b,
-    output wire [`ALU_FUNC_WIDTH-1:0] alu_func
+    output wire [`ALU_FUNCT_WIDTH-1:0] alu_funct
 );
 
     exu_pc exu_pc_1 (
@@ -85,7 +85,7 @@ module exu (
         .alu_result(alu_result),
         .alu_a(alu_a),
         .alu_b(alu_b),
-        .alu_func(alu_func)
+        .alu_funct(alu_funct)
     );
 
 endmodule

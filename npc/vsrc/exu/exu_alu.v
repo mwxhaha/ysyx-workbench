@@ -15,7 +15,7 @@ module exu_alu
         input wire [`ISA_WIDTH-1:0] alu_result,
         output wire [`ISA_WIDTH-1:0] alu_a,
         output wire [`ISA_WIDTH-1:0] alu_b,
-        output wire [`ALU_FUNC_WIDTH-1:0] alu_func
+        output wire [`ALU_FUNCT_WIDTH-1:0] alu_funct
     );
 
     MuxKeyWithDefault #(
@@ -109,44 +109,44 @@ module exu_alu
     MuxKeyWithDefault #(
         .NR_KEY  (`INST_NUM_MAX),
         .KEY_LEN (`INST_NUM_WIDTH),
-        .DATA_LEN(`ALU_FUNC_WIDTH)
-    ) muxkeywithdefault_alu_func (
-        .out(alu_func),
+        .DATA_LEN(`ALU_FUNCT_WIDTH)
+    ) muxkeywithdefault_alu_funct (
+        .out(alu_funct),
         .key(inst_num),
-        .default_out(`ALU_FUNC_WIDTH'd`NO_FUNC),
+        .default_out(`ALU_FUNCT_WIDTH'd`NO_FUNCT),
         .lut({       
             `INST_NUM_WIDTH'd`auipc,
-            `ALU_FUNC_WIDTH'd`ADD,
+            `ALU_FUNCT_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`jal,
-            `ALU_FUNC_WIDTH'd`ADD,
+            `ALU_FUNCT_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`jalr,
-            `ALU_FUNC_WIDTH'd`ADD,
+            `ALU_FUNCT_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`beq,
-            `ALU_FUNC_WIDTH'd`EQ,
+            `ALU_FUNCT_WIDTH'd`EQ,
             `INST_NUM_WIDTH'd`bne,
-            `ALU_FUNC_WIDTH'd`NEQ,
+            `ALU_FUNCT_WIDTH'd`NEQ,
             `INST_NUM_WIDTH'd`lw,
-            `ALU_FUNC_WIDTH'd`ADD,
+            `ALU_FUNCT_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`sh,
-            `ALU_FUNC_WIDTH'd`ADD,
+            `ALU_FUNCT_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`sw,
-            `ALU_FUNC_WIDTH'd`ADD,
+            `ALU_FUNCT_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`addi,
-            `ALU_FUNC_WIDTH'd`ADD,
+            `ALU_FUNCT_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`sltiu,
-            `ALU_FUNC_WIDTH'd`LESS_U,
+            `ALU_FUNCT_WIDTH'd`LESS_U,
             `INST_NUM_WIDTH'd`add,
-            `ALU_FUNC_WIDTH'd`ADD,
+            `ALU_FUNCT_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`sub,
-            `ALU_FUNC_WIDTH'd`SUB,
+            `ALU_FUNCT_WIDTH'd`SUB,
             `INST_NUM_WIDTH'd`sltu,
-            `ALU_FUNC_WIDTH'd`LESS_U,
+            `ALU_FUNCT_WIDTH'd`LESS_U,
             `INST_NUM_WIDTH'd`ixor,
-            `ALU_FUNC_WIDTH'd`XOR,
+            `ALU_FUNCT_WIDTH'd`XOR,
             `INST_NUM_WIDTH'd`ior,
-            `ALU_FUNC_WIDTH'd`OR,
+            `ALU_FUNCT_WIDTH'd`OR,
             `INST_NUM_WIDTH'd`ebreak,
-            `ALU_FUNC_WIDTH'd`NO_FUNC
+            `ALU_FUNCT_WIDTH'd`NO_FUNCT
         })
     );
 

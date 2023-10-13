@@ -8,9 +8,9 @@
 `define BASE_ADDR `ISA_WIDTH'h80000000
 `define PC_BASE_ADDR `BASE_ADDR
 
-`define ALU_FUNC_WIDTH 4
-`define ALU_FUNC_MAX 12
-`define NO_FUNC 0
+`define ALU_FUNCT_WIDTH 4
+`define ALU_FUNCT_MAX 12
+`define NO_FUNCT 0
 `define ADD 1
 `define SUB 2
 `define ADD_U 3

@@ -78,22 +78,22 @@ module cpu (
         .rst       (rst),
         .alu_a     (alu_a),
         .alu_b     (alu_b),
-        .alu_func  (alu_func),
+        .alu_funct (alu_funct),
         .alu_result(alu_result)
     );
 
-    wire [     `ISA_WIDTH-1:0] pc_in;
-    wire                       pc_w_en;
-    wire [     `ISA_WIDTH-1:0] srd;
-    wire                       gpr_w_en;
-    reg  [     `ISA_WIDTH-1:0] mem_r_2;
-    wire [     `ISA_WIDTH-1:0] mem_w_2;
-    wire [     `ISA_WIDTH-1:0] mem_addr_2;
-    wire                       mem_r_en_2;
-    wire                       mem_w_en_2;
-    wire [     `ISA_WIDTH-1:0] alu_a;
-    wire [     `ISA_WIDTH-1:0] alu_b;
-    wire [`ALU_FUNC_WIDTH-1:0] alu_func;
+    wire [      `ISA_WIDTH-1:0] pc_in;
+    wire                        pc_w_en;
+    wire [      `ISA_WIDTH-1:0] srd;
+    wire                        gpr_w_en;
+    reg  [      `ISA_WIDTH-1:0] mem_r_2;
+    wire [      `ISA_WIDTH-1:0] mem_w_2;
+    wire [      `ISA_WIDTH-1:0] mem_addr_2;
+    wire                        mem_r_en_2;
+    wire                        mem_w_en_2;
+    wire [      `ISA_WIDTH-1:0] alu_a;
+    wire [      `ISA_WIDTH-1:0] alu_b;
+    wire [`ALU_FUNCT_WIDTH-1:0] alu_funct;
     exu exu_1 (
         .clk       (clk),
         .rst       (rst),
@@ -115,7 +115,7 @@ module cpu (
         .alu_result(alu_result),
         .alu_a     (alu_a),
         .alu_b     (alu_b),
-        .alu_func  (alu_func)
+        .alu_funct (alu_funct)
     );
 
     always @(posedge clk) begin
