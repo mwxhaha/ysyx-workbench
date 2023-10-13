@@ -53,7 +53,9 @@ module idu_funct3 (
         .out(inst_sb_num),
         .key(inst[12+`FUNCT3_WIDTH-1:12]),
         .default_out(`INST_NUM_WIDTH'd`inv),
-        .lut({    
+        .lut({
+            `FUNCT3_WIDTH'b001,
+            `INST_NUM_WIDTH'd`sh,
             `FUNCT3_WIDTH'b010,
             `INST_NUM_WIDTH'd`sw
         })
