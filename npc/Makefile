@@ -12,7 +12,7 @@ BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 PREFIX_NAME = Vtop
-TOP_NAME = processor_core
+TOP_NAME = cpu
 BIN = $(BUILD_DIR)/$(PREFIX_NAME)
 MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 WAVE = $(BUILD_DIR)/wave.vcd
@@ -35,7 +35,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 
 VERILATOR_CFLAGS = -std=c++20 -Wall -DTOP_NAME=$(TOP_NAME)
-ifeq ($(TOP_NAME),processor_core)
+ifeq ($(TOP_NAME),cpu)
 VERILATOR_CFLAGS += -DSIM_ALL
 endif
 VERILATOR_LDFLAGS = 

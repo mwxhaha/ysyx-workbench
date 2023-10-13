@@ -14,7 +14,7 @@ import "DPI-C" function void pmem_write(
     input byte wmask
 );
 
-module processor_core (
+module cpu (
     input wire clk,
     input wire rst
 );
