@@ -5,6 +5,7 @@ module idu_funct3 (
     input wire clk,
     input wire rst,
     input wire [`ISA_WIDTH-1:0] inst,
+    input wire [`INST_NUM_WIDTH-1:0] inst_srli_addi_num,
     input wire [`INST_NUM_WIDTH-1:0] inst_add_add_num,
     input wire [`INST_NUM_WIDTH-1:0] inst_ebreak_ebreak_num,
     output wire [`INST_NUM_WIDTH-1:0] inst_beq_num,
@@ -62,7 +63,7 @@ module idu_funct3 (
     );
 
     MuxKeyWithDefault #(
-        .NR_KEY  (`INST_ADDI_NUM_MAX),
+        .NR_KEY  (`INST_ADDI_NUM_IDU_MAX),
         .KEY_LEN (`FUNCT3_WIDTH),
         .DATA_LEN(`INST_NUM_WIDTH)
     ) muxkeywithdefault_inst_addi_num (
@@ -73,7 +74,9 @@ module idu_funct3 (
             `FUNCT3_WIDTH'b000,
             `INST_NUM_WIDTH'd`addi,
             `FUNCT3_WIDTH'b011,
-            `INST_NUM_WIDTH'd`sltiu
+            `INST_NUM_WIDTH'd`sltiu,
+            `FUNCT3_WIDTH'b101,
+            inst_srli_addi_num
         })
     );
 

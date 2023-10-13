@@ -105,6 +105,7 @@ module cpu (
         .pc_w_en   (pc_w_en),
         .src1      (src1),
         .src2      (src2),
+        .rs2       (rs2),
         .srd       (srd),
         .gpr_w_en  (gpr_w_en),
         .mem_r     (mem_r_2),

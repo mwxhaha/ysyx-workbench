@@ -1,9 +1,14 @@
+`define INST_SRLI_ADDI_NUM_MAX 1
+`define srai 30
+
 `define INST_ADD_ADD_NUM_MAX 2
 `define add 31
 `define sub 32
 
 `define INST_EBREAK_EBREAK_NUM_MAX 1
 `define ebreak 42
+
+
 
 `define INST_BEQ_NUM_MAX 2
 `define beq 5
@@ -16,7 +21,8 @@
 `define sh 19
 `define sw 20
 
-`define INST_ADDI_NUM_MAX 2
+`define INST_ADDI_NUM_MAX 3
+`define INST_ADDI_NUM_IDU_MAX `INST_ADDI_NUM_MAX-`INST_SRLI_ADDI_NUM_MAX+1
 `define addi 21
 `define sltiu 23
 
@@ -29,8 +35,10 @@
 `define INST_EBREAK_NUM_MAX 1
 `define INST_EBREAK_NUM_IDU_MAX `INST_EBREAK_NUM_MAX-`INST_EBREAK_EBREAK_NUM_MAX+1
 
+
+
 `define INST_NUM_WIDTH 8
-`define INST_NUM_MAX 16
+`define INST_NUM_MAX 17
 `define INST_NUM_IDU_MAX `INST_NUM_MAX-`INST_BEQ_NUM_MAX+1-`INST_LB_NUM_MAX+1-`INST_SB_NUM_MAX+1-`INST_ADDI_NUM_MAX+1-`INST_ADD_NUM_MAX+1
 `define inv 0
 `define auipc 2
