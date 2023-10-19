@@ -35,11 +35,11 @@ extern VerilatedVcdC *tfp;
 extern uint8_t mem[MEM_MAX];
 enum state_t
 {
-    running,
-    stop,
-    end,
-    absort,
-    quit
+    npc_running,
+    npc_stop,
+    npc_end,
+    npc_absort,
+    npc_quit
 };
 typedef struct npc_state_t
 {

@@ -36,7 +36,6 @@ TOP_NAME = cpu
 BIN = $(BUILD_DIR)/$(PREFIX_NAME)
 VERILATOR_CFLAGS = -std=c++20 -Wall -g -DTOP_NAME=$(TOP_NAME) -I$(INCLUDE_DIR) -I/usr/lib/llvm-14/include
 VERILATOR_LDFLAGS = -lreadline -lLLVM-14
-CSRC += $(NEMU_HOME)/src/utils/disasm.cc
 ifeq ($(TOP_NAME),cpu)
 VERILATOR_CFLAGS += -DSIM_ALL
 endif

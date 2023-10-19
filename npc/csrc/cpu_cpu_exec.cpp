@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <cstring>
 #include <Vtop___024root.h>
-extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+#include <cpu_disasm.hpp>
 
 #define MAX_INST_TO_PRINT 10
 static uint64_t g_nr_guest_inst = 0;
@@ -62,7 +62,7 @@ static void execute(uint64_t n)
         exec_once(&s,top->rootp->cpu__DOT__pc_out);
         g_nr_guest_inst++;
         trace_and_difftest(&s,top->rootp->cpu__DOT__pc_out);
-        if (npc_state.state != running)
+        if (npc_state.state != npc_running)
             break;
     }
 }
@@ -72,29 +72,29 @@ void cpu_exec(uint64_t n)
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (npc_state.state)
     {
-    case end:
-    case absort:
+    case npc_end:
+    case npc_absort:
         printf(
             "Program execution has ended. To restart the program, exit NEMU and "
             "run again.\n");
         return;
     default:
-        npc_state.state = running;
+        npc_state.state = npc_running;
     }
 
     execute(n);
 
     switch (npc_state.state)
     {
-    case running:
-        npc_state.state = stop;
+    case npc_running:
+        npc_state.state = npc_stop;
         break;
-    case end:
-    case absort:
+    case npc_end:
+    case npc_absort:
         printf("npc: %s at pc = " FMT_WORD "\n",
-               npc_state.state == absort ? "ABORT" : (npc_state.ret == 0 ? "HIT GOOD TRAP" : "HIT BAD TRAP"),
+               npc_state.state == npc_absort ? "ABORT" : (npc_state.ret == 0 ? "HIT GOOD TRAP" : "HIT BAD TRAP"),
                npc_state.pc);
-        if (npc_state.state != end || npc_state.ret != 0)
+        if (npc_state.state != npc_end || npc_state.ret != 0)
         {
             // isa_reg_display();
             // print_iringbuf();

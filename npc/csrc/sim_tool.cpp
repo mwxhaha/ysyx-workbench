@@ -11,7 +11,7 @@ void nvboard_bind_all_pins(Vtop *top);
 #include <cstring>
 #include <Vtop__Dpi.h>
 #include <iostream>
-#include <fstream>
+#include <cpu_init.hpp>
 
 VerilatedContext *contextp;
 Vtop *top;
@@ -24,28 +24,11 @@ uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01,
                         0x97, 0x18, 0x00, 0x80,
                         0xef, 0x08, 0x40, 0x00,
                         0x73, 0x00, 0x10, 0x80};
-npc_state_t npc_state = {0, running, MEM_BASE_ADDR};
+npc_state_t npc_state = {0, npc_running, MEM_BASE_ADDR};
 
-static void load_img(int argc, char **argv)
-{
-    for (int i = 0; i < argc; i++)
-        if (strcmp(argv[i], "-i") == 0)
-        {
-            const char *img_file = argv[2];
-            std::cout << "use image" << img_file << std::endl;
-            std::ifstream fin;
-            fin.open(img_file, std::ios::in);
-            fin.read(reinterpret_cast<char *>(mem), MEM_MAX);
-            fin.close();
-            argc -= 2;
-            return;
-        }
-}
-extern "C" void init_disasm(const char *triple);
 void sim_init(int argc, char **argv)
 {
-    init_disasm("riscv32-pc-linux-gnu");
-    load_img(argc, argv);
+    init(argc, argv);
     contextp = new VerilatedContext;
     contextp->commandArgs(argc, argv);
     top = new Vtop{contextp};
@@ -115,14 +98,14 @@ void reset(int reset_cycle_number, int cycle_time)
 void absort_dpic(int pc)
 {
     npc_state.ret = 1;
-    npc_state.state = absort;
+    npc_state.state = npc_absort;
     npc_state.pc = pc;
 }
 
 void ebreak_dpic(int ret, int pc)
 {
     npc_state.ret = ret;
-    npc_state.state = end;
+    npc_state.state = npc_end;
     npc_state.pc = pc;
 }
 
