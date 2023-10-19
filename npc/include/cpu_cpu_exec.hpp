@@ -2,7 +2,8 @@
 #define CPU_CPU_EXEC_HPP
 
 #include <cstdint>
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
+#include <sim/cpu_sim.hpp>
 
 typedef struct {
   union {

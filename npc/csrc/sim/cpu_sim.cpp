@@ -1,16 +1,27 @@
+#include <sim/cpu_sim.hpp>
 #include <verilated.h>
 #include <Vtop.h>
 #include <verilated_vcd_c.h>
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
 #include <iostream>
 #include <cstdint>
 #include <cassert>
 #include <sdb/cpu_sdb.hpp>
 
+
+uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01,
+                        0x93, 0x89, 0x18, 0x80,
+                        0xa3, 0xa8, 0x3c, 0x83,
+                        0xe3, 0x88, 0x99, 0x83,
+                        0x97, 0x18, 0x00, 0x80,
+                        0xef, 0x08, 0x40, 0x00,
+                        0x73, 0x00, 0x10, 0x80};
+npc_state_t npc_state = {0, npc_running, MEM_BASE_ADDR};
+
 void sim()
 {
 #ifdef NV_SIM
-    assert(0);
+    panic("do not support nvboard");
 #else
     reset();
     sdb_mainloop();

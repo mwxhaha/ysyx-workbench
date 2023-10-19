@@ -1,5 +1,6 @@
 #include <cpu_init.hpp>
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
+#include <sim/cpu_sim.hpp>
 #include <iostream>
 #include <fstream>
 #include <sdb/cpu_disasm.hpp>

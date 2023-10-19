@@ -1,5 +1,6 @@
 #include <sdb/cpu_iringbuf.hpp>
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
+#include <sim/cpu_sim.hpp>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>

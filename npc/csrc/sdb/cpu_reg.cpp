@@ -1,7 +1,8 @@
 #include <sdb/cpu_reg.hpp>
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
 #include <Vtop.h>
 #include <Vtop___024root.h>
+#include <sim/cpu_sim.hpp>
 
 const char *regs[] = {"$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
                       "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",

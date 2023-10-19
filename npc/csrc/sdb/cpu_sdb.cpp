@@ -1,5 +1,6 @@
 #include <sdb/cpu_sdb.hpp>
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
+#include <sim/cpu_sim.hpp>
 #include <cpu_cpu_exec.hpp>
 #include <sdb/cpu_reg.hpp>
 #include <sdb/cpu_expr.hpp>
@@ -69,7 +70,7 @@ static int cmd_si(const char *const args)
         printf("step number must be larger than 0\n");
         return 0;
       }
-        cpu_exec(number);
+      cpu_exec(number);
     }
     else
     {
@@ -94,10 +95,10 @@ static int cmd_info(const char *const args)
       switch (cmd)
       {
       case 'r':
-          isa_reg_display();
+        isa_reg_display();
         break;
       case 'w':
-          printf_watchpoint();
+        printf_watchpoint();
         break;
       default:
         printf("info format error, using like this: info r/w\n");

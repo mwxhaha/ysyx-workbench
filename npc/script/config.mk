@@ -4,7 +4,7 @@ ROOT_DIR = $(NPC_HOME)
 VSRC_DIR = $(ROOT_DIR)/vsrc
 VSRC = $(shell find $(VSRC_DIR) -name "*.v")
 CSRC_DIR = $(ROOT_DIR)/csrc
-CSRC = $(shell find $(CSRC_DIR) -name "main.cpp" -or -name "sim_tool.cpp" -or -name "$(TOP_NAME)*.cpp")
+CSRC = $(shell find $(CSRC_DIR) -name "main.cpp" -or -name "sim_tool.cpp" -or -name "$(TOP_NAME)*.cpp") $(shell find $(CSRC_DIR)/util -name "*.cpp" )
 NXDC_DIR = $(ROOT_DIR)/nxdc
 NXDC = $(shell find $(NXDC_DIR) -name "*.nxdc")
 INCLUDE_DIR = $(ROOT_DIR)/include
@@ -25,8 +25,9 @@ ifeq ($(NVBOARD),0)
 WTRACE = 1
 endif
 ITRACE = 1
+MTRACE = 1
 endif
-EXPR_MATCH = 0
+EXPR_MATCH = 1
 WATCHPOINT = 1
 
 
@@ -81,6 +82,10 @@ endif
 ifeq ($(ITRACE),1)
 VERILATOR_CFLAGS += -I/usr/lib/llvm-14/include -DCONFIG_ITRACE
 VERILATOR_LDFLAGS += -lLLVM-14
+endif
+
+ifeq ($(MTRACE),1)
+VERILATOR_CFLAGS += -DCONFIG_MTRACE
 endif
 
 ifeq ($(EXPR_MATCH),1)

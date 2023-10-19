@@ -7,45 +7,10 @@
 #include <iostream>
 #include <cmath>
 #include <bitset>
-#include <cstdint>
-
-#ifdef CONFIG_RV64
-using word_t = uint63_t;
-using vaddr_t = word_t;
-#define FMT_WORD "0x%016x"
-#define FMT_WORD_T "%lu"
-#define FMT_SWORD_T "%ld"
-#else
-using word_t = uint32_t;
-using vaddr_t = word_t;
-#define FMT_WORD "0x%08x"
-#define FMT_WORD_T "%u"
-#define FMT_SWORD_T "%d"
-#endif
-
-#define HIERARCHY_DEEP 100
-#define MEM_BASE_ADDR 0x80000000
-#define MEM_MAX 1000000
 
 extern VerilatedContext *contextp;
 extern Vtop *top;
 extern VerilatedVcdC *tfp;
-extern uint8_t mem[MEM_MAX];
-enum state_t
-{
-    npc_running,
-    npc_stop,
-    npc_end,
-    npc_absort,
-    npc_quit
-};
-typedef struct npc_state_t
-{
-    word_t ret;
-    state_t state;
-    vaddr_t pc;
-} npc_state_t;
-extern npc_state_t npc_state;
 
 void sim_init(int &argc, char **argv);
 void sim_exit();
@@ -74,6 +39,19 @@ void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool un
     std::cout << std::endl;
 }
 
+#ifdef SIM_ALL
+#define Assert(cond, format, ...)               \
+    do                                          \
+    {                                           \
+        if (!(cond))                            \
+        {                                       \
+            printf(format "\n", ##__VA_ARGS__); \
+            extern void assert_fail_msg();      \
+            assert_fail_msg();                  \
+            assert(cond);                       \
+        }                                       \
+    } while (0)
+#else
 #define Assert(cond, format, ...)               \
     do                                          \
     {                                           \
@@ -83,6 +61,7 @@ void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool un
             assert(cond);                       \
         }                                       \
     } while (0)
+#endif
 
 #define panic(format, ...) Assert(0, format, ##__VA_ARGS__)
 

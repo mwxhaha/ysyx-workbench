@@ -1,4 +1,7 @@
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
+#ifdef SIM_ALL
+#include <sim/cpu_sim.hpp>
+#endif
 
 void sim();
 

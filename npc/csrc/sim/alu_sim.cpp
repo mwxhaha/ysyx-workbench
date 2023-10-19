@@ -1,7 +1,7 @@
 #include <verilated.h>
 #include <Vtop.h>
 #include <verilated_vcd_c.h>
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
 
 void sim()
 {

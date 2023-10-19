@@ -1,5 +1,6 @@
 #include <sdb/cpu_watchpoint.hpp>
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
+#include <sim/cpu_sim.hpp>
 #include <sdb/cpu_expr.hpp>
 #include <cstdbool>
 #include <cstdio>

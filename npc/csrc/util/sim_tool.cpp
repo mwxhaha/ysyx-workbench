@@ -1,4 +1,4 @@
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
 #include <verilated.h>
 #include <Vtop.h>
 #include <verilated_vcd_c.h>
@@ -16,14 +16,7 @@ VerilatedContext *contextp;
 Vtop *top;
 VerilatedVcdC *tfp;
 #define MAX_TRACE_TIME 100000
-uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01,
-                        0x93, 0x89, 0x18, 0x80,
-                        0xa3, 0xa8, 0x3c, 0x83,
-                        0xe3, 0x88, 0x99, 0x83,
-                        0x97, 0x18, 0x00, 0x80,
-                        0xef, 0x08, 0x40, 0x00,
-                        0x73, 0x00, 0x10, 0x80};
-npc_state_t npc_state = {0, npc_running, MEM_BASE_ADDR};
+#define HIERARCHY_DEEP 100
 
 void sim_init(int &argc, char **argv)
 {
@@ -97,48 +90,4 @@ void reset(int reset_cycle_number, int cycle_time)
     set_pin([&]
             { top->rst = 0; },
             cycle_time);
-}
-
-void absort_dpic(int pc)
-{
-    npc_state.ret = 1;
-    npc_state.state = npc_absort;
-    npc_state.pc = pc;
-}
-
-void ebreak_dpic(int ret, int pc)
-{
-    npc_state.ret = ret;
-    npc_state.state = npc_end;
-    npc_state.pc = pc;
-}
-
-void pmem_read(int raddr, int *rdata)
-{
-    assert((vaddr_t)raddr >= MEM_BASE_ADDR);
-    assert((vaddr_t)raddr <= MEM_BASE_ADDR + MEM_MAX - 1);
-    void *addr_real = (vaddr_t)raddr - MEM_BASE_ADDR + mem;
-    *rdata = *(word_t *)addr_real;
-}
-
-void pmem_write(int waddr, int wdata, char wmask)
-{
-    assert((vaddr_t)waddr >= MEM_BASE_ADDR);
-    assert((vaddr_t)waddr <= MEM_BASE_ADDR + MEM_MAX - 1);
-    void *addr_real = (vaddr_t)waddr - MEM_BASE_ADDR + mem;
-    switch (wmask)
-    {
-    case 1:
-        *(uint8_t *)addr_real = wdata;
-        break;
-    case 3:
-        *(uint16_t *)addr_real = wdata;
-        break;
-    case 7:
-        *(uint32_t *)addr_real = wdata;
-        break;
-    default:
-        assert(0);
-        break;
-    }
 }

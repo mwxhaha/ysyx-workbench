@@ -1,6 +1,7 @@
 #include <sdb/cpu_expr.hpp>
 #include <sdb/cpu_watchpoint.hpp>
-#include <sim_tool.hpp>
+#include <util/sim_tool.hpp>
+#include <sim/cpu_sim.hpp>
 #include <sdb/cpu_reg.hpp>
 #include <regex.h>
 #include <cstdbool>
@@ -58,7 +59,6 @@ void init_regex()
         if (ret != 0)
         {
             regerror(ret, &re[i], error_msg, 128);
-            assert(0);
             panic("regex compilation failed: %s\n%s", error_msg, rules[i].regex);
         }
     }
@@ -271,7 +271,7 @@ static word_t eval(const int p, const int q, bool *const success)
     else if (p == q)
     {
         word_t number;
-        bool success_tmp=true;
+        bool success_tmp = true;
         switch (tokens[p].type)
         {
         case TK_NUMBER:
