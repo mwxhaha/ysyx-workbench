@@ -7,6 +7,8 @@
 #include <Vtop___024root.h>
 #include <sdb/cpu_disasm.hpp>
 #include <sdb/cpu_reg.hpp>
+#include <sdb/cpu_watchpoint.hpp>
+#include <sdb/cpu_iringbuf.hpp>
 
 #define MAX_INST_TO_PRINT 10
 static uint64_t g_nr_guest_inst = 0;
@@ -19,22 +21,23 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     {
         puts(_this->logbuf);
     }
+    add_iringbuf(_this->logbuf);
 #endif
-    //   add_iringbuf(_this->logbuf);
-    //   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
-    // #ifdef CONFIG_WATCHPOINT
-    //   if (check_watchpoint()) {
-    //     printf("watchpoint trigger at:");
-    //     puts(_this->logbuf);
-    //     if (nemu_state.state == NEMU_RUNNING) nemu_state.state = NEMU_STOP;
-    //   }
-    // #endif
+#ifdef CONFIG_WATCHPOINT
+    if (check_watchpoint())
+    {
+        printf("watchpoint trigger at:");
+        puts(_this->logbuf);
+        if (npc_state.state == npc_running)
+            npc_state.state = npc_stop;
+    }
+#endif
 }
 
 void assert_fail_msg()
 {
     isa_reg_display();
-    //   print_iringbuf();
+    print_iringbuf();
     //   print_ftrace();
     //   statistic();
 }
@@ -112,7 +115,7 @@ void cpu_exec(uint64_t n)
         if (npc_state.state != npc_end || npc_state.ret != 0)
         {
             isa_reg_display();
-            // print_iringbuf();
+            print_iringbuf();
             // print_ftrace();
         }
     }
