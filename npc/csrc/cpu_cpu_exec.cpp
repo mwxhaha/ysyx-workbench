@@ -5,8 +5,8 @@
 #include <cstdint>
 #include <cstring>
 #include <Vtop___024root.h>
-#include <trace/cpu_disasm.hpp>
-#include <cpu_reg.hpp>
+#include <sdb/cpu_disasm.hpp>
+#include <sdb/cpu_reg.hpp>
 
 #define MAX_INST_TO_PRINT 10
 static uint64_t g_nr_guest_inst = 0;

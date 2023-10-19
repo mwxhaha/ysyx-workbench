@@ -1,8 +1,9 @@
-#include <cpu_sdb.hpp>
+#include <sdb/cpu_sdb.hpp>
 #include <sim_tool.hpp>
 #include <cpu_cpu_exec.hpp>
-#include <cpu_reg.hpp>
-#include <trace/cpu_expr.hpp>
+#include <sdb/cpu_reg.hpp>
+#include <sdb/cpu_expr.hpp>
+#include <sdb/cpu_watchpoint.hpp>
 #include <Vtop__Dpi.h>
 #include <cmath>
 #include <readline/history.h>
@@ -96,7 +97,7 @@ static int cmd_info(const char *const args)
           isa_reg_display();
         break;
       case 'w':
-        //   printf_watchpoint();
+          printf_watchpoint();
         break;
       default:
         printf("info format error, using like this: info r/w\n");
@@ -179,7 +180,7 @@ static int cmd_w(const char *const args)
 {
   if (args != NULL)
   {
-    // new_wp(args);
+    new_wp(args);
   }
   else
   {
@@ -196,7 +197,7 @@ static int cmd_d(const char *const args)
     int result = sscanf(args, "%d", &n);
     if (result == 1)
     {
-      // free_wp(n);
+      free_wp(n);
     }
     else
     {

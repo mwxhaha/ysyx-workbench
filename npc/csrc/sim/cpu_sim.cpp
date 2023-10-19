@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cstdint>
 #include <cassert>
-#include <cpu_sdb.hpp>
+#include <sdb/cpu_sdb.hpp>
 
 void sim()
 {

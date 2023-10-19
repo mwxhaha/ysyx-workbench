@@ -2,8 +2,8 @@
 #include <sim_tool.hpp>
 #include <iostream>
 #include <fstream>
-#include <trace/cpu_disasm.hpp>
-#include <cpu_sdb.hpp>
+#include <sdb/cpu_disasm.hpp>
+#include <sdb/cpu_sdb.hpp>
 
 static void load_img(int &argc, char **argv)
 {
