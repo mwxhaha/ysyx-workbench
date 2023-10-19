@@ -6,6 +6,7 @@
 #include <cstring>
 #include <Vtop___024root.h>
 #include <cpu_disasm.hpp>
+#include <cpu_reg.hpp>
 
 #define MAX_INST_TO_PRINT 10
 static uint64_t g_nr_guest_inst = 0;
@@ -102,7 +103,7 @@ void cpu_exec(uint64_t n)
                npc_state.pc);
         if (npc_state.state != npc_end || npc_state.ret != 0)
         {
-            // isa_reg_display();
+            isa_reg_display();
             // print_iringbuf();
             // print_ftrace();
         }

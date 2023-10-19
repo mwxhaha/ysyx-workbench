@@ -9,9 +9,7 @@
 #include <bitset>
 #include <cstdint>
 
-// #define ISA64
-
-#ifdef ISA64
+#ifdef CONFIG_RV64
 using word_t = uint63_t;
 using vaddr_t = word_t;
 #define FMT_WORD "0x%016x"

@@ -1,6 +1,7 @@
 #include <cpu_sdb.hpp>
 #include <sim_tool.hpp>
 #include <cpu_cpu_exec.hpp>
+#include <cpu_reg.hpp>
 #include <Vtop__Dpi.h>
 #include <cmath>
 #include <readline/history.h>
@@ -91,7 +92,7 @@ static int cmd_info(const char *const args)
       switch (cmd)
       {
       case 'r':
-        //   isa_reg_display();
+          isa_reg_display();
         break;
       case 'w':
         //   printf_watchpoint();

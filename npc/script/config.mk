@@ -14,6 +14,7 @@ BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 TOP_NAME = cpu
+RV64 = 0
 NVBOARD = 0
 DISPLAY_WAVE = 0
 FSANITIZE = 1
@@ -47,6 +48,10 @@ VERILATE = $(OBJ_DIR)/verilate.txt
 ifeq ($(TOP_NAME),cpu)
 VERILATOR_CFLAGS += -DSIM_ALL
 VERILATOR_LDFLAGS += -lreadline
+endif
+
+ifeq ($(RV64),1)
+VERILATOR_CFLAGS += -DCONFIG_RV64
 endif
 
 ifeq ($(NVBOARD),1)
