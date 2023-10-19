@@ -18,6 +18,7 @@ typedef struct Decode {
   char logbuf[128];
 } Decode;
 
+void assert_fail_msg();
 void cpu_exec(uint64_t n);
 
 #endif

@@ -74,4 +74,16 @@ void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool un
     std::cout << std::endl;
 }
 
+#define Assert(cond, format, ...)               \
+    do                                          \
+    {                                           \
+        if (!(cond))                            \
+        {                                       \
+            printf(format "\n", ##__VA_ARGS__); \
+            assert(cond);                       \
+        }                                       \
+    } while (0)
+
+#define panic(format, ...) Assert(0, format, ##__VA_ARGS__)
+
 #endif

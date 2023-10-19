@@ -2,7 +2,8 @@
 #include <sim_tool.hpp>
 #include <iostream>
 #include <fstream>
-#include <cpu_disasm.hpp>
+#include <trace/cpu_disasm.hpp>
+#include <cpu_sdb.hpp>
 
 static void load_img(int &argc, char **argv)
 {
@@ -26,4 +27,5 @@ void init(int &argc, char **argv)
     init_disasm("riscv32-pc-linux-gnu");
 #endif
     load_img(argc, argv);
+    init_sdb();
 }

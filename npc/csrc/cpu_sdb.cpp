@@ -2,6 +2,7 @@
 #include <sim_tool.hpp>
 #include <cpu_cpu_exec.hpp>
 #include <cpu_reg.hpp>
+#include <trace/cpu_expr.hpp>
 #include <Vtop__Dpi.h>
 #include <cmath>
 #include <readline/history.h>
@@ -129,8 +130,7 @@ static int cmd_x(const char *const args)
       }
       const char *const e = args + (int)log10(scan_len) + 2;
       bool success = true;
-      // vaddr_t addr = expr(e, &success);
-      vaddr_t addr = 0x80000000;
+      vaddr_t addr = expr(e, &success);
       if (!success)
         return 0;
       int len = sizeof(word_t);
@@ -163,8 +163,7 @@ static int cmd_p(const char *const args)
   if (args)
   {
     bool success = true;
-    // word_t val = expr(args, &success);
-    word_t val = 0;
+    word_t val = expr(args, &success);
     if (!success)
       return 0;
     printf("%s = " FMT_WORD_T "\n", args, val);
@@ -309,6 +308,6 @@ void sdb_mainloop()
 
 void init_sdb()
 {
-  // init_regex();
+  init_regex();
   // init_wp_pool();
 }

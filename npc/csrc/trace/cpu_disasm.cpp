@@ -1,4 +1,4 @@
-#include <cpu_disasm.hpp>
+#include <trace/cpu_disasm.hpp>
 
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push

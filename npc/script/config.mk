@@ -25,6 +25,7 @@ ifeq ($(NVBOARD),0)
 WTRACE = 1
 endif
 ITRACE = 1
+EXPR_MATCH = 1
 endif
 
 
@@ -79,6 +80,10 @@ endif
 ifeq ($(ITRACE),1)
 VERILATOR_CFLAGS += -I/usr/lib/llvm-14/include -DCONFIG_ITRACE
 VERILATOR_LDFLAGS += -lLLVM-14
+endif
+
+ifeq ($(EXPR_MATCH),1)
+VERILATOR_CFLAGS += -DCONFIG_EXPR_MATCH
 endif
 
 

@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <cstring>
 #include <Vtop___024root.h>
-#include <cpu_disasm.hpp>
+#include <trace/cpu_disasm.hpp>
 #include <cpu_reg.hpp>
 
 #define MAX_INST_TO_PRINT 10
@@ -31,6 +31,14 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     // #endif
 }
 
+void assert_fail_msg()
+{
+    isa_reg_display();
+    //   print_iringbuf();
+    //   print_ftrace();
+    //   statistic();
+}
+
 static void exec_once(Decode *s, vaddr_t pc)
 {
 #ifdef CONFIG_ITRACE
@@ -39,7 +47,7 @@ static void exec_once(Decode *s, vaddr_t pc)
 #endif
     cycle();
 #ifdef CONFIG_ITRACE
-    s->snpc = pc+4;
+    s->snpc = pc + 4;
     s->dnpc = top->rootp->cpu__DOT__pc_out;
     char *p = s->logbuf;
     p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
@@ -66,9 +74,9 @@ static void execute(uint64_t n)
     Decode s;
     for (; n > 0; n--)
     {
-        exec_once(&s,top->rootp->cpu__DOT__pc_out);
+        exec_once(&s, top->rootp->cpu__DOT__pc_out);
         g_nr_guest_inst++;
-        trace_and_difftest(&s,top->rootp->cpu__DOT__pc_out);
+        trace_and_difftest(&s, top->rootp->cpu__DOT__pc_out);
         if (npc_state.state != npc_running)
             break;
     }
