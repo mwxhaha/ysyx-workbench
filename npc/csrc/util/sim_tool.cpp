@@ -20,7 +20,9 @@ VerilatedVcdC *tfp;
 
 void sim_init(int &argc, char **argv)
 {
+#ifdef SIM_ALL
     init(argc, argv);
+#endif
     contextp = new VerilatedContext;
     contextp->commandArgs(argc, argv);
     top = new Vtop{contextp};

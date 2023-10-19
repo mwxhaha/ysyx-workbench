@@ -9,6 +9,7 @@
 #include <sdb/cpu_reg.hpp>
 #include <sdb/cpu_watchpoint.hpp>
 #include <sdb/cpu_iringbuf.hpp>
+#include <sdb/cpu_ftrace.hpp>
 #include <locale.h>
 #include <util/timer.hpp>
 
@@ -55,16 +56,14 @@ void assert_fail_msg()
 {
     isa_reg_display();
     print_iringbuf();
-    //   print_ftrace();
-    //   statistic();
+    print_ftrace();
+    statistic();
 }
 
 static void exec_once(Decode *s, vaddr_t pc)
 {
-#ifdef CONFIG_ITRACE
     s->pc = pc;
     s->isa.inst.val = top->rootp->cpu__DOT__mem_r_1;
-#endif
 #ifdef CONFIG_MTRACE
     if (top->rootp->cpu__DOT__mem_r_en_2 == 1)
         printf("memory read in addr " FMT_WORD ": " FMT_WORD "\n", top->rootp->cpu__DOT__mem_addr_2, top->rootp->cpu__DOT__mem_r_2);
@@ -72,9 +71,11 @@ static void exec_once(Decode *s, vaddr_t pc)
         printf("memory write in addr " FMT_WORD ": " FMT_WORD "\n", top->rootp->cpu__DOT__mem_addr_2, top->rootp->cpu__DOT__mem_w_2);
 #endif
     cycle();
-#ifdef CONFIG_ITRACE
     s->snpc = pc + 4;
     s->dnpc = top->rootp->cpu__DOT__pc_out;
+    if ((s->isa.inst.val & 0x7f) == 0x6f || (s->isa.inst.val & 0x707f) == 0x67)
+        ftrace_record(s);
+#ifdef CONFIG_ITRACE
     char *p = s->logbuf;
     p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
     int ilen = s->snpc - s->pc;
@@ -144,7 +145,7 @@ void cpu_exec(uint64_t n)
         {
             isa_reg_display();
             print_iringbuf();
-            // print_ftrace();
+            print_ftrace();
         }
     default:
         statistic();
