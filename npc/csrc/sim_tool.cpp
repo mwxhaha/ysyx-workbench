@@ -16,6 +16,7 @@ void nvboard_bind_all_pins(Vtop *top);
 VerilatedContext *contextp;
 Vtop *top;
 VerilatedVcdC *tfp;
+#define MAX_TRACE_TIME 100000
 uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01,
                         0x93, 0x89, 0x18, 0x80,
                         0xa3, 0xa8, 0x3c, 0x83,
@@ -23,11 +24,11 @@ uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01,
                         0x97, 0x18, 0x00, 0x80,
                         0xef, 0x08, 0x40, 0x00,
                         0x73, 0x00, 0x10, 0x80};
-npc_state_t npc_state={0,running,MEM_BASE_ADDR};
+npc_state_t npc_state = {0, running, MEM_BASE_ADDR};
 
 static void load_img(int argc, char **argv)
 {
-    for (int i = 0; i < argc;i++)
+    for (int i = 0; i < argc; i++)
         if (strcmp(argv[i], "-i") == 0)
         {
             const char *img_file = argv[2];
@@ -40,9 +41,10 @@ static void load_img(int argc, char **argv)
             return;
         }
 }
-
+extern "C" void init_disasm(const char *triple);
 void sim_init(int argc, char **argv)
 {
+    init_disasm("riscv32-pc-linux-gnu");
     load_img(argc, argv);
     contextp = new VerilatedContext;
     contextp->commandArgs(argc, argv);
@@ -81,7 +83,8 @@ void update(int time)
 #ifdef NV_SIM
         nvboard_update();
 #else
-        tfp->dump(contextp->time());
+        if (contextp->time() < MAX_TRACE_TIME)
+            tfp->dump(contextp->time());
 #endif
         contextp->timeInc(1);
         time--;
@@ -116,7 +119,7 @@ void absort_dpic(int pc)
     npc_state.pc = pc;
 }
 
-void ebreak_dpic(int ret,int pc)
+void ebreak_dpic(int ret, int pc)
 {
     npc_state.ret = ret;
     npc_state.state = end;

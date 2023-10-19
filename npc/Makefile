@@ -34,8 +34,9 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 PREFIX_NAME = Vtop
 TOP_NAME = cpu
 BIN = $(BUILD_DIR)/$(PREFIX_NAME)
-VERILATOR_CFLAGS = -std=c++20 -Wall -DTOP_NAME=$(TOP_NAME) -I$(INCLUDE_DIR)
-VERILATOR_LDFLAGS = -lreadline
+VERILATOR_CFLAGS = -std=c++20 -Wall -g -DTOP_NAME=$(TOP_NAME) -I$(INCLUDE_DIR) -I/usr/lib/llvm-14/include
+VERILATOR_LDFLAGS = -lreadline -lLLVM-14
+CSRC += $(NEMU_HOME)/src/utils/disasm.cc
 ifeq ($(TOP_NAME),cpu)
 VERILATOR_CFLAGS += -DSIM_ALL
 endif
@@ -48,7 +49,7 @@ VERILATOR_CFLAGS += -I$(NVBOARD_HOME)/include -DNV_SIM
 VERILATOR_LDFLAGS += -lSDL2 -lSDL2_image
 VERILATOR_SRC = $(VSRC) $(CSRC) $(NVBOARD_ARCHIVE)
 endif
-VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) -y $(INCLUDE_DIR) --prefix $(PREFIX_NAME) --top-module $(TOP_NAME) -o $(BIN) -j 0 -Wall -Wno-UNUSEDSIGNAL --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+VERILATOR_FLAGS = --cc --exe --debug --Mdir $(OBJ_DIR) -y $(INCLUDE_DIR) --prefix $(PREFIX_NAME) --top-module $(TOP_NAME) -o $(BIN) -j 0 -Wall -Wno-UNUSEDSIGNAL --trace $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
 VERILATOR_FLAGS_LIB = $(addprefix -LDFLAGS , $(VERILATOR_LDFLAGS))
 VERILATE = $(OBJ_DIR)/verilate.txt
 
