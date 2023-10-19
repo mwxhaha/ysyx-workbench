@@ -6,9 +6,9 @@ include script/config.mk
 $(SRC_AUTO_BIND): $(NXDC)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
+
+
 include $(NVBOARD_HOME)/scripts/nvboard.mk
-
-
 
 verilate: $(VERILATE)
 

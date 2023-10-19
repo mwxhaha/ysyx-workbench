@@ -2,12 +2,12 @@
 #include <sim_tool.hpp>
 #include <cpu_cpu_exec.hpp>
 #include <Vtop__Dpi.h>
-#include <math.h>
+#include <cmath>
 #include <readline/history.h>
 #include <readline/readline.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdio>
+#include <cstdbool>
 
 static int is_batch_mode = false;
 
@@ -44,6 +44,7 @@ static int cmd_c(const char *const args)
 
 static int cmd_q(const char *const args)
 {
+  npc_state.state = npc_quit;
   if (args != NULL)
   {
     printf("q format error, using like this: q\n");
