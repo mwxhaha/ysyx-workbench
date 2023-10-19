@@ -17,6 +17,7 @@ typedef struct Decode {
   ISADecodeInfo isa;
   char logbuf[128];
 } Decode;
+
 void cpu_exec(uint64_t n);
 
 #endif

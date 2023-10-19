@@ -49,7 +49,7 @@ typedef struct npc_state_t
 } npc_state_t;
 extern npc_state_t npc_state;
 
-void sim_init(int argc, char **argv);
+void sim_init(int &argc, char **argv);
 void sim_exit();
 void update(int time = 1);
 void cycle(int cycle_number = 1, int cycle_time = 10);

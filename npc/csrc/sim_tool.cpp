@@ -10,7 +10,6 @@ void nvboard_bind_all_pins(Vtop *top);
 #include <cstdint>
 #include <cstring>
 #include <Vtop__Dpi.h>
-#include <iostream>
 #include <cpu_init.hpp>
 
 VerilatedContext *contextp;
@@ -26,17 +25,19 @@ uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01,
                         0x73, 0x00, 0x10, 0x80};
 npc_state_t npc_state = {0, npc_running, MEM_BASE_ADDR};
 
-void sim_init(int argc, char **argv)
+void sim_init(int &argc, char **argv)
 {
     init(argc, argv);
     contextp = new VerilatedContext;
     contextp->commandArgs(argc, argv);
     top = new Vtop{contextp};
 
+#ifdef CONFIG_WTRACE
     Verilated::traceEverOn(true);
     tfp = new VerilatedVcdC;
     top->trace(tfp, HIERARCHY_DEEP);
     tfp->open("build/wave.vcd");
+#endif
 
 #ifdef NV_SIM
     nvboard_bind_all_pins(top);
@@ -50,8 +51,10 @@ void sim_exit()
     delete top;
     delete contextp;
 
+#ifdef CONFIG_WTRACE
     tfp->close();
     delete tfp;
+#endif
 
 #ifdef NV_SIM
     nvboard_quit();
@@ -65,7 +68,8 @@ void update(int time)
         top->eval();
 #ifdef NV_SIM
         nvboard_update();
-#else
+#endif
+#ifdef CONFIG_WTRACE
         if (contextp->time() < MAX_TRACE_TIME)
             tfp->dump(contextp->time());
 #endif

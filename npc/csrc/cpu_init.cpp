@@ -4,7 +4,7 @@
 #include <fstream>
 #include <cpu_disasm.hpp>
 
-static void load_img(int argc, char **argv)
+static void load_img(int &argc, char **argv)
 {
     for (int i = 0; i < argc; i++)
         if (strcmp(argv[i], "-i") == 0)
@@ -20,8 +20,10 @@ static void load_img(int argc, char **argv)
         }
 }
 
-void init(int argc, char **argv)
+void init(int &argc, char **argv)
 {
+#ifdef CONFIG_ITRACE
     init_disasm("riscv32-pc-linux-gnu");
+#endif
     load_img(argc, argv);
 }

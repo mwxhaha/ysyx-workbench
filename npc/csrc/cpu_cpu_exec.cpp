@@ -13,10 +13,12 @@ static bool g_print_step = false;
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 {
+#ifdef CONFIG_ITRACE
     if (g_print_step)
     {
         puts(_this->logbuf);
     }
+#endif
     //   add_iringbuf(_this->logbuf);
     //   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
     // #ifdef CONFIG_WATCHPOINT
@@ -30,9 +32,12 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 
 static void exec_once(Decode *s, vaddr_t pc)
 {
+#ifdef CONFIG_ITRACE
     s->pc = pc;
     s->isa.inst.val = top->rootp->cpu__DOT__mem_r_1;
+#endif
     cycle();
+#ifdef CONFIG_ITRACE
     s->snpc = pc+4;
     s->dnpc = top->rootp->cpu__DOT__pc_out;
     char *p = s->logbuf;
@@ -52,6 +57,7 @@ static void exec_once(Decode *s, vaddr_t pc)
     memset(p, ' ', space_len);
     p += space_len;
     disassemble(p, s->logbuf + sizeof(s->logbuf) - p, s->pc, (uint8_t *)&s->isa.inst.val, ilen);
+#endif
 }
 
 static void execute(uint64_t n)
