@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <cstring>
 #include <Vtop___024root.h>
-#include <sdb/cpu_disasm.hpp>
+#include <util/disasm.hpp>
 #include <sdb/cpu_reg.hpp>
 #include <sdb/cpu_watchpoint.hpp>
 #include <sdb/cpu_iringbuf.hpp>

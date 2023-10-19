@@ -1,5 +1,5 @@
-#ifndef CPU_DISASM_HPP
-#define CPU_DISASM_HPP
+#ifndef DISASM_HPP
+#define DISASM_HPP
 
 #include <cstdint>
 

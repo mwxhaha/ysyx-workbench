@@ -3,7 +3,7 @@
 #include <sim/cpu_sim.hpp>
 #include <iostream>
 #include <fstream>
-#include <sdb/cpu_disasm.hpp>
+#include <util/disasm.hpp>
 #include <sdb/cpu_sdb.hpp>
 
 static void load_img(int &argc, char **argv)
