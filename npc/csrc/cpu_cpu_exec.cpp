@@ -9,9 +9,12 @@
 #include <sdb/cpu_reg.hpp>
 #include <sdb/cpu_watchpoint.hpp>
 #include <sdb/cpu_iringbuf.hpp>
+#include <locale.h>
+#include <util/timer.hpp>
 
 #define MAX_INST_TO_PRINT 10
 static uint64_t g_nr_guest_inst = 0;
+static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
@@ -34,17 +37,18 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 #endif
 }
 
-static void statistic() {
-//   IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
-// #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
-//   Log("host time spent = " NUMBERIC_FMT " us", g_timer);
-//   Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
-//   if (g_timer > 0)
-//     Log("simulation frequency = " NUMBERIC_FMT " inst/s",
-//         g_nr_guest_inst * 1000000 / g_timer);
-//   else
-//     Log("Finish running in less than 1 us and can not calculate the simulation "
-//         "frequency");
+static void statistic()
+{
+    setlocale(LC_NUMERIC, "");
+#define NUMBERIC_FMT "%'lu"
+    printf("host time spent = " NUMBERIC_FMT " us\n", g_timer);
+    printf("total guest instructions = " NUMBERIC_FMT "\n", g_nr_guest_inst);
+    if (g_timer > 0)
+        printf("simulation frequency = " NUMBERIC_FMT " inst/s\n",
+               g_nr_guest_inst * 1000000 / g_timer);
+    else
+        printf("Finish running in less than 1 us and can not calculate the simulation "
+               "frequency\n");
 }
 
 void assert_fail_msg()
@@ -119,7 +123,12 @@ void cpu_exec(uint64_t n)
         npc_state.state = npc_running;
     }
 
+    uint64_t timer_start = get_time();
+
     execute(n);
+
+    uint64_t timer_end = get_time();
+    g_timer += timer_end - timer_start;
 
     switch (npc_state.state)
     {
@@ -138,6 +147,6 @@ void cpu_exec(uint64_t n)
             // print_ftrace();
         }
     default:
-      statistic();
+        statistic();
     }
 }
