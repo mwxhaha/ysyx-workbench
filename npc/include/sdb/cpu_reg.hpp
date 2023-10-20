@@ -7,5 +7,6 @@
 
 void isa_reg_display();
 word_t isa_reg_str2val(const char *s, bool *success);
+bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc);
 
 #endif

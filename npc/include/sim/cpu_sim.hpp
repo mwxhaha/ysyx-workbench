@@ -61,4 +61,9 @@ typedef struct npc_state_t
 } npc_state_t;
 extern npc_state_t npc_state;
 
+typedef struct {
+  word_t gpr[GPR_NUM];
+  vaddr_t pc;
+} CPU_state;
+
 #endif

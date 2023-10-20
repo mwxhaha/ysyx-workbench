@@ -40,16 +40,20 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (CONFIG_ITRACE_COND) {
     log_write("%s\n", _this->logbuf);
   }
+  add_iringbuf(_this->logbuf);
 #endif
   if (g_print_step) {
     IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
   }
-  add_iringbuf(_this->logbuf);// plan todo
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
   if (check_watchpoint()) {
-    printf("watchpoint trigger at:");
+    printf("watchpoint trigger at: ");
+#ifdef CONFIG_ITRACE_COND
     puts(_this->logbuf);
+#else
+    printf("0x%08x\n",_this->isa.inst.val);// plan todo
+#endif
     if (nemu_state.state == NEMU_RUNNING) nemu_state.state = NEMU_STOP;
   }
 #endif

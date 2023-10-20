@@ -11,6 +11,7 @@
 #include <util/debug.hpp>
 #include <sdb/cpu_sdb.hpp>
 #include <sdb/cpu_ftrace.hpp>
+#include <sdb/cpu_dut.hpp>
 
 static bool load_img(int argc, char **argv)
 {
@@ -36,6 +37,7 @@ void init(int &argc, char **argv)
         argc_tmp -= 2;
     if (load_elf(argc, argv))
         argc_tmp -= 2;
+    init_difftest("/home/mwxhaha/ysyx-workbench/nemu/build/riscv32-nemu-interpreter-so", 10000);
     init_sdb();
 #ifdef CONFIG_ITRACE
 #if CONFIG_ISA == CONFIG_RV32I

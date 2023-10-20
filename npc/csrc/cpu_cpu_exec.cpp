@@ -15,6 +15,7 @@
 #include <sdb/cpu_watchpoint.hpp>
 #include <sdb/cpu_iringbuf.hpp>
 #include <sdb/cpu_ftrace.hpp>
+#include <sdb/cpu_dut.hpp>
 
 #define MAX_INST_TO_PRINT 10
 static uint64_t g_nr_guest_inst = 0;
@@ -30,11 +31,18 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     }
     add_iringbuf(_this->logbuf);
 #endif
+#ifdef CONFIG_DIFFTEST
+    difftest_step(_this->pc, dnpc);
+#endif
 #ifdef CONFIG_WATCHPOINT
     if (check_watchpoint())
     {
         printf("watchpoint trigger at:");
-        puts(_this->logbuf);
+#ifdef CONFIG_ITRACE_COND
+    puts(_this->logbuf);
+#else
+    printf("0x%08x\n",_this->isa.inst.val);// plan todo
+#endif
         if (npc_state.state == npc_running)
             npc_state.state = npc_stop;
     }
