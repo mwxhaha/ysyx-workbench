@@ -38,10 +38,14 @@ void init(int &argc, char **argv)
         argc_tmp -= 2;
     init_sdb();
 #ifdef CONFIG_ITRACE
-#ifdef CONFIG_RV64
-    panic("do not support");
-#else
+#if CONFIG_ISA == CONFIG_RV32I
     init_disasm("riscv32-pc-linux-gnu");
+#elif CONFIG_ISA == CONFIG_RV32E
+    init_disasm("riscv32-pc-linux-gnu");
+#elif CONFIG_ISA == CONFIG_RV64I
+    init_disasm("riscv64-pc-linux-gnu");
+#else
+#error "do not support ISA " #CONFIG_ISA
 #endif
 #endif
     argc = argc_tmp;

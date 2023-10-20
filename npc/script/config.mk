@@ -16,13 +16,13 @@ BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 TOP_NAME = cpu
-RV64 = 0
+ISA = RV32E
 NVBOARD = 0
 DISPLAY_WAVE = 0
 ifeq ($(NVBOARD),0)
 FSANITIZE = 1
 endif
-DEBUG = 1
+DEBUG = 0
 TRACE = 1
 ifeq ($(TRACE),1)
 ifeq ($(NVBOARD),0)
@@ -57,8 +57,14 @@ VERILATOR_CFLAGS += -DSIM_ALL
 VERILATOR_LDFLAGS += -lreadline
 endif
 
-ifeq ($(RV64),1)
-VERILATOR_CFLAGS += -DCONFIG_RV64
+ifeq ($(ISA),RV32I)
+VERILATOR_CFLAGS += -DCONFIG_ISA=0
+else ifeq ($(ISA),RV32E)
+VERILATOR_CFLAGS += -DCONFIG_ISA=1
+else ifeq ($(ISA),RV64I)
+VERILATOR_CFLAGS += -DCONFIG_ISA=2
+else
+$(error "do not support ISA $(ISA)")
 endif
 
 ifeq ($(NVBOARD),1)

@@ -50,12 +50,12 @@ static int cmd_c(const char *const args)
 
 static int cmd_q(const char *const args)
 {
-  npc_state.state = npc_quit;
   if (args != NULL)
   {
     printf("q format error, using like this: q\n");
     return 0;
   }
+  npc_state.state = npc_quit;
   return -1;
 }
 
@@ -119,6 +119,8 @@ static int cmd_info(const char *const args)
   return 0;
 }
 
+#define COLUMN 8
+
 static int cmd_x(const char *const args)
 {
   if (args)
@@ -138,16 +140,15 @@ static int cmd_x(const char *const args)
       if (!success)
         return 0;
       int len = sizeof(word_t);
-      int column_cnt_display = 8;
       for (int i = 0; i < scan_len; i++)
       {
         word_t val;
         pmem_read(addr + i * len, (int *)&val);
         printf(FMT_WORD " ", val);
-        if (i % column_cnt_display == column_cnt_display - 1)
+        if (i % COLUMN == COLUMN - 1)
           printf("\n");
       }
-      if (scan_len % column_cnt_display != 0)
+      if (scan_len % COLUMN != 0)
         printf("\n");
     }
     else

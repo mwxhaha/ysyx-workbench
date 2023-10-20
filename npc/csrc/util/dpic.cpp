@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#ifdef SIM_ALL
 #include <sim/cpu_sim.hpp>
 
 extern "C" void absort_dpic(int pc)
@@ -20,14 +21,21 @@ extern "C" void ebreak_dpic(int ret, int pc)
 
 extern "C" void pmem_read(int raddr, int *rdata)
 {
+#if (ISA_WIDTH == 64)
+    assert(0)
+#else
     assert((vaddr_t)raddr >= MEM_BASE_ADDR);
     assert((vaddr_t)raddr <= MEM_BASE_ADDR + MEM_MAX - 1);
     void *addr_real = (vaddr_t)raddr - MEM_BASE_ADDR + mem;
     *rdata = *(word_t *)addr_real;
+#endif
 }
 
 extern "C" void pmem_write(int waddr, int wdata, char wmask)
 {
+#if (ISA_WIDTH == 64)
+    assert(0)
+#else
     assert((vaddr_t)waddr >= MEM_BASE_ADDR);
     assert((vaddr_t)waddr <= MEM_BASE_ADDR + MEM_MAX - 1);
     void *addr_real = (vaddr_t)waddr - MEM_BASE_ADDR + mem;
@@ -46,4 +54,14 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
         assert(0);
         break;
     }
+#endif
 }
+
+#else
+
+extern "C" void absort_dpic(int pc) {}
+extern "C" void ebreak_dpic(int ret, int pc) {}
+extern "C" void pmem_read(int raddr, int *rdata) {}
+extern "C" void pmem_write(int waddr, int wdata, char wmask) {}
+
+#endif

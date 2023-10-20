@@ -4,7 +4,6 @@
 #include <cstdbool>
 #include <cstdint>
 #include <cstring>
-
 #include <locale.h>
 
 #include <util/sim_tool.hpp>
@@ -138,6 +137,7 @@ void cpu_exec(uint64_t n)
     switch (npc_state.state)
     {
     case npc_running:
+    case npc_stop:
         npc_state.state = npc_stop;
         break;
     case npc_end:
@@ -151,7 +151,7 @@ void cpu_exec(uint64_t n)
             print_iringbuf();
             print_ftrace();
         }
-    default:
+    case npc_quit:
         statistic();
     }
 }

@@ -10,7 +10,7 @@
 #include <util/io.hpp>
 #include <cpu_cpu_exec.hpp>
 
-#ifdef CONFIG_RV64
+#if (ISA_WIDTH == 64)
 typedef Elf64_Ehdr Elf_Ehdr;
 typedef Elf64_Shdr Elf_Shdr;
 typedef Elf64_Sym Elf_Sym;
@@ -42,12 +42,15 @@ static bool open_ftrace = true;
 
 bool load_elf(int argc, char **argv)
 {
-    char *elf_file=NULL;
+#if (ISA_WIDTH == 64)
+    panic("do not support rv64");
+#endif
+    char *elf_file = NULL;
     for (int i = 0; i < argc; i++)
         if (strcmp(argv[i], "-e") == 0)
         {
             elf_file = argv[i + 1];
-            printf("use elf: %s\n",elf_file);
+            printf("use elf: %s\n", elf_file);
             break;
         }
     if (elf_file == NULL)
