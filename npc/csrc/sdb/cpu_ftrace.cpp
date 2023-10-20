@@ -1,11 +1,14 @@
-#include <util/sim_tool.hpp>
-#include <sim/cpu_sim.hpp>
-#include <util/io.hpp>
-#include <cpu_cpu_exec.hpp>
+#include <sdb/cpu_ftrace.hpp>
+
 #include <elf.h>
 #include <cstdio>
 #include <cstdbool>
 #include <cstring>
+
+#include <sim/cpu_sim.hpp>
+#include <util/debug.hpp>
+#include <util/io.hpp>
+#include <cpu_cpu_exec.hpp>
 
 #ifdef CONFIG_RV64
 typedef Elf64_Ehdr Elf_Ehdr;
@@ -44,7 +47,7 @@ bool load_elf(int argc, char **argv)
         if (strcmp(argv[i], "-e") == 0)
         {
             elf_file = argv[i + 1];
-            std::cout << "use elf: " << elf_file << std::endl;
+            printf("use elf: %s\n",elf_file);
             break;
         }
     if (elf_file == NULL)

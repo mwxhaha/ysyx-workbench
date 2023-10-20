@@ -1,12 +1,16 @@
 #include <cpu_init.hpp>
-#include <util/sim_tool.hpp>
-#include <sim/cpu_sim.hpp>
+
+#include <cstdbool>
+#include <cstring>
+
 #include <iostream>
 #include <fstream>
+
+#include <sim/cpu_sim.hpp>
 #include <util/disasm.hpp>
+#include <util/debug.hpp>
 #include <sdb/cpu_sdb.hpp>
 #include <sdb/cpu_ftrace.hpp>
-#include <cstdbool>
 
 static bool load_img(int argc, char **argv)
 {
@@ -34,7 +38,11 @@ void init(int &argc, char **argv)
         argc_tmp -= 2;
     init_sdb();
 #ifdef CONFIG_ITRACE
+#ifdef CONFIG_RV64
+    panic("do not support");
+#else
     init_disasm("riscv32-pc-linux-gnu");
+#endif
 #endif
     argc = argc_tmp;
 }

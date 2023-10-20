@@ -1,18 +1,23 @@
 #ifndef CPU_SIM_HPP
 #define CPU_SIM_HPP
 
-#include <util/sim_tool.hpp>
 #include <cstdint>
 
 #ifdef CONFIG_RV64
 using word_t = uint63_t;
 using vaddr_t = word_t;
+using inst_t = uint32_t;
+#define GPR_NUM 32
+#define INST_LEN 32
 #define FMT_WORD "0x%016x"
 #define FMT_WORD_T "%lu"
 #define FMT_SWORD_T "%ld"
 #else
 using word_t = uint32_t;
 using vaddr_t = word_t;
+using inst_t = uint32_t;
+#define GPR_NUM 16
+#define INST_LEN 32
 #define FMT_WORD "0x%08x"
 #define FMT_WORD_T "%u"
 #define FMT_SWORD_T "%d"

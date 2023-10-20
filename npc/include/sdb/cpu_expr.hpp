@@ -1,7 +1,6 @@
 #ifndef CPU_EXPR_HPP
 #define CPU_EXPR_HPP
 
-#include <util/sim_tool.hpp>
 #include <sim/cpu_sim.hpp>
 
 void init_regex();

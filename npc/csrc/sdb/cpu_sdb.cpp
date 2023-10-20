@@ -1,4 +1,12 @@
 #include <sdb/cpu_sdb.hpp>
+
+#include <cstdint>
+#include <cstdio>
+#include <cstdbool>
+
+#include <readline/history.h>
+#include <readline/readline.h>
+
 #include <util/sim_tool.hpp>
 #include <sim/cpu_sim.hpp>
 #include <cpu_cpu_exec.hpp>
@@ -6,12 +14,6 @@
 #include <sdb/cpu_expr.hpp>
 #include <sdb/cpu_watchpoint.hpp>
 #include <Vtop__Dpi.h>
-#include <cmath>
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <cstdint>
-#include <cstdio>
-#include <cstdbool>
 
 static int is_batch_mode = false;
 
@@ -262,7 +264,7 @@ static int cmd_help(const char *const args)
   return 0;
 }
 
-void sdb_set_batch_mode() { is_batch_mode = true; }
+// void sdb_set_batch_mode() { is_batch_mode = true; }
 
 void sdb_mainloop()
 {

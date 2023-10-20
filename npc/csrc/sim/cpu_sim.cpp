@@ -1,12 +1,8 @@
 #include <sim/cpu_sim.hpp>
-#include <verilated.h>
-#include <Vtop.h>
-#include <verilated_vcd_c.h>
+
 #include <util/sim_tool.hpp>
-#include <iostream>
-#include <cstdint>
-#include <cassert>
 #include <sdb/cpu_sdb.hpp>
+#include <util/debug.hpp>
 
 
 uint8_t mem[MEM_MAX] = {0xb3, 0x8c, 0x19, 0x01,

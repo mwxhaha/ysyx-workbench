@@ -1,16 +1,16 @@
 #include <util/sim_tool.hpp>
+
 #include <verilated.h>
-#include <Vtop.h>
 #include <verilated_vcd_c.h>
+
+#include <Vtop.h>
 #ifdef NV_SIM
 #include <nvboard.h>
 void nvboard_bind_all_pins(Vtop *top);
 #endif
-#include <cassert>
-#include <cstdint>
-#include <cstring>
-#include <Vtop__Dpi.h>
+#ifdef SIM_ALL
 #include <cpu_init.hpp>
+#endif
 
 VerilatedContext *contextp;
 Vtop *top;
@@ -23,6 +23,7 @@ void sim_init(int &argc, char **argv)
 #ifdef SIM_ALL
     init(argc, argv);
 #endif
+
     contextp = new VerilatedContext;
     contextp->commandArgs(argc, argv);
     top = new Vtop{contextp};

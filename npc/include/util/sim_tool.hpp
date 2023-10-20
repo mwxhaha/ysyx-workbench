@@ -1,12 +1,13 @@
 #ifndef SIM_TOOL_HPP
 #define SIM_TOOL_HPP
 
-#include <verilated.h>
-#include <Vtop.h>
-#include <verilated_vcd_c.h>
 #include <iostream>
-#include <cmath>
 #include <bitset>
+
+#include <verilated.h>
+#include <verilated_vcd_c.h>
+
+#include <Vtop.h>
 
 extern VerilatedContext *contextp;
 extern Vtop *top;
@@ -38,31 +39,5 @@ void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool un
         std::cout << pin - std::pow(2, data_len) << ' ';
     std::cout << std::endl;
 }
-
-#ifdef SIM_ALL
-#define Assert(cond, format, ...)               \
-    do                                          \
-    {                                           \
-        if (!(cond))                            \
-        {                                       \
-            printf(format "\n", ##__VA_ARGS__); \
-            extern void assert_fail_msg();      \
-            assert_fail_msg();                  \
-            assert(cond);                       \
-        }                                       \
-    } while (0)
-#else
-#define Assert(cond, format, ...)               \
-    do                                          \
-    {                                           \
-        if (!(cond))                            \
-        {                                       \
-            printf(format "\n", ##__VA_ARGS__); \
-            assert(cond);                       \
-        }                                       \
-    } while (0)
-#endif
-
-#define panic(format, ...) Assert(0, format, ##__VA_ARGS__)
 
 #endif

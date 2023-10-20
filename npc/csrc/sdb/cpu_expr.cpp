@@ -1,12 +1,14 @@
 #include <sdb/cpu_expr.hpp>
-#include <sdb/cpu_watchpoint.hpp>
-#include <util/sim_tool.hpp>
-#include <sim/cpu_sim.hpp>
-#include <sdb/cpu_reg.hpp>
-#include <regex.h>
+
 #include <cstdbool>
 #include <cstdio>
 #include <cstring>
+#include <regex.h>
+
+#include <sim/cpu_sim.hpp>
+#include <util/debug.hpp>
+#include <sdb/cpu_watchpoint.hpp>
+#include <sdb/cpu_reg.hpp>
 #include <Vtop__Dpi.h>
 
 enum

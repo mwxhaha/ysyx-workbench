@@ -1,9 +1,10 @@
 #include <sdb/cpu_iringbuf.hpp>
-#include <util/sim_tool.hpp>
+
+#include <cstdbool>
+#include <cstdio>
+#include <cstring>
+
 #include <sim/cpu_sim.hpp>
-#include <stdbool.h>
-#include <stdio.h>
-#include <string.h>
 
 #define IRINGBUF_MAX 10
 

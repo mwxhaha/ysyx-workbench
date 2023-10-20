@@ -1,17 +1,21 @@
 #include <cpu_cpu_exec.hpp>
-#include <util/sim_tool.hpp>
+
 #include <cstdio>
 #include <cstdbool>
 #include <cstdint>
 #include <cstring>
-#include <Vtop___024root.h>
+
+#include <locale.h>
+
+#include <util/sim_tool.hpp>
+#include <util/timer.hpp>
 #include <util/disasm.hpp>
+#include <sim/cpu_sim.hpp>
+#include <Vtop___024root.h>
 #include <sdb/cpu_reg.hpp>
 #include <sdb/cpu_watchpoint.hpp>
 #include <sdb/cpu_iringbuf.hpp>
 #include <sdb/cpu_ftrace.hpp>
-#include <locale.h>
-#include <util/timer.hpp>
 
 #define MAX_INST_TO_PRINT 10
 static uint64_t g_nr_guest_inst = 0;
@@ -38,28 +42,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 #endif
 }
 
-static void statistic()
-{
-    setlocale(LC_NUMERIC, "");
-#define NUMBERIC_FMT "%'lu"
-    printf("host time spent = " NUMBERIC_FMT " us\n", g_timer);
-    printf("total guest instructions = " NUMBERIC_FMT "\n", g_nr_guest_inst);
-    if (g_timer > 0)
-        printf("simulation frequency = " NUMBERIC_FMT " inst/s\n",
-               g_nr_guest_inst * 1000000 / g_timer);
-    else
-        printf("Finish running in less than 1 us and can not calculate the simulation "
-               "frequency\n");
-}
-
-void assert_fail_msg()
-{
-    isa_reg_display();
-    print_iringbuf();
-    print_ftrace();
-    statistic();
-}
-
 static void exec_once(Decode *s, vaddr_t pc)
 {
     s->pc = pc;
@@ -71,7 +53,7 @@ static void exec_once(Decode *s, vaddr_t pc)
         printf("memory write in addr " FMT_WORD ": " FMT_WORD "\n", top->rootp->cpu__DOT__mem_addr_2, top->rootp->cpu__DOT__mem_w_2);
 #endif
     cycle();
-    s->snpc = pc + 4;
+    s->snpc = pc + INST_LEN / 8;
     s->dnpc = top->rootp->cpu__DOT__pc_out;
     if ((s->isa.inst.val & 0x7f) == 0x6f || (s->isa.inst.val & 0x707f) == 0x67)
         ftrace_record(s);
@@ -85,7 +67,7 @@ static void exec_once(Decode *s, vaddr_t pc)
     {
         p += snprintf(p, 4, " %02x", inst[i]);
     }
-    int ilen_max = 4;
+    int ilen_max = INST_LEN / 8;
     int space_len = ilen_max - ilen;
     if (space_len < 0)
         space_len = 0;
@@ -107,6 +89,28 @@ static void execute(uint64_t n)
         if (npc_state.state != npc_running)
             break;
     }
+}
+
+static void statistic()
+{
+    setlocale(LC_NUMERIC, "");
+#define NUMBERIC_FMT "%'lu"
+    printf("host time spent = " NUMBERIC_FMT " us\n", g_timer);
+    printf("total guest instructions = " NUMBERIC_FMT "\n", g_nr_guest_inst);
+    if (g_timer > 0)
+        printf("simulation frequency = " NUMBERIC_FMT " inst/s\n",
+               g_nr_guest_inst * 1000000 / g_timer);
+    else
+        printf("Finish running in less than 1 us and can not calculate the simulation "
+               "frequency\n");
+}
+
+void assert_fail_msg()
+{
+    isa_reg_display();
+    print_iringbuf();
+    print_ftrace();
+    statistic();
 }
 
 void cpu_exec(uint64_t n)

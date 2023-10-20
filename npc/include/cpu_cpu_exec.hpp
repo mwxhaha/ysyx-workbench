@@ -2,16 +2,19 @@
 #define CPU_CPU_EXEC_HPP
 
 #include <cstdint>
-#include <util/sim_tool.hpp>
+
 #include <sim/cpu_sim.hpp>
 
-typedef struct {
-  union {
+typedef struct
+{
+  union
+  {
     uint32_t val;
   } inst;
 } ISADecodeInfo;
 
-typedef struct Decode {
+typedef struct Decode
+{
   vaddr_t pc;
   vaddr_t snpc; // static next pc
   vaddr_t dnpc; // dynamic next pc

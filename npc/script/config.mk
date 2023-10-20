@@ -4,12 +4,14 @@ ROOT_DIR = $(NPC_HOME)
 VSRC_DIR = $(ROOT_DIR)/vsrc
 VSRC = $(shell find $(VSRC_DIR) -name "*.v")
 CSRC_DIR = $(ROOT_DIR)/csrc
-CSRC = $(shell find $(CSRC_DIR) -name "main.cpp" -or -name "sim_tool.cpp" -or -name "$(TOP_NAME)*.cpp") $(shell find $(CSRC_DIR)/util -name "*.cpp" )
+CSRC = $(shell find $(CSRC_DIR) -name "main.cpp" -or -name "$(TOP_NAME)*.cpp") $(shell find $(CSRC_DIR)/util -name "*.cpp" )
 NXDC_DIR = $(ROOT_DIR)/nxdc
 NXDC = $(shell find $(NXDC_DIR) -name "*.nxdc")
 INCLUDE_DIR = $(ROOT_DIR)/include
 INCLUDE = $(shell find $(INCLUDE_DIR) -name "*.vh" -or -name "*.hpp")
-MAKE_FILE = $(ROOT_DIR)/Makefile
+SCRIPT_DIR = $(ROOT_DIR)/script
+SCRIPT = $(shell find $(SCRIPT_DIR) -name "*.mk")
+MAKE_FILE = $(ROOT_DIR)/Makefile $(SCRIPT)
 BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
@@ -17,8 +19,10 @@ TOP_NAME = cpu
 RV64 = 0
 NVBOARD = 0
 DISPLAY_WAVE = 0
+ifeq ($(NVBOARD),0)
 FSANITIZE = 1
-DEBUG = 0
+endif
+DEBUG = 1
 TRACE = 1
 ifeq ($(TRACE),1)
 ifeq ($(NVBOARD),0)
@@ -64,9 +68,8 @@ VERILATOR_SRC += $(NVBOARD_ARCHIVE)
 endif
 
 ifeq ($(FSANITIZE),1)
-ifeq ($(NVBOARD),0)
+VERILATOR_CFLAGS += -fsanitize=address
 VERILATOR_LDFLAGS += -fsanitize=address
-endif
 endif
 
 ifeq ($(DEBUG),1)
