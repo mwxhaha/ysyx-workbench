@@ -1,5 +1,7 @@
 #include <util/sim_tool.hpp>
 
+#include <iostream>
+
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
@@ -15,7 +17,7 @@ void nvboard_bind_all_pins(Vtop *top);
 VerilatedContext *contextp;
 Vtop *top;
 VerilatedVcdC *tfp;
-#define MAX_TRACE_TIME 100000
+#define MAX_RECORD_WAVE 100000
 #define HIERARCHY_DEEP 100
 
 void sim_init(int &argc, char **argv)
@@ -28,7 +30,7 @@ void sim_init(int &argc, char **argv)
     contextp->commandArgs(argc, argv);
     top = new Vtop{contextp};
 
-#ifdef CONFIG_WTRACE
+#ifdef CONFIG_RECORD_WAVE
     Verilated::traceEverOn(true);
     tfp = new VerilatedVcdC;
     top->trace(tfp, HIERARCHY_DEEP);
@@ -47,7 +49,7 @@ void sim_exit()
     delete top;
     delete contextp;
 
-#ifdef CONFIG_WTRACE
+#ifdef CONFIG_RECORD_WAVE
     tfp->close();
     delete tfp;
 #endif
@@ -65,9 +67,11 @@ void update(int time)
 #ifdef NV_SIM
         nvboard_update();
 #endif
-#ifdef CONFIG_WTRACE
-        if (contextp->time() < MAX_TRACE_TIME)
+#ifdef CONFIG_RECORD_WAVE
+        if (contextp->time() < MAX_RECORD_WAVE)
             tfp->dump(contextp->time());
+        else if (contextp->time() == MAX_RECORD_WAVE)
+            std::cout << "loog sim time may cause large vcd file" << std::endl;
 #endif
         contextp->timeInc(1);
         time--;

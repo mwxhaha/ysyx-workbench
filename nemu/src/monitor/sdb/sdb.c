@@ -60,7 +60,7 @@ static int cmd_c(const char *const args) {
   cpu_exec(-1);
   return 0;
 }
-
+//  plan todo
 static int cmd_q(const char *const args) {
   nemu_state.state = NEMU_QUIT;
   if (args != NULL) {
@@ -128,7 +128,7 @@ static int cmd_x(const char *const args) {
       vaddr_t addr = expr(e, &success);
       if (!success) return 0;
       int len = sizeof(word_t);
-      int column_cnt_display = 8;
+      int column_cnt_display = 8;// plan todo
       for (int i = 0; i < scan_len; i++) {
         printf(FMT_WORD " ", vaddr_read(addr + i * len, len));
         if (i % column_cnt_display == column_cnt_display - 1) printf("\n");

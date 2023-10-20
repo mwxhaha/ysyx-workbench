@@ -34,7 +34,7 @@ static func_info_t func_infos[FUNC_INFOS_MAX];
 static int func_infos_max = 0;
 static bool open_ftrace = true;
 
-void load_elf(const char *elf_file) {
+void load_elf(const char *elf_file) {// plan todo
   if (elf_file == NULL) {
     Log("No elf is given. ftrace will not work.");
     open_ftrace = false;

@@ -15,23 +15,33 @@ MAKE_FILE = $(ROOT_DIR)/Makefile $(SCRIPT)
 BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
+
 TOP_NAME = cpu
 ISA = RV32E
 NVBOARD = 0
-DISPLAY_WAVE = 0
 ifeq ($(NVBOARD),0)
+RECORD_WAVE = 1
 FSANITIZE = 1
+else
+RECORD_WAVE = 0
+FSANITIZE = 0
+endif
+ifeq ($(RECORD_WAVE),1)
+DISPLAY_WAVE = 0
+else
+DISPLAY_WAVE = 0
 endif
 DEBUG = 0
 TRACE = 1
 ifeq ($(TRACE),1)
-ifeq ($(NVBOARD),0)
-WTRACE = 1
-endif
 ITRACE = 1
 MTRACE = 1
-endif
 EXPR_MATCH = 1
+else
+ITRACE = 0
+MTRACE = 0
+EXPR_MATCH = 0
+endif
 WATCHPOINT = 1
 
 
@@ -83,8 +93,8 @@ VERILATOR_CFLAGS += -g
 VERILATOR_FLAGS += --debug
 endif
 
-ifeq ($(WTRACE),1)
-VERILATOR_CFLAGS += -DCONFIG_WTRACE
+ifeq ($(RECORD_WAVE),1)
+VERILATOR_CFLAGS += -DCONFIG_RECORD_WAVE
 VERILATOR_FLAGS += --trace
 endif
 

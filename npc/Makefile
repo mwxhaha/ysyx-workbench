@@ -34,10 +34,8 @@ include ../Makefile
 sim: $(BIN)
 	@echo "-----simulate------"
 	$(BIN) $(NPC_FLAGS)
-ifeq ($(NVBOARD),0)
 ifeq ($(DISPLAY_WAVE),1)
 	$(WAVE_READER) $(WAVE)
-endif
 endif
 	$(call git_commit, "sim RTL") 
 	@echo "-----simulate done------"
