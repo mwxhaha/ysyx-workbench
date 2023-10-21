@@ -10,7 +10,7 @@
 `define PC_BASE_ADDR `BASE_ADDR
 
 `define ALU_FUNCT_WIDTH 4
-`define ALU_FUNCT_MAX 13
+`define ALU_FUNCT_MAX 14
 `define NO_FUNCT 0
 `define ADD 1
 `define SUB 2
@@ -22,6 +22,7 @@
 `define XOR 8
 `define EQ 9
 `define NEQ 10
-`define LESS_U 11
-`define SHIFT_L_L 12
-`define SHIFT_R_A 13
+`define GREATER_EQ 11
+`define LESS_U 12
+`define SHIFT_L_L 13
+`define SHIFT_R_A 14

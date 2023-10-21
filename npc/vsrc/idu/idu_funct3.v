@@ -28,7 +28,9 @@ module idu_funct3 (
             `FUNCT3_WIDTH'b000,
             `INST_NUM_WIDTH'd`beq,
             `FUNCT3_WIDTH'b001,
-            `INST_NUM_WIDTH'd`bne
+            `INST_NUM_WIDTH'd`bne,
+            `FUNCT3_WIDTH'b101,
+            `INST_NUM_WIDTH'd`bge
         })
     );
 
