@@ -6,7 +6,8 @@
 `define add 28
 `define sub 29
 
-`define INST_SRL_ADD_NUM_MAX 1
+`define INST_SRL_ADD_NUM_MAX 2
+`define srl 34
 `define sra 35
 
 `define INST_EBREAK_EBREAK_NUM_MAX 1
@@ -42,7 +43,7 @@
 `define andi 24
 `define slli 25
 
-`define INST_ADD_NUM_MAX 9
+`define INST_ADD_NUM_MAX 10
 `define INST_ADD_NUM_IDU_MAX `INST_ADD_NUM_MAX-`INST_SRL_ADD_NUM_MAX+1-`INST_ADD_ADD_NUM_MAX+1
 `define sll 30
 `define slt 31
@@ -57,7 +58,7 @@
 
 
 `define INST_NUM_WIDTH 8
-`define INST_NUM_MAX 34
+`define INST_NUM_MAX 35
 `define INST_NUM_IDU_MAX `INST_NUM_MAX-`INST_BEQ_NUM_MAX+1-`INST_LB_NUM_MAX+1-`INST_SB_NUM_MAX+1-`INST_ADDI_NUM_MAX+1-`INST_ADD_NUM_MAX+1
 `define inv 0
 `define lui 1
