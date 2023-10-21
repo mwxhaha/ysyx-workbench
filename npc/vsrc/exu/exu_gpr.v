@@ -25,6 +25,8 @@ module exu_gpr (
         .key(inst_num),
         .default_out(`ISA_WIDTH'b0),
         .lut({
+            `INST_NUM_WIDTH'd`lui,
+            imm,
             `INST_NUM_WIDTH'd`auipc,
             alu_result,
             `INST_NUM_WIDTH'd`jal,

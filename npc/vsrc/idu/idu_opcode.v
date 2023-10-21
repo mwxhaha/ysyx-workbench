@@ -29,6 +29,8 @@ module idu_opcode (
         .key(inst[`OPCODE_WIDTH-1:0]),
         .default_out(`INST_NUM_WIDTH'd`inv),
         .lut({
+            `OPCODE_WIDTH'b0110111,
+            `INST_NUM_WIDTH'd`lui,
             `OPCODE_WIDTH'b0010111,
             `INST_NUM_WIDTH'd`auipc,
             `OPCODE_WIDTH'b1101111,
@@ -59,6 +61,8 @@ module idu_opcode (
         .key(inst[`OPCODE_WIDTH-1:0]),
         .default_out(`INST_TYPE_WIDTH'd`N),
         .lut({
+            `OPCODE_WIDTH'b0110111,
+            `INST_TYPE_WIDTH'd`U,
             `OPCODE_WIDTH'b0010111,
             `INST_TYPE_WIDTH'd`U,
             `OPCODE_WIDTH'b1101111,

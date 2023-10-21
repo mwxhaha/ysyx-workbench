@@ -53,7 +53,7 @@ EXPR_MATCH = 0
 endif
 ifeq ($(DEBUG),1)
 COPTIMIZE = -Og
-VOPTIMIZE = -O0
+VOPTIMIZE = -O3
 endif
 
 

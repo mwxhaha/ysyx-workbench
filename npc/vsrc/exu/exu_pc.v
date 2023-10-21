@@ -25,6 +25,8 @@ module exu_pc (
         .key(inst_num),
         .default_out(pc_out),
         .lut({
+            `INST_NUM_WIDTH'd`lui,
+            pc_out,
             `INST_NUM_WIDTH'd`auipc,
             pc_out,
             `INST_NUM_WIDTH'd`jal,
@@ -85,6 +87,8 @@ module exu_pc (
         .key(inst_num),
         .default_out(`ISA_WIDTH'd4),
         .lut({
+            `INST_NUM_WIDTH'd`lui,
+            `ISA_WIDTH'd4,
             `INST_NUM_WIDTH'd`auipc,
             `ISA_WIDTH'd4,
             `INST_NUM_WIDTH'd`jal,

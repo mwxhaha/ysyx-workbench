@@ -27,6 +27,8 @@ module exu_mem (
         .key(inst_num),
         .default_out(`ISA_WIDTH'b0),
         .lut({
+            `INST_NUM_WIDTH'd`lui,
+            `ISA_WIDTH'b0,
             `INST_NUM_WIDTH'd`auipc,
             `ISA_WIDTH'b0,
             `INST_NUM_WIDTH'd`jal,
@@ -87,6 +89,8 @@ module exu_mem (
         .key(inst_num),
         .default_out(`BASE_ADDR),
         .lut({
+            `INST_NUM_WIDTH'd`lui,
+            `BASE_ADDR,
             `INST_NUM_WIDTH'd`auipc,
             `BASE_ADDR,
             `INST_NUM_WIDTH'd`jal,
@@ -147,6 +151,8 @@ module exu_mem (
         .key(inst_num),
         .default_out(1'b0),
         .lut({
+            `INST_NUM_WIDTH'd`lui,
+            1'b0,
             `INST_NUM_WIDTH'd`auipc,
             1'b0,
             `INST_NUM_WIDTH'd`jal,

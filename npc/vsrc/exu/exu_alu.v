@@ -28,6 +28,8 @@ module exu_alu
         .key(inst_num),
         .default_out(`ISA_WIDTH'b0),
         .lut({
+            `INST_NUM_WIDTH'd`lui,
+            `ISA_WIDTH'b0,
             `INST_NUM_WIDTH'd`auipc,
             pc_out,
             `INST_NUM_WIDTH'd`jal,
@@ -88,6 +90,8 @@ module exu_alu
         .key(inst_num),
         .default_out(`ISA_WIDTH'b0),
         .lut({
+            `INST_NUM_WIDTH'd`lui,
+            `ISA_WIDTH'b0,
             `INST_NUM_WIDTH'd`auipc,
             imm,
             `INST_NUM_WIDTH'd`jal,
@@ -147,7 +151,9 @@ module exu_alu
         .out(alu_funct),
         .key(inst_num),
         .default_out(`ALU_FUNCT_WIDTH'd`NO_FUNCT),
-        .lut({       
+        .lut({
+            `INST_NUM_WIDTH'd`auipc,
+            `ALU_FUNCT_WIDTH'd`NO_FUNCT,
             `INST_NUM_WIDTH'd`auipc,
             `ALU_FUNCT_WIDTH'd`ADD,
             `INST_NUM_WIDTH'd`jal,
