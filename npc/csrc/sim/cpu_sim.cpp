@@ -21,11 +21,6 @@ void sim()
 #else
     reset();
     sdb_mainloop();
-    // int sim_time = 100000;
-    // while (contextp->time() < sim_time && !contextp->gotFinish() && npc_state.state == npc_running)
-    // {
-    //     cycle();
-    // }
 #endif
 }
 

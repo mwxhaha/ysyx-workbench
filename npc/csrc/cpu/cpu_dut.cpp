@@ -61,6 +61,7 @@ void init_difftest(const char *ref_so_file, long img_size)
 
 static void checkregs(CPU_state *ref, vaddr_t pc) {
   if (!isa_difftest_checkregs(ref, pc)) {
+    npc_state.ret = 1;
     npc_state.state = npc_absort;
     npc_state.pc = pc;
   }

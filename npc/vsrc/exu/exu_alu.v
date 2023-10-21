@@ -108,7 +108,7 @@ module exu_alu
             imm,
             `INST_NUM_WIDTH'd`xori,
             imm,
-            `INST_NUM_WIDTH'd`addi,
+            `INST_NUM_WIDTH'd`andi,
             imm,
             `INST_NUM_WIDTH'd`srai,
             {{`ISA_WIDTH-`SHAMT_WIDTH{1'b0}},shamt},
