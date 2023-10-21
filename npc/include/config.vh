@@ -1,7 +1,8 @@
 `define ISA_WIDTH 32
-`define REG_ADDR_WIDTH 5
+`define REG_ADDR_WIDTH 4
 `define OPCODE_WIDTH 7
 `define IMM_WIDTH 32
+`define SHAMT_WIDTH 5
 `define FUNCT3_WIDTH 3
 `define FUNCT7_WIDTH 7
 

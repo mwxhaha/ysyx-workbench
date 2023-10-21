@@ -71,6 +71,7 @@ VERILATOR_CFLAGS = -std=c++20 -Wall -DTOP_NAME=$(TOP_NAME) -I$(INCLUDE_DIR) $(CO
 VERILATOR_LDFLAGS =  
 VERILATOR_SRC = $(VSRC) $(CSRC)
 VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) -y $(INCLUDE_DIR) --prefix $(PREFIX_NAME) --top-module $(TOP_NAME) -o $(BIN) -j $(VOPTIMIZE) -Wall -Wno-UNUSEDSIGNAL $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+# VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) -y $(INCLUDE_DIR) --prefix $(PREFIX_NAME) --top-module $(TOP_NAME) -o $(BIN) -j $(VOPTIMIZE) -Wall $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
 VERILATOR_FLAGS_LIB = $(addprefix -LDFLAGS , $(VERILATOR_LDFLAGS))
 VERILATE = $(OBJ_DIR)/verilate.txt
 

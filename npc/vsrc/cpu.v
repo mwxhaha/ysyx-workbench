@@ -45,17 +45,19 @@ module cpu (
     wire [ `INST_NUM_WIDTH-1:0] inst_num;
     wire [`INST_TYPE_WIDTH-1:0] inst_type;
     wire [`REG_ADDR_WIDTH-1:0] rd, rs1, rs2;
-    wire [`IMM_WIDTH-1:0] imm;
+    wire [  `IMM_WIDTH-1:0] imm;
+    wire [`SHAMT_WIDTH-1:0] shamt;
     idu idu_1 (
-        .clk(clk),
-        .rst(rst),
-        .inst(inst),
-        .inst_num(inst_num),
+        .clk      (clk),
+        .rst      (rst),
+        .inst     (inst),
+        .inst_num (inst_num),
         .inst_type(inst_type),
-        .rd(rd),
-        .rs1(rs1),
-        .rs2(rs2),
-        .imm(imm)
+        .rd       (rd),
+        .rs1      (rs1),
+        .rs2      (rs2),
+        .imm      (imm),
+        .shamt    (shamt)
     );
 
     wire [`ISA_WIDTH-1:0] src1;
@@ -100,12 +102,12 @@ module cpu (
         .inst_num  (inst_num),
         .inst_type (inst_type),
         .imm       (imm),
+        .shamt     (shamt),
         .pc_out    (pc_out),
         .pc_in     (pc_in),
         .pc_w_en   (pc_w_en),
         .src1      (src1),
         .src2      (src2),
-        .rs2       (rs2),
         .srd       (srd),
         .gpr_w_en  (gpr_w_en),
         .mem_r     (mem_r_2),

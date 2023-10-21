@@ -16,7 +16,8 @@ module idu_opcode (
     output wire [`REG_ADDR_WIDTH-1:0] rd,
     output wire [`REG_ADDR_WIDTH-1:0] rs1,
     output wire [`REG_ADDR_WIDTH-1:0] rs2,
-    output wire [`IMM_WIDTH-1:0] imm
+    output wire [`IMM_WIDTH-1:0] imm,
+    output wire [`SHAMT_WIDTH-1:0] shamt
 );
 
     MuxKeyWithDefault #(
@@ -82,6 +83,7 @@ module idu_opcode (
     assign rd  = inst[7+`REG_ADDR_WIDTH-1:7];
     assign rs1 = inst[15+`REG_ADDR_WIDTH-1:15];
     assign rs2 = inst[20+`REG_ADDR_WIDTH-1:20];
+
     MuxKeyWithDefault #(
         .NR_KEY  (`INST_TYPE_MAX),
         .KEY_LEN (`INST_TYPE_WIDTH),
@@ -105,5 +107,7 @@ module idu_opcode (
             {{11{inst[31]}}, inst[31:31], inst[19:12], inst[20:20], inst[30:21], 1'b0}
         })
     );
+
+    assign shamt = inst[20+`SHAMT_WIDTH-1:20];
 
 endmodule

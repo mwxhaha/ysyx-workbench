@@ -10,7 +10,8 @@ module idu (
     output wire [`REG_ADDR_WIDTH-1:0] rd,
     output wire [`REG_ADDR_WIDTH-1:0] rs1,
     output wire [`REG_ADDR_WIDTH-1:0] rs2,
-    output wire [`IMM_WIDTH-1:0] imm
+    output wire [`IMM_WIDTH-1:0] imm,
+    output wire [`SHAMT_WIDTH-1:0] shamt
 );
 
     wire [`INST_NUM_WIDTH-1:0] inst_srli_addi_num;
@@ -61,7 +62,8 @@ module idu (
         .rd             (rd),
         .rs1            (rs1),
         .rs2            (rs2),
-        .imm            (imm)
+        .imm            (imm),
+        .shamt          (shamt)
     );
 
 endmodule
