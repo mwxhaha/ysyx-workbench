@@ -44,11 +44,15 @@ word_t isa_reg_str2val(const char *s, bool *success)
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc)
 {
     bool ret = true;
+    if (top->rootp->cpu__DOT__pc_out != ref_r->pc)
+    {
+        printf("pc: " FMT_WORD " is different, it should be " FMT_WORD "\n", top->rootp->cpu__DOT__pc_out, ref_r->pc);
+        ret = false;
+    }
     for (int i = 0; i < GPR_NUM; i++)
         if (top->rootp->cpu__DOT__gpr_1__DOT__registerfile_gpr__DOT__rf[i] != ref_r->gpr[i])
         {
-            printf("reg %s: " FMT_WORD " is different, it should be " FMT_WORD "\n", regs[i],
-                   top->rootp->cpu__DOT__gpr_1__DOT__registerfile_gpr__DOT__rf[i], ref_r->gpr[i]);
+            printf("reg %s: " FMT_WORD " is different, it should be " FMT_WORD "\n", regs[i], top->rootp->cpu__DOT__gpr_1__DOT__registerfile_gpr__DOT__rf[i], ref_r->gpr[i]);
             ret = false;
         }
     if (!ret)

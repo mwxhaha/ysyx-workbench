@@ -6,7 +6,7 @@
 
 #include <sim/cpu_sim.hpp>
 
-#define IRINGBUF_MAX 100
+#define IRINGBUF_MAX 10
 
 static int iringbuf_ptr = 0;
 static bool iringbuf_full = false;

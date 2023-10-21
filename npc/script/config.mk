@@ -29,7 +29,7 @@ DEBUG = 0
 TRACE = 1
 ifeq ($(TRACE),1)
 ITRACE = 1
-MTRACE = 1
+MTRACE = 0
 EXPR_MATCH = 0
 endif
 WATCHPOINT = 1
