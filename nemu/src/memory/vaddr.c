@@ -21,9 +21,22 @@ word_t vaddr_ifetch(vaddr_t addr, int len) {
 }
 
 word_t vaddr_read(vaddr_t addr, int len) {
+#ifdef CONFIG_MTRACE
+  word_t read_data = paddr_read(addr, len);
+  printf("memory read in addr " FMT_PADDR " with len %d: " FMT_WORD "\n", addr, len, read_data);
+  return read_data ;
+#else
   return paddr_read(addr, len);
+#endif
 }
 
 void vaddr_write(vaddr_t addr, int len, word_t data) {
+#ifdef CONFIG_MTRACE
+  word_t write_data_before  = paddr_read(addr, len);
   paddr_write(addr, len, data);
+  word_t write_data_after  = paddr_read(addr, len);
+  printf("memory write in addr " FMT_PADDR " with len %d: " FMT_WORD "->" FMT_WORD "\n", addr, len, write_data_before, write_data_after);
+#else
+  paddr_write(addr, len, data);
+#endif
 }
