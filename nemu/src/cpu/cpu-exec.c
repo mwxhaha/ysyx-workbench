@@ -56,7 +56,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 #ifdef CONFIG_ITRACE_COND
         puts(_this->logbuf);
 #else
-        printf(FMT_INST "\n", _this->isa.inst.val);
+        printf(FMT_WORD ", inst: " FMT_INST "\n", _this->pc, _this->isa.inst.val);
 #endif
         if (nemu_state.state == NEMU_RUNNING)
             nemu_state.state = NEMU_STOP;

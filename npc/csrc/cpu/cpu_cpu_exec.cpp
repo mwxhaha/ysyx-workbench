@@ -17,7 +17,7 @@
 #include <cpu/cpu_ftrace.hpp>
 #include <cpu/cpu_dut.hpp>
 
-#define MAX_INST_TO_PRINT 10
+#define MAX_INST_TO_PRINT 100
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
@@ -37,11 +37,11 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 #ifdef CONFIG_WATCHPOINT
     if (check_watchpoint())
     {
-        printf("watchpoint trigger at:");
-#ifdef CONFIG_ITRACE_COND
+        printf("watchpoint trigger at: ");
+#ifdef CONFIG_ITRACE
         puts(_this->logbuf);
 #else
-        printf(FMT_INST "\n", _this->isa.inst.val);
+        printf(FMT_WORD ", inst: " FMT_INST "\n", _this->pc, _this->isa.inst.val);
 #endif
         if (npc_state.state == npc_running)
             npc_state.state = npc_stop;
