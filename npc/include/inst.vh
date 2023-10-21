@@ -26,12 +26,13 @@
 `define sh 17
 `define sw 18
 
-`define INST_ADDI_NUM_MAX 6
+`define INST_ADDI_NUM_MAX 7
 `define INST_ADDI_NUM_IDU_MAX `INST_ADDI_NUM_MAX-`INST_SRLI_ADDI_NUM_MAX+1
 `define addi 19
 `define sltiu 21
 `define xori 22
 `define andi 24
+`define slli 25
 
 `define INST_ADD_NUM_MAX 7
 `define INST_ADD_NUM_IDU_MAX `INST_ADD_NUM_MAX-`INST_ADD_ADD_NUM_MAX+1
@@ -47,7 +48,7 @@
 
 
 `define INST_NUM_WIDTH 8
-`define INST_NUM_MAX 27
+`define INST_NUM_MAX 28
 `define INST_NUM_IDU_MAX `INST_NUM_MAX-`INST_BEQ_NUM_MAX+1-`INST_LB_NUM_MAX+1-`INST_SB_NUM_MAX+1-`INST_ADDI_NUM_MAX+1-`INST_ADD_NUM_MAX+1
 `define inv 0
 `define lui 1
