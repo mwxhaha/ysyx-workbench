@@ -39,6 +39,8 @@ module exu_gpr (
             {{`ISA_WIDTH-32{mem_r[31]}},mem_r[31:0]},
             `INST_NUM_WIDTH'd`lbu,
             {{`ISA_WIDTH-8{1'b0}},mem_r[7:0]},
+            `INST_NUM_WIDTH'd`sb,
+            `ISA_WIDTH'b0,
             `INST_NUM_WIDTH'd`sh,
             `ISA_WIDTH'b0,
             `INST_NUM_WIDTH'd`sw,
