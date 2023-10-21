@@ -160,7 +160,7 @@ static int cmd_x(const char *const args)
             int len = sizeof(word_t);
             for (int i = 0; i < scan_len; i++)
             {
-                printf(FMT_WORD " ", vaddr_read(addr + i * len, len));
+                printf(FMT_WORD " ", vaddr_ifetch(addr + i * len, len));
                 if (i % COLUMN == COLUMN - 1)
                     printf("\n");
             }
