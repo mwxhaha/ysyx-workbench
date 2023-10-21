@@ -20,14 +20,15 @@ VerilatedVcdC *tfp;
 #define MAX_RECORD_WAVE 100000
 #define HIERARCHY_DEEP 100
 
-void sim_init(int &argc, char **argv)
+void sim_init(int &argc, char *argv[])
 {
-#ifdef SIM_ALL
-    init(argc, argv);
-#endif
 
     contextp = new VerilatedContext;
+#ifdef SIM_ALL
+    init_monitor(argc, argv);
+#else
     contextp->commandArgs(argc, argv);
+#endif
     top = new Vtop{contextp};
 
 #ifdef CONFIG_RECORD_WAVE

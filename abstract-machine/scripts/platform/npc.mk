@@ -15,7 +15,7 @@ LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\"
 .PHONY: $(AM_HOME)/am/src/riscv/npc/trm.c
 
-NPC_FLAGS = -i $(IMAGE).bin -e $(IMAGE).elf
+NPC_FLAGS = -e $(IMAGE).elf -d /home/mwxhaha/ysyx-workbench/nemu/build/riscv32-nemu-interpreter-so $(IMAGE).bin
 
 image: $(IMAGE).elf
 	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt

@@ -40,25 +40,11 @@ static func_info_t func_infos[FUNC_INFOS_MAX];
 static int func_infos_max = 0;
 static bool open_ftrace = true;
 
-bool load_elf(int argc, char **argv)
+void load_elf(const char *elf_file)
 {
 #if (ISA_WIDTH == 64)
     panic("do not support rv64");
 #endif
-    char *elf_file = NULL;
-    for (int i = 0; i < argc; i++)
-        if (strcmp(argv[i], "-e") == 0)
-        {
-            elf_file = argv[i + 1];
-            printf("use elf: %s\n", elf_file);
-            break;
-        }
-    if (elf_file == NULL)
-    {
-        printf("No elf is given. ftrace will not work.\n");
-        open_ftrace = false;
-        return false;
-    }
 
     FILE *fp = fopen(elf_file, "rb");
     Assert(fp, "Can not open '%s'", elf_file);
@@ -112,7 +98,6 @@ bool load_elf(int argc, char **argv)
     }
 
     fclose(fp);
-    return true;
 }
 
 typedef struct
