@@ -20,12 +20,20 @@
 
 // ----------- state -----------
 
-enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };
+enum
+{
+    NEMU_RUNNING,
+    NEMU_STOP,
+    NEMU_END,
+    NEMU_ABORT,
+    NEMU_QUIT
+};
 
-typedef struct {
-  int state;
-  vaddr_t halt_pc;
-  uint32_t halt_ret;
+typedef struct
+{
+    int state;
+    vaddr_t halt_pc;
+    uint32_t halt_ret;
 } NEMUState;
 
 extern NEMUState nemu_state;
@@ -56,22 +64,24 @@ uint64_t get_time();
 
 #define ANSI_FMT(str, fmt) fmt str ANSI_NONE
 
-#define log_write(...)                  \
-  IFDEF(                                \
-      CONFIG_TARGET_NATIVE_ELF, do {    \
-        extern FILE *log_fp;            \
-        extern bool log_enable();       \
-        if (log_enable()) {             \
-          fprintf(log_fp, __VA_ARGS__); \
-          fflush(log_fp);               \
-        }                               \
-      } while (0))
+#define log_write(...)                        \
+    IFDEF(                                    \
+        CONFIG_TARGET_NATIVE_ELF, do {        \
+            extern FILE *log_fp;              \
+            extern bool log_enable();         \
+            if (log_enable())                 \
+            {                                 \
+                fprintf(log_fp, __VA_ARGS__); \
+                fflush(log_fp);               \
+            }                                 \
+        } while (0))
 
-#define _Log(...)           \
-  do {                      \
-    printf(__VA_ARGS__);    \
-    log_write(__VA_ARGS__); \
-  } while (0)
+#define _Log(...)               \
+    do                          \
+    {                           \
+        printf(__VA_ARGS__);    \
+        log_write(__VA_ARGS__); \
+    } while (0)
 
 char *fgetstr(char *s, int n, FILE *stream);
 

@@ -90,7 +90,7 @@ config CC
 
 choice
   prompt "Optimization Level"
-  default CC_O2
+  default CC_O3
 config CC_O0
   bool "O0"
 config CC_O1
@@ -116,12 +116,12 @@ config CC_LTO
 
 config CC_DEBUG
   bool "Enable debug information"
-  default n
+  default y
 
 config CC_ASAN
   depends on MODE_SYSTEM
   bool "Enable address sanitizer"
-  default n
+  default y
 endmenu
 
 menu "Testing and Debugging"
@@ -173,7 +173,7 @@ config WATCHPOINT
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
   bool "Enable differential testing"
-  default n
+  default y
   help
     Enable differential testing with a reference design.
     Note that this will significantly reduce the performance of NEMU.

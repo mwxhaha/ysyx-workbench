@@ -1,12 +1,12 @@
-`include "config.v"
+`include "config.vh"
 
-module ifu
-    (
-        input wire clk,rst,
-        input wire [`ISA_WIDTH-1:0] mem_r,
-        output wire [`ISA_WIDTH-1:0] inst
-    );
+module ifu (
+    input wire clk,
+    input wire rst,
+    input wire [`ISA_WIDTH-1:0] mem_r,
+    output wire [`ISA_WIDTH-1:0] inst
+);
 
-    assign inst = mem_r ;
+    assign inst = mem_r;
 
 endmodule
