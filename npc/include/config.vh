@@ -8,6 +8,7 @@
 
 `define BASE_ADDR `ISA_WIDTH'h80000000
 `define PC_BASE_ADDR `BASE_ADDR
+`define MEM_MASK_WIDTH 4
 
 `define ALU_FUNCT_WIDTH 5
 `define ALU_FUNCT_MAX 17

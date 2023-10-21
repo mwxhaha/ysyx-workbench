@@ -372,7 +372,7 @@ static word_t eval(const int p, const int q, bool *const success)
                 return val1 && val2;
             case TK_DEREF:
                 word_t val;
-                pmem_read(val2, (int *)&val);
+                pmem_read(val2, (int *)&val, 1);
                 return val;
             case TK_MINUS_ONE:
                 return -val2;

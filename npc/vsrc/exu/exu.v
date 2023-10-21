@@ -18,6 +18,7 @@ module exu (
     input wire [`ISA_WIDTH-1:0] mem_r,
     output wire [`ISA_WIDTH-1:0] mem_w,
     output wire [`ISA_WIDTH-1:0] mem_addr,
+    output wire [`MEM_MASK_WIDTH-1:0] mem_mask,
     output wire mem_r_en,
     output wire mem_w_en,
     input wire [`ISA_WIDTH-1:0] alu_result,
@@ -68,6 +69,7 @@ module exu (
         .mem_r     (mem_r),
         .mem_w     (mem_w),
         .mem_addr  (mem_addr),
+        .mem_mask  (mem_mask),
         .mem_r_en  (mem_r_en),
         .mem_w_en  (mem_w_en),
         .alu_result(alu_result)

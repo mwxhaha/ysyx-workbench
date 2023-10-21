@@ -53,13 +53,7 @@ static void exec_once(Decode *s, vaddr_t pc)
 {
     s->pc = pc;
     s->isa.inst.val = top->rootp->cpu__DOT__mem_r_1;
-#ifdef CONFIG_MTRACE
-    if (top->rootp->cpu__DOT__mem_r_en_2 == 1)
-        printf("memory read in addr " FMT_WORD ": " FMT_WORD "\n", top->rootp->cpu__DOT__mem_addr_2, top->rootp->cpu__DOT__mem_r_2);
-    if (top->rootp->cpu__DOT__mem_w_en_2 == 1)
-        printf("memory write in addr " FMT_WORD ": " FMT_WORD "\n", top->rootp->cpu__DOT__mem_addr_2, top->rootp->cpu__DOT__mem_w_2);
-#endif
-    cycle();
+    cycle(1, CYCLE);
     s->snpc = pc + INST_LEN / 8;
     s->dnpc = top->rootp->cpu__DOT__pc_out;
     if ((s->isa.inst.val & 0x7f) == 0x6f || (s->isa.inst.val & 0x707f) == 0x67)

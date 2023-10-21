@@ -143,7 +143,7 @@ static int cmd_x(const char *const args)
       for (int i = 0; i < scan_len; i++)
       {
         word_t val;
-        pmem_read(addr + i * len, (int *)&val);
+        pmem_read(addr + i * len, (int *)&val, 1);
         printf(FMT_WORD " ", val);
         if (i % COLUMN == COLUMN - 1)
           printf("\n");

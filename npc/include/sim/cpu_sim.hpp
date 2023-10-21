@@ -47,6 +47,8 @@ using vaddr_t = word_t;
 #error "do not support ISA " #CONFIG_ISA
 #endif
 
+#define CYCLE 10
+
 #define MEM_BASE_ADDR 0x80000000
 #define MEM_MAX 0x8000000
 

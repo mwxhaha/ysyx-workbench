@@ -7,7 +7,8 @@ import "DPI-C" function void ebreak_dpic(
 );
 import "DPI-C" function void pmem_read(
     input  int raddr,
-    output int rdata
+    output int rdata,
+    input  int is_fetch
 );
 import "DPI-C" function void pmem_write(
     input int  waddr,
@@ -91,6 +92,7 @@ module cpu (
     reg  [      `ISA_WIDTH-1:0] mem_r_2;
     wire [      `ISA_WIDTH-1:0] mem_w_2;
     wire [      `ISA_WIDTH-1:0] mem_addr_2;
+    wire [ `MEM_MASK_WIDTH-1:0] mem_mask;
     wire                        mem_r_en_2;
     wire                        mem_w_en_2;
     wire [      `ISA_WIDTH-1:0] alu_a;
@@ -113,6 +115,7 @@ module cpu (
         .mem_r     (mem_r_2),
         .mem_w     (mem_w_2),
         .mem_addr  (mem_addr_2),
+        .mem_mask  (mem_mask),
         .mem_r_en  (mem_r_en_2),
         .mem_w_en  (mem_w_en_2),
         .alu_result(alu_result),
@@ -131,7 +134,7 @@ module cpu (
 
     always @(*) begin
         if (!rst && mem_r_en_1) begin
-            pmem_read(mem_addr_1, mem_r_1);
+            pmem_read(mem_addr_1, mem_r_1, 1);
         end else begin
             mem_r_1 = `ISA_WIDTH'b0;
         end
@@ -139,7 +142,7 @@ module cpu (
 
     always @(*) begin
         if (!rst && mem_r_en_2) begin
-            pmem_read(mem_addr_2, mem_r_2);
+            pmem_read(mem_addr_2, mem_r_2, 0);
         end else begin
             mem_r_2 = `ISA_WIDTH'b0;
         end
@@ -147,7 +150,7 @@ module cpu (
 
     always @(posedge clk) begin
         if (!rst && mem_w_en_2) begin
-            pmem_write(mem_addr_2, mem_w_2, 8'b00000111);
+            pmem_write(mem_addr_2, mem_w_2, {4'b0000, mem_mask});
         end
     end
 
