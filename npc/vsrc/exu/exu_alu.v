@@ -169,7 +169,7 @@ module exu_alu
             `INST_NUM_WIDTH'd`sltiu,
             `ALU_FUNCT_WIDTH'd`LESS_U,
             `INST_NUM_WIDTH'd`xori,
-            `ALU_FUNCT_WIDTH'd`LESS_U,
+            `ALU_FUNCT_WIDTH'd`XOR,
             `INST_NUM_WIDTH'd`andi,
             `ALU_FUNCT_WIDTH'd`AND,
             `INST_NUM_WIDTH'd`srai,
