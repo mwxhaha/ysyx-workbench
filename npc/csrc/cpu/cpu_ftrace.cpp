@@ -46,6 +46,13 @@ void load_elf(const char *elf_file)
     panic("do not support rv64");
 #endif
 
+    if (elf_file == NULL)
+    {
+        printf("No elf is given. ftrace will not work.\n");
+        open_ftrace = false;
+        return;
+    }
+
     FILE *fp = fopen(elf_file, "rb");
     Assert(fp, "Can not open '%s'", elf_file);
 

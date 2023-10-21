@@ -15,20 +15,14 @@ MAKE_FILE = $(ROOT_DIR)/Makefile $(SCRIPT)
 BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
-
 TOP_NAME = cpu
 ISA = RV32E
 NVBOARD = 0
 ifeq ($(NVBOARD),0)
 RECORD_WAVE = 1
 FSANITIZE = 1
-else
-RECORD_WAVE = 0
-FSANITIZE = 0
 endif
 ifeq ($(RECORD_WAVE),1)
-DISPLAY_WAVE = 0
-else
 DISPLAY_WAVE = 0
 endif
 DEBUG = 0
@@ -37,13 +31,30 @@ ifeq ($(TRACE),1)
 ITRACE = 1
 MTRACE = 0
 EXPR_MATCH = 0
-else
+endif
+WATCHPOINT = 1
+DIFFTEST = 1
+ifeq ($(DEBUG),0)
+COPTIMIZE = -O3
+VOPTIMIZE = -O3
+endif
+
+ifeq ($(NVBOARD),1)
+RECORD_WAVE = 0
+FSANITIZE = 0
+endif
+ifeq ($(RECORD_WAVE),0)
+DISPLAY_WAVE = 0
+endif
+ifeq ($(TRACE),0)
 ITRACE = 0
 MTRACE = 0
 EXPR_MATCH = 0
 endif
-WATCHPOINT = 1
-DIFFTEST = 1
+ifeq ($(DEBUG),1)
+COPTIMIZE = -Og
+VOPTIMIZE = -O0
+endif
 
 
 
@@ -56,10 +67,10 @@ endif
 
 PREFIX_NAME = Vtop
 BIN = $(BUILD_DIR)/$(PREFIX_NAME)
-VERILATOR_CFLAGS = -std=c++20 -Wall -DTOP_NAME=$(TOP_NAME) -I$(INCLUDE_DIR) 
+VERILATOR_CFLAGS = -std=c++20 -Wall -DTOP_NAME=$(TOP_NAME) -I$(INCLUDE_DIR) $(COPTIMIZE)
 VERILATOR_LDFLAGS =  
 VERILATOR_SRC = $(VSRC) $(CSRC)
-VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) -y $(INCLUDE_DIR) --prefix $(PREFIX_NAME) --top-module $(TOP_NAME) -o $(BIN) -j 0 -Wall -Wno-UNUSEDSIGNAL $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) -y $(INCLUDE_DIR) --prefix $(PREFIX_NAME) --top-module $(TOP_NAME) -o $(BIN) -j $(VOPTIMIZE) -Wall -Wno-UNUSEDSIGNAL $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
 VERILATOR_FLAGS_LIB = $(addprefix -LDFLAGS , $(VERILATOR_LDFLAGS))
 VERILATE = $(OBJ_DIR)/verilate.txt
 
@@ -119,6 +130,7 @@ endif
 ifeq ($(DIFFTEST),1)
 VERILATOR_CFLAGS += -DCONFIG_DIFFTEST
 endif
+
 
 
 VERILATOR_MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
