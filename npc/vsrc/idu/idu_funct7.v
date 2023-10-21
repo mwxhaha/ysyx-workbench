@@ -7,6 +7,7 @@ module idu_funct7 (
     input wire [`ISA_WIDTH-1:0] inst,
     output wire [`INST_NUM_WIDTH-1:0] inst_srli_addi_num,
     output wire [`INST_NUM_WIDTH-1:0] inst_add_add_num,
+    output wire [`INST_NUM_WIDTH-1:0] inst_srl_add_num,
     output wire [`INST_NUM_WIDTH-1:0] inst_ebreak_ebreak_num
 );
 
@@ -39,6 +40,20 @@ module idu_funct7 (
                     `INST_NUM_WIDTH'd`add,
                     `FUNCT7_WIDTH'b0100000,
                     `INST_NUM_WIDTH'd`sub
+        })
+    );
+
+        MuxKeyWithDefault #(
+        .NR_KEY  (`INST_SRL_ADD_NUM_MAX),
+        .KEY_LEN (`FUNCT7_WIDTH),
+        .DATA_LEN(`INST_NUM_WIDTH)
+    ) muxkeywithdefault_inst_srl_add_num (
+        .out        (inst_srl_add_num),
+        .key        (inst[25+`FUNCT7_WIDTH-1:25]),
+        .default_out(`INST_NUM_WIDTH'd`inv),
+        .lut        ({
+                    `FUNCT7_WIDTH'b0100000,
+                    `INST_NUM_WIDTH'd`sra
         })
     );
 
