@@ -1,4 +1,4 @@
-#include <sdb/cpu_ftrace.hpp>
+#include <cpu/cpu_ftrace.hpp>
 
 #include <elf.h>
 #include <cstdio>
@@ -8,7 +8,7 @@
 #include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
 #include <util/io.hpp>
-#include <cpu_cpu_exec.hpp>
+#include <cpu/cpu_cpu_exec.hpp>
 
 #if (ISA_WIDTH == 64)
 typedef Elf64_Ehdr Elf_Ehdr;

@@ -1,6 +1,5 @@
-#include <cpu_init.hpp>
+#include <monitor/cpu_monitor.hpp>
 
-#include <cstdbool>
 #include <cstring>
 #include <cstdio>
 #include <getopt.h>
@@ -12,9 +11,9 @@
 #include <util/disasm.hpp>
 #include <util/sim_tool.hpp>
 #include <util/debug.hpp>
-#include <sdb/cpu_sdb.hpp>
-#include <sdb/cpu_ftrace.hpp>
-#include <sdb/cpu_dut.hpp>
+#include <monitor/cpu_sdb.hpp>
+#include <cpu/cpu_ftrace.hpp>
+#include <cpu/cpu_dut.hpp>
 
 static char *diff_so_file = NULL;
 static char *img_file = NULL;

@@ -1,4 +1,4 @@
-#include <sdb/cpu_dut.hpp>
+#include <cpu/cpu_dut.hpp>
 
 #include <cstddef>
 #include <cassert>
@@ -8,7 +8,7 @@
 
 #include <sim/cpu_sim.hpp>
 #include <util/sim_tool.hpp>
-#include <sdb/cpu_reg.hpp>
+#include <cpu/cpu_reg.hpp>
 #include <Vtop.h>
 #include <Vtop___024root.h>
 

@@ -1,4 +1,4 @@
-#include <sdb/cpu_expr.hpp>
+#include <monitor/cpu_expr.hpp>
 
 #include <cstdbool>
 #include <cstdio>
@@ -7,8 +7,8 @@
 
 #include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
-#include <sdb/cpu_watchpoint.hpp>
-#include <sdb/cpu_reg.hpp>
+#include <monitor/cpu_watchpoint.hpp>
+#include <cpu/cpu_reg.hpp>
 #include <Vtop__Dpi.h>
 
 enum

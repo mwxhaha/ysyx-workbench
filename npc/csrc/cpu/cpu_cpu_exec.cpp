@@ -1,4 +1,4 @@
-#include <cpu_cpu_exec.hpp>
+#include <cpu/cpu_cpu_exec.hpp>
 
 #include <cstdio>
 #include <cstdbool>
@@ -11,11 +11,11 @@
 #include <util/disasm.hpp>
 #include <sim/cpu_sim.hpp>
 #include <Vtop___024root.h>
-#include <sdb/cpu_reg.hpp>
-#include <sdb/cpu_watchpoint.hpp>
-#include <sdb/cpu_iringbuf.hpp>
-#include <sdb/cpu_ftrace.hpp>
-#include <sdb/cpu_dut.hpp>
+#include <cpu/cpu_reg.hpp>
+#include <monitor/cpu_watchpoint.hpp>
+#include <cpu/cpu_iringbuf.hpp>
+#include <cpu/cpu_ftrace.hpp>
+#include <cpu/cpu_dut.hpp>
 
 #define MAX_INST_TO_PRINT 10
 static uint64_t g_nr_guest_inst = 0;

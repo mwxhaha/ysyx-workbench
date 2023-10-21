@@ -1,4 +1,4 @@
-#include <sdb/cpu_sdb.hpp>
+#include <monitor/cpu_sdb.hpp>
 
 #include <cstdint>
 #include <cstdio>
@@ -9,10 +9,10 @@
 
 #include <util/sim_tool.hpp>
 #include <sim/cpu_sim.hpp>
-#include <cpu_cpu_exec.hpp>
-#include <sdb/cpu_reg.hpp>
-#include <sdb/cpu_expr.hpp>
-#include <sdb/cpu_watchpoint.hpp>
+#include <cpu/cpu_cpu_exec.hpp>
+#include <cpu/cpu_reg.hpp>
+#include <monitor/cpu_expr.hpp>
+#include <monitor/cpu_watchpoint.hpp>
 #include <Vtop__Dpi.h>
 
 static int is_batch_mode = false;

@@ -11,7 +11,7 @@
 void nvboard_bind_all_pins(Vtop *top);
 #endif
 #ifdef SIM_ALL
-#include <cpu_init.hpp>
+#include <monitor/cpu_monitor.hpp>
 #endif
 
 VerilatedContext *contextp;

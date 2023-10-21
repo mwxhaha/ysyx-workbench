@@ -1,4 +1,4 @@
-#include <sdb/cpu_watchpoint.hpp>
+#include <monitor/cpu_watchpoint.hpp>
 
 #include <cstdbool>
 #include <cstdio>
@@ -6,7 +6,7 @@
 
 #include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
-#include <sdb/cpu_expr.hpp>
+#include <monitor/cpu_expr.hpp>
 
 #define NR_WP 32
 #define WP_EXPR_MAX 32

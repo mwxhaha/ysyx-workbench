@@ -1,4 +1,4 @@
-#include <sdb/cpu_reg.hpp>
+#include <cpu/cpu_reg.hpp>
 
 #include <cstdbool>
 #include <cstdio>

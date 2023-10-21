@@ -1,7 +1,7 @@
 #include <sim/cpu_sim.hpp>
 
 #include <util/sim_tool.hpp>
-#include <sdb/cpu_sdb.hpp>
+#include <monitor/cpu_sdb.hpp>
 #include <util/debug.hpp>
 
 
