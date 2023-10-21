@@ -65,15 +65,15 @@ static int cmd_c(const char *const args)
     cpu_exec(-1);
     return 0;
 }
-//  plan todo
+
 static int cmd_q(const char *const args)
 {
-    nemu_state.state = NEMU_QUIT;
     if (args != NULL)
     {
         printf("q format error, using like this: q\n");
         return 0;
     }
+    nemu_state.state = NEMU_QUIT;
     return -1;
 }
 
@@ -137,6 +137,8 @@ static int cmd_info(const char *const args)
     return 0;
 }
 
+#define COLUMN 8
+
 static int cmd_x(const char *const args)
 {
     if (args)
@@ -156,14 +158,13 @@ static int cmd_x(const char *const args)
             if (!success)
                 return 0;
             int len = sizeof(word_t);
-            int column_cnt_display = 8; // plan todo
             for (int i = 0; i < scan_len; i++)
             {
                 printf(FMT_WORD " ", vaddr_read(addr + i * len, len));
-                if (i % column_cnt_display == column_cnt_display - 1)
+                if (i % COLUMN == COLUMN - 1)
                     printf("\n");
             }
-            if (scan_len % column_cnt_display != 0)
+            if (scan_len % COLUMN != 0)
                 printf("\n");
         }
         else

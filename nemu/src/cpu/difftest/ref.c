@@ -23,7 +23,7 @@
 #include <stdio.h>
 
 __EXPORT void difftest_memcpy(vaddr_t addr, void *buf, size_t n, bool direction)
-{ // plan todo
+{
     if (direction == DIFFTEST_TO_DUT)
     {
         for (size_t i = 0; i < n; i++)
@@ -45,7 +45,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction)
     if (direction == DIFFTEST_TO_DUT)
     {
         (*((CPU_state *)dut)).pc = cpu.pc;
-        for (int i = 0; i < RISCV_GPR_NUM; i++)
+        for (int i = 0; i < GPR_NUM; i++)
         {
             (*((CPU_state *)dut)).gpr[i] = cpu.gpr[i];
         }
@@ -53,7 +53,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction)
     else if (direction == DIFFTEST_TO_REF)
     {
         cpu.pc = (*((CPU_state *)dut)).pc;
-        for (int i = 0; i < RISCV_GPR_NUM; i++)
+        for (int i = 0; i < GPR_NUM; i++)
         {
             cpu.gpr[i] = (*((CPU_state *)dut)).gpr[i];
         }

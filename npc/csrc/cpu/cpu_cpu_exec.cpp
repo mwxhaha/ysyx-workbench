@@ -39,9 +39,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     {
         printf("watchpoint trigger at:");
 #ifdef CONFIG_ITRACE_COND
-    puts(_this->logbuf);
+        puts(_this->logbuf);
 #else
-    printf("0x%08x\n",_this->isa.inst.val);// plan todo
+        printf(FMT_INST "\n", _this->isa.inst.val);
 #endif
         if (npc_state.state == npc_running)
             npc_state.state = npc_stop;

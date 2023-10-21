@@ -23,7 +23,7 @@
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc)
 {
     bool ret = true;
-    for (int i = 0; i < sizeof(cpu.gpr) / sizeof(cpu.gpr[0]); i++)
+    for (int i = 0; i < GPR_NUM; i++)
         if (cpu.gpr[i] != ref_r->gpr[i])
         {
             printf("reg %s: " FMT_WORD " is different, it should be " FMT_WORD "\n", regs[i],

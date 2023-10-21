@@ -36,7 +36,11 @@ static int func_infos_max = 0;
 static bool open_ftrace = true;
 
 void load_elf(const char *elf_file)
-{ // plan todo
+{
+#if (ISA_WIDTH == 64)
+    panic("do not support isa 64");
+#endif
+
     if (elf_file == NULL)
     {
         Log("No elf is given. ftrace will not work.");
