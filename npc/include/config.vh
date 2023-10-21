@@ -9,8 +9,8 @@
 `define BASE_ADDR `ISA_WIDTH'h80000000
 `define PC_BASE_ADDR `BASE_ADDR
 
-`define ALU_FUNCT_WIDTH 4
-`define ALU_FUNCT_MAX 15
+`define ALU_FUNCT_WIDTH 5
+`define ALU_FUNCT_MAX 16
 `define NO_FUNCT 0
 `define ADD 1
 `define SUB 2
@@ -24,6 +24,7 @@
 `define NEQ 10
 `define GREATER_EQ 11
 `define LESS_U 12
-`define SHIFT_L_L 13
-`define SHIFT_R_L 14
-`define SHIFT_R_A 15
+`define GREATER_EQ_U 13
+`define SHIFT_L_L 14
+`define SHIFT_R_L 15
+`define SHIFT_R_A 16
