@@ -115,7 +115,7 @@ typedef struct
     int nfunc_num;
     int call_or_ret;
 } ftrace_t;
-#define FTRACES_MAX 1000
+#define FTRACES_MAX 10000
 ftrace_t ftraces[FTRACES_MAX];
 int ftraces_max = 0;
 
@@ -152,6 +152,11 @@ void ftrace_record(Decode *s)
         ftraces[ftraces_max].nfunc_num = nfunc_num;
         ftraces[ftraces_max].call_or_ret = call_or_ret;
         ftraces_max++;
+        if (ftraces_max >= FTRACES_MAX)
+        {
+            printf("too many ftrace record\n");
+            open_ftrace = false;
+        }
     }
 }
 
