@@ -109,6 +109,8 @@ module idu_funct3 (
         .lut({
             `FUNCT3_WIDTH'b001,
             `INST_NUM_WIDTH'd`sll,
+            `FUNCT3_WIDTH'b010,
+            `INST_NUM_WIDTH'd`slt,
             `FUNCT3_WIDTH'b000,
             inst_add_add_num,
             `FUNCT3_WIDTH'b011,
