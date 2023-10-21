@@ -57,6 +57,8 @@ module exu_gpr (
             alu_result,
             `INST_NUM_WIDTH'd`andi,
             alu_result,
+            `INST_NUM_WIDTH'd`srli,
+            alu_result,
             `INST_NUM_WIDTH'd`srai,
             alu_result,
             `INST_NUM_WIDTH'd`add,

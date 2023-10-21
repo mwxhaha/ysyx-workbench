@@ -19,6 +19,8 @@ module idu_funct7 (
         .key        (inst[25+`FUNCT7_WIDTH-1:25]),
         .default_out(`INST_NUM_WIDTH'd`inv),
         .lut        ({
+                    `FUNCT7_WIDTH'b0000000,
+                    `INST_NUM_WIDTH'd`srli,
                     `FUNCT7_WIDTH'b0100000,
                     `INST_NUM_WIDTH'd`srai
         })
