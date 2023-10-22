@@ -72,7 +72,7 @@ void update(int time)
         if (contextp->time() < MAX_RECORD_WAVE)
             tfp->dump(contextp->time());
         else if (contextp->time() == MAX_RECORD_WAVE)
-            std::cout << "loog sim time may cause large vcd file" << std::endl;
+            std::cout << "too large vcd file" << std::endl;
 #endif
         contextp->timeInc(1);
         time--;

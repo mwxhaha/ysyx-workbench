@@ -6,6 +6,24 @@
 `define add 28
 `define sub 29
 
+`define INST_SLL_ADD_NUM_MAX 1
+`define sll 30
+
+`define INST_SLT_ADD_NUM_MAX 1
+`define slt 30
+
+`define INST_SLTU_ADD_NUM_MAX 1
+`define sltu 32
+
+`define INST_IXOR_ADD_NUM_MAX 1
+`define ixor 33
+
+`define INST_IOR_ADD_NUM_MAX 1
+`define ior 36
+
+`define INST_IAND_ADD_NUM_MAX 1
+`define iand 37
+
 `define INST_SRL_ADD_NUM_MAX 2
 `define srl 34
 `define sra 35
@@ -30,7 +48,6 @@
 `define lbu 14
 `define lhu 15
 
-
 `define INST_SB_NUM_MAX 3
 `define sb 16
 `define sh 17
@@ -47,13 +64,7 @@
 `define slli 25
 
 `define INST_ADD_NUM_MAX 10
-`define INST_ADD_NUM_IDU_MAX `INST_ADD_NUM_MAX-`INST_SRL_ADD_NUM_MAX+1-`INST_ADD_ADD_NUM_MAX+1
-`define sll 30
-`define slt 31
-`define sltu 32
-`define ixor 33
-`define ior 36
-`define iand 37
+`define INST_ADD_NUM_IDU_MAX `INST_ADD_NUM_MAX-`INST_ADD_ADD_NUM_MAX+1-`INST_SLL_ADD_NUM_MAX+1-`INST_SLT_ADD_NUM_MAX+1-`INST_SLTU_ADD_NUM_MAX+1-`INST_IXOR_ADD_NUM_MAX+1-`INST_SRL_ADD_NUM_MAX+1-`INST_IOR_ADD_NUM_MAX+1-`INST_IAND_ADD_NUM_MAX+1
 
 `define INST_EBREAK_NUM_MAX 1
 `define INST_EBREAK_NUM_IDU_MAX `INST_EBREAK_NUM_MAX-`INST_EBREAK_EBREAK_NUM_MAX+1

@@ -16,7 +16,13 @@ module idu (
 
     wire [`INST_NUM_WIDTH-1:0] inst_srli_addi_num;
     wire [`INST_NUM_WIDTH-1:0] inst_add_add_num;
+    wire [`INST_NUM_WIDTH-1:0] inst_sll_add_num;
+    wire [`INST_NUM_WIDTH-1:0] inst_slt_add_num;
+    wire [`INST_NUM_WIDTH-1:0] inst_sltu_add_num;
+    wire [`INST_NUM_WIDTH-1:0] inst_ixor_add_num;
     wire [`INST_NUM_WIDTH-1:0] inst_srl_add_num;
+    wire [`INST_NUM_WIDTH-1:0] inst_ior_add_num;
+    wire [`INST_NUM_WIDTH-1:0] inst_iand_add_num;
     wire [`INST_NUM_WIDTH-1:0] inst_ebreak_ebreak_num;
     idu_funct7 u_idu_funct7 (
         .clk                   (clk),
@@ -24,7 +30,13 @@ module idu (
         .inst                  (inst),
         .inst_srli_addi_num    (inst_srli_addi_num),
         .inst_add_add_num      (inst_add_add_num),
+        .inst_sll_add_num      (inst_sll_add_num),
+        .inst_slt_add_num      (inst_slt_add_num),
+        .inst_sltu_add_num     (inst_sltu_add_num),
+        .inst_ixor_add_num     (inst_ixor_add_num),
         .inst_srl_add_num      (inst_srl_add_num),
+        .inst_ior_add_num      (inst_ior_add_num),
+        .inst_iand_add_num     (inst_iand_add_num),
         .inst_ebreak_ebreak_num(inst_ebreak_ebreak_num)
     );
 
@@ -40,7 +52,13 @@ module idu (
         .inst                  (inst),
         .inst_srli_addi_num    (inst_srli_addi_num),
         .inst_add_add_num      (inst_add_add_num),
+        .inst_sll_add_num      (inst_sll_add_num),
+        .inst_slt_add_num      (inst_slt_add_num),
+        .inst_sltu_add_num     (inst_sltu_add_num),
+        .inst_ixor_add_num     (inst_ixor_add_num),
         .inst_srl_add_num      (inst_srl_add_num),
+        .inst_ior_add_num      (inst_ior_add_num),
+        .inst_iand_add_num     (inst_iand_add_num),
         .inst_ebreak_ebreak_num(inst_ebreak_ebreak_num),
         .inst_beq_num          (inst_beq_num),
         .inst_lb_num           (inst_lb_num),
