@@ -50,6 +50,8 @@ module idu_funct3 (
         .key(inst[12+`FUNCT3_WIDTH-1:12]),
         .default_out(`INST_NUM_WIDTH'd`inv),
         .lut({
+            `FUNCT3_WIDTH'b000,
+            `INST_NUM_WIDTH'd`lb,
             `FUNCT3_WIDTH'b001,
             `INST_NUM_WIDTH'd`lh,
             `FUNCT3_WIDTH'b010,
@@ -90,10 +92,14 @@ module idu_funct3 (
         .lut({
             `FUNCT3_WIDTH'b000,
             `INST_NUM_WIDTH'd`addi,
+            `FUNCT3_WIDTH'b010,
+            `INST_NUM_WIDTH'd`slti,
             `FUNCT3_WIDTH'b011,
             `INST_NUM_WIDTH'd`sltiu,
             `FUNCT3_WIDTH'b100,
             `INST_NUM_WIDTH'd`xori,
+            `FUNCT3_WIDTH'b110,
+            `INST_NUM_WIDTH'd`ori,
             `FUNCT3_WIDTH'b111,
             `INST_NUM_WIDTH'd`andi,
             `FUNCT3_WIDTH'b001,
