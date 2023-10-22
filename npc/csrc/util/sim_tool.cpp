@@ -20,7 +20,7 @@ VerilatedVcdC *tfp;
 #define MAX_RECORD_WAVE 100000
 #define HIERARCHY_DEEP 100
 
-void sim_init(int &argc, char *argv[])
+void sim_init(int argc, char *argv[])
 {
 
     contextp = new VerilatedContext;

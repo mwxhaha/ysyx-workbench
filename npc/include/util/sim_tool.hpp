@@ -13,7 +13,7 @@ extern VerilatedContext *contextp;
 extern Vtop *top;
 extern VerilatedVcdC *tfp;
 
-void sim_init(int &argc, char *argv[]);
+void sim_init(int argc, char *argv[]);
 void sim_exit();
 void update(int time = 1);
 void cycle(int cycle_number = 1, int cycle_time = 10);
