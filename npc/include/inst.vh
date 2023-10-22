@@ -1,3 +1,6 @@
+`define INST_SLLI_ADDI_NUM_MAX 1
+`define slli 25
+
 `define INST_SRLI_ADDI_NUM_MAX 2
 `define srli 26
 `define srai 27
@@ -54,14 +57,13 @@
 `define sw 18
 
 `define INST_ADDI_NUM_MAX 9
-`define INST_ADDI_NUM_IDU_MAX `INST_ADDI_NUM_MAX-`INST_SRLI_ADDI_NUM_MAX+1
+`define INST_ADDI_NUM_IDU_MAX `INST_ADDI_NUM_MAX-`INST_SLLI_ADDI_NUM_MAX+1-`INST_SRLI_ADDI_NUM_MAX+1
 `define addi 19
 `define slti `inv
 `define sltiu 21
 `define xori 22
 `define ori `inv
 `define andi 24
-`define slli 25
 
 `define INST_ADD_NUM_MAX 10
 `define INST_ADD_NUM_IDU_MAX `INST_ADD_NUM_MAX-`INST_ADD_ADD_NUM_MAX+1-`INST_SLL_ADD_NUM_MAX+1-`INST_SLT_ADD_NUM_MAX+1-`INST_SLTU_ADD_NUM_MAX+1-`INST_IXOR_ADD_NUM_MAX+1-`INST_SRL_ADD_NUM_MAX+1-`INST_IOR_ADD_NUM_MAX+1-`INST_IAND_ADD_NUM_MAX+1

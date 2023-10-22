@@ -2,7 +2,7 @@ module barrel_shifter #(
     parameter data_len = 32
 ) (
     input wire [data_len-1:0] din,
-    input wire [5:0] shamt,
+    input wire [4:0] shamt,
     input wire left_or_right,
     input wire algorism_or_logic,
     output wire [data_len-1:0] dout

@@ -14,6 +14,7 @@ module idu (
     output wire [`SHAMT_WIDTH-1:0] shamt
 );
 
+    wire [`INST_NUM_WIDTH-1:0] inst_slli_addi_num;
     wire [`INST_NUM_WIDTH-1:0] inst_srli_addi_num;
     wire [`INST_NUM_WIDTH-1:0] inst_add_add_num;
     wire [`INST_NUM_WIDTH-1:0] inst_sll_add_num;
@@ -28,6 +29,7 @@ module idu (
         .clk                   (clk),
         .rst                   (rst),
         .inst                  (inst),
+        .inst_slli_addi_num    (inst_slli_addi_num),
         .inst_srli_addi_num    (inst_srli_addi_num),
         .inst_add_add_num      (inst_add_add_num),
         .inst_sll_add_num      (inst_sll_add_num),
@@ -50,6 +52,7 @@ module idu (
         .clk                   (clk),
         .rst                   (rst),
         .inst                  (inst),
+        .inst_slli_addi_num    (inst_slli_addi_num),
         .inst_srli_addi_num    (inst_srli_addi_num),
         .inst_add_add_num      (inst_add_add_num),
         .inst_sll_add_num      (inst_sll_add_num),

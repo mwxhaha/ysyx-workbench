@@ -5,6 +5,7 @@ module idu_funct3 (
     input wire clk,
     input wire rst,
     input wire [`ISA_WIDTH-1:0] inst,
+    input wire [`INST_NUM_WIDTH-1:0] inst_slli_addi_num,
     input wire [`INST_NUM_WIDTH-1:0] inst_srli_addi_num,
     input wire [`INST_NUM_WIDTH-1:0] inst_add_add_num,
     input wire [`INST_NUM_WIDTH-1:0] inst_sll_add_num,
@@ -109,7 +110,7 @@ module idu_funct3 (
             `FUNCT3_WIDTH'b111,
             `INST_NUM_WIDTH'd`andi,
             `FUNCT3_WIDTH'b001,
-            `INST_NUM_WIDTH'd`slli,
+            inst_slli_addi_num,
             `FUNCT3_WIDTH'b101,
             inst_srli_addi_num
         })

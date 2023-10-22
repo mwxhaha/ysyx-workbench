@@ -170,7 +170,7 @@ module alu (
         .data_len(`ISA_WIDTH)
     ) barrel_shifter_1 (
         .din(alu_a),
-        .shamt(alu_b[5:0]),
+        .shamt(alu_b[`SHAMT_WIDTH-1:0]),
         .left_or_right(left_or_right),
         .algorism_or_logic(algorism_or_logic),
         .dout(barrel_shifter_1_result)
