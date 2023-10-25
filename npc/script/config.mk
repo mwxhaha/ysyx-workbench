@@ -143,6 +143,5 @@ VERILATOR_MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 MAKE_FLAGS = -C $(OBJ_DIR) -f $(VERILATOR_MAKE_FILE) -j $(shell nproc)
 
 
-
-NPC_FLAGS =
+NPC_FLAGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so 
 WAVE = $(BUILD_DIR)/wave.vcd
