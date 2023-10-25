@@ -19,11 +19,15 @@ void update(int time = 1);
 void cycle(int cycle_number = 1, int cycle_time = 10);
 void set_pin(auto f, int cycle_time = 10)
 {
+#ifdef HAVE_CLK
     top->clk = 1;
+#endif
     update();
     f();
     update(cycle_time / 2 - 1);
+#ifdef HAVE_CLK
     top->clk = 0;
+#endif
     update(cycle_time / 2);
 }
 void reset(int reset_cycle_number = 3, int cycle_time = 10);

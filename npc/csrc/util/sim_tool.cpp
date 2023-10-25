@@ -83,9 +83,13 @@ void cycle(int cycle_number, int cycle_time)
 {
     while (cycle_number > 0)
     {
+#ifdef HAVE_CLK
         top->clk = 1;
+#endif
         update(cycle_time / 2);
+#ifdef HAVE_CLK
         top->clk = 0;
+#endif
         update(cycle_time / 2);
         cycle_number--;
     }
@@ -93,9 +97,15 @@ void cycle(int cycle_number, int cycle_time)
 
 void reset(int reset_cycle_number, int cycle_time)
 {
+#ifdef HAVE_CLK
     top->rst = 1;
+#endif
     cycle(reset_cycle_number, cycle_time);
     set_pin([&]
-            { top->rst = 0; },
+            {
+#ifdef HAVE_CLK
+                top->rst = 0;
+#endif
+            },
             cycle_time);
 }

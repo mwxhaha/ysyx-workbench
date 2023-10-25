@@ -82,7 +82,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
 extern "C" void absort_dpic(int pc) {}
 extern "C" void ebreak_dpic(int ret, int pc) {}
-extern "C" void pmem_read(int raddr, int *rdata) {}
+extern "C" void pmem_read(int raddr, int *rdata, int is_fetch) {}
 extern "C" void pmem_write(int waddr, int wdata, char wmask) {}
 
 #endif
