@@ -45,7 +45,9 @@ $(OBJ_DIR)/%.o: %.cc
 
 # Some convenient rules
 
-.PHONY: app clean
+.PHONY: app clean all
+
+all: app
 
 app: $(BINARY)
 

@@ -1,5 +1,5 @@
 include script/config.mk
-.DEFAULT_GOAL = sim
+.DEFAULT_GOAL = all
 
 
 
