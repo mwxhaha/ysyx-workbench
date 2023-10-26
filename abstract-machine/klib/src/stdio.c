@@ -11,7 +11,10 @@ int printf(const char *fmt, ...) {
   char out[100];
   int ret = vsprintf(out, fmt, ap);
   int i = 0;
-  while (out[i] != '\0') putch(out[i]);
+  while (out[i] != '\0') {
+    putch(out[i]);
+    i++;
+  }
   return ret;
 }
 

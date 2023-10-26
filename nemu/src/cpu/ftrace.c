@@ -19,7 +19,7 @@ typedef Elf32_Sym Elf_Sym;
 static Elf_Shdr section_headers[SECTION_HEADERS_MAX];
 
 #define SYM_NAME_MAX 100
-#define SYM_TAB_MAX 100
+#define SYM_TAB_MAX 1000
 static Elf_Sym sym_tab[SYM_TAB_MAX];
 static char shstr[SYM_NAME_MAX];
 
@@ -110,7 +110,7 @@ typedef struct
     int nfunc_num;
     int call_or_ret;
 } ftrace_t;
-#define FTRACES_MAX 10000
+#define FTRACES_MAX 100
 ftrace_t ftraces[FTRACES_MAX];
 int ftraces_max = 0;
 
@@ -164,7 +164,7 @@ void print_ftrace()
         if (ftraces[i].call_or_ret == 1)
             func_stack--;
         for (int j = 0; j < func_stack; j++)
-            printf("|   ");
+            printf("|");
         if (ftraces[i].call_or_ret == 0)
         {
             printf("%s call %s " FMT_WORD, func_infos[ftraces[i].func_num].func_name,
