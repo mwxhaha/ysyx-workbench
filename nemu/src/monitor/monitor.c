@@ -29,6 +29,9 @@ void init_device();
 void init_sdb();
 void init_disasm(const char *triple);
 
+void device_quit();
+void mem_quit();
+
 static void welcome()
 {
     Log("Trace: %s", MUXDEF(CONFIG_TRACE, ANSI_FMT("ON", ANSI_FG_GREEN),
@@ -175,6 +178,12 @@ void init_monitor(int argc, char *argv[])
     /* Display welcome message. */
     welcome();
 }
+
+void monitor_quit(int argc, char *argv[]) {
+    mem_quit();
+    IFDEF(CONFIG_DEVICE, device_quit());
+}
+
 #else // CONFIG_TARGET_AM
 static long load_img()
 {
@@ -193,5 +202,10 @@ void am_init_monitor()
     load_img();
     IFDEF(CONFIG_DEVICE, init_device());
     welcome();
+}
+
+void am_monitor_quit(int argc, char *argv[]) {
+    mem_quit();
+    IFDEF(CONFIG_DEVICE, device_quit());
 }
 #endif

@@ -17,6 +17,8 @@
 
 void init_monitor(int, char *[]);
 void am_init_monitor();
+void monitor_quit();
+void am_monitor_quit();
 void engine_start();
 int is_exit_status_bad();
 
@@ -31,6 +33,12 @@ int main(int argc, char *argv[])
 
     /* Start engine. */
     engine_start();
+
+#ifdef CONFIG_TARGET_AM
+    am_monitor_quit();
+#else
+    monitor_quit();
+#endif
 
     return is_exit_status_bad();
 }

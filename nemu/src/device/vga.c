@@ -38,11 +38,12 @@ static uint32_t *vgactl_port_base = NULL;
 #ifndef CONFIG_TARGET_AM
 #include <SDL2/SDL.h>
 
+static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 static SDL_Texture *texture = NULL;
 
 static void init_screen() {
-  SDL_Window *window = NULL;
+  // SDL_Window *window = NULL;
   char title[128];
   sprintf(title, "%s-NEMU", str(__GUEST_ISA__));
   SDL_Init(SDL_INIT_VIDEO);
@@ -61,12 +62,22 @@ static inline void update_screen() {
   SDL_RenderCopy(renderer, texture, NULL, NULL);
   SDL_RenderPresent(renderer);
 }
+
+static void screen_quit() {
+  SDL_DestroyTexture(texture);
+  SDL_DestroyRenderer(renderer);
+  SDL_DestroyWindow(window);
+  SDL_Quit();
+}
+
 #else
 static void init_screen() {}
 
 static inline void update_screen() {
   io_write(AM_GPU_FBDRAW, 0, 0, vmem, screen_width(), screen_height(), true);
 }
+
+static void screen_quit() {}
 #endif
 #endif
 
@@ -88,4 +99,8 @@ void init_vga() {
   add_mmio_map("vmem", CONFIG_FB_ADDR, vmem, screen_size(), NULL);
   IFDEF(CONFIG_VGA_SHOW_SCREEN, init_screen());
   IFDEF(CONFIG_VGA_SHOW_SCREEN, memset(vmem, 0, screen_size()));
+}
+
+void vga_quit() {
+  IFDEF(CONFIG_VGA_SHOW_SCREEN, screen_quit());
 }
