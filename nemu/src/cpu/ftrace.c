@@ -33,7 +33,7 @@ typedef struct
 } func_info_t;
 static func_info_t func_infos[FUNC_INFOS_MAX];
 static int func_infos_max = 0;
-static bool open_ftrace = true;
+static bool ftrace_full = false;
 
 void load_elf(const char *elf_file)
 {
@@ -43,8 +43,7 @@ void load_elf(const char *elf_file)
 
     if (elf_file == NULL)
     {
-        Log("No elf is given. ftrace will not work.");
-        open_ftrace = false;
+        panic("No elf is given. ftrace will not work.");
         return;
     }
 
@@ -110,13 +109,13 @@ typedef struct
     int nfunc_num;
     int call_or_ret;
 } ftrace_t;
-#define FTRACES_MAX 100
+#define FTRACES_MAX 100 // plan todo
 ftrace_t ftraces[FTRACES_MAX];
 int ftraces_max = 0;
 
 void ftrace_record(Decode *s)
 {
-    if (!open_ftrace)
+    if (ftrace_full)
         return;
     int call_or_ret = 0;
     if (s->isa.inst.val == 0x00008067)
@@ -148,15 +147,14 @@ void ftrace_record(Decode *s)
         ftraces[ftraces_max].call_or_ret = call_or_ret;
         ftraces_max++;
         if (ftraces_max >= FTRACES_MAX)
-        {
-            printf("too many ftrace record\n");
-            open_ftrace = false;
-        }
+            ftrace_full = true;
     }
 }
 
 void print_ftrace()
 {
+    if (ftrace_full)
+        printf("It is imcomplete because of too many ftrace record\n"); // plan todo
     int func_stack = 0;
     for (int i = 0; i < ftraces_max; i++)
     {

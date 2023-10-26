@@ -5,10 +5,11 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+char out[1000];
+
 int printf(const char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
-  char out[100];
   int ret = vsprintf(out, fmt, ap);
   int i = 0;
   while (out[i] != '\0') {
@@ -16,6 +17,47 @@ int printf(const char *fmt, ...) {
     i++;
   }
   return ret;
+}
+
+static char d_str_inverse[20];
+
+static void number_to_str(int d, char *d_str, int *index) {
+  if (d == 0) {
+    d_str[0] = '0';
+    (*index)++;
+    return;
+  }
+  if (d == -2147483648) {
+    d_str[0] = '-';
+    d_str[1] = '2';
+    d_str[2] = '1';
+    d_str[3] = '4';
+    d_str[4] = '7';
+    d_str[5] = '4';
+    d_str[6] = '8';
+    d_str[7] = '3';
+    d_str[8] = '6';
+    d_str[9] = '4';
+    d_str[10] = '8';
+    (*index)+=11;
+    return;
+  }
+  if (d < 0) {
+    d_str[0] = '-';
+    (*index)++;
+    d = -d;
+  }
+  int i = 0;
+  while (d != 0) {
+    d_str_inverse[i] = '0' + d % 10;
+    i++;
+    d = d / 10;
+  }
+  i--;
+  for (; i >= 0; i--) {
+    d_str[(*index)] = d_str_inverse[i];
+    (*index)++;
+  }
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
@@ -26,43 +68,19 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       switch (fmt[i + 1]) {
         case 'd':
           int d = va_arg(ap, int);
-          char d_str[20];
-          int k = 0;
-          if (d == 0) {
-            out[j] = '0';
-            j++;
-            break;
-          }
-          if (d < 0) {
-            out[j] = '-';
-            j++;
-            d = -d;
-          }
-          while (d != 0) {
-            d_str[k] = d % 10;
-            k++;
-            d = d / 10;
-          }
-          k--;
-          while (k >= 0) {
-            out[j] = '0' + d_str[k];
-            k--;
-            j++;
-          }
+          number_to_str(d, out + j, &j);
           break;
         case 's':
           char *s = va_arg(ap, char *);
-          int k1 = 0;
-          while (s[k1] != '\0') {
-            out[j] = s[k1];
+          int k = 0;
+          while (s[k] != '\0') {
+            out[j] = s[k];
             j++;
-            k1++;
+            k++;
           }
-          out[j] = s[k1];
-          j++;
           break;
         default:
-          panic("Not implemented");
+          panic("not support fmt code");
           break;
       }
       i += 2;

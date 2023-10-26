@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 #ifdef CONFIG_TARGET_AM
     am_monitor_quit();
 #else
-    monitor_quit();
+    monitor_quit(); // plan todo
 #endif
 
     return is_exit_status_bad();
