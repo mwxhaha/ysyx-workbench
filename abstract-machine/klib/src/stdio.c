@@ -20,7 +20,7 @@ int printf(const char *fmt, ...) {
 }
 
 char num_to_char(int num) {
-  assert(num < 16);
+  assert(num <= 16);
   if (num <= 9)
     return '0' + num;
   else
@@ -30,7 +30,7 @@ char num_to_char(int num) {
 #define NMU_STR_MAX 25
 
 static int num_to_str(uint64_t num,char *num_str,int is_signed,int base) {
-  assert(base < 16);
+  assert(base <= 16);
   if (num == 0)
   {
     num_str[0] = '0';
@@ -73,10 +73,10 @@ static int num_to_str(uint64_t num,char *num_str,int is_signed,int base) {
   while (num != 0) {
     if (is_signed) {
       num_str_inverse[i] = num_to_char((int64_t)num % base);
-      num = (int64_t)num / 10;
+      num = (int64_t)num / base;
     } else {
       num_str_inverse[i] = num_to_char(num % base);;
-      num = num / 10;
+      num = num / base;
     }
     i++;
     assert(i < NMU_STR_MAX);
@@ -123,7 +123,7 @@ static char decode_fmt(const char *fmt, int *i, int *is_filling_zero, int *fmt_l
       (*i)++;
       continue;
     }
-    if (fmt[*i] == 'd' || fmt[*i] == 's') {
+    if (fmt[*i] == 'd' || fmt[*i] == 'u' || fmt[*i] == 'x' || fmt[*i] == 's') {
       *fmt_limit_len = str_to_num(fmt + init_i, *i - init_i);
       (*i)++;
       return fmt[*i-1];
@@ -160,10 +160,22 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       char fmt_code = decode_fmt(fmt, &i, &is_filling_zero, &fmt_limit_len);
       switch (fmt_code)
       {
-      case 'd':
-        int num = va_arg(ap, int);
+        int num;
         char num_str[NMU_STR_MAX];
-        int num_str_len=num_to_str(num, num_str, 1,10);
+        int num_str_len;
+      case 'd':
+        num = va_arg(ap, int);
+        num_str_len=num_to_str(num, num_str, 1,10);
+        sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
+        break;
+      case 'u':
+        num = va_arg(ap, unsigned int);
+        num_str_len=num_to_str(num, num_str, 0,10);
+        sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
+        break;
+      case 'x':
+        num = va_arg(ap, unsigned int);
+        num_str_len=num_to_str(num, num_str, 0,16);
         sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
         break;
       case 's':
