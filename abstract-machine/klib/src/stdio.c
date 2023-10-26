@@ -5,7 +5,7 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-char out[1000];
+static char out[1000];
 
 int printf(const char *fmt, ...) {
   va_list ap;
@@ -18,8 +18,6 @@ int printf(const char *fmt, ...) {
   }
   return ret;
 }
-
-static char d_str_inverse[20];
 
 static void number_to_str(int d, char *d_str, int *index) {
   if (d == 0) {
@@ -47,6 +45,7 @@ static void number_to_str(int d, char *d_str, int *index) {
     (*index)++;
     d = -d;
   }
+  char d_str_inverse[20];
   int i = 0;
   while (d != 0) {
     d_str_inverse[i] = '0' + d % 10;
@@ -68,7 +67,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       switch (fmt[i + 1]) {
         case 'd':
           int d = va_arg(ap, int);
-          number_to_str(d, out + j, &j);
+          number_to_str(d, out, &j);
           break;
         case 's':
           char *s = va_arg(ap, char *);
