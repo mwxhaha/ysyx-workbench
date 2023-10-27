@@ -76,9 +76,17 @@ void *memset(void *s, int c, size_t n)
   return s;
 }
 
+#define MEMMOVE_LEN_MAX 10000
+static char out[MEMMOVE_LEN_MAX];
+
 void *memmove(void *dst, const void *src, size_t n)
 {
-  panic("Not implemented");
+  assert(n < MEMMOVE_LEN_MAX);
+  for (int i = 0; i < n; i++)
+    out[i] = ((char *)src)[i];
+  for (int i = 0; i < n; i++)
+    ((char *)dst)[i] = out[i];
+  return dst;
 }
 
 void *memcpy(void *out, const void *in, size_t n)

@@ -5,7 +5,8 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-static char out[1000];
+#define PRINTF_LEN_MAX 1000
+static char out[PRINTF_LEN_MAX];
 
 int printf(const char *fmt, ...)
 {
@@ -17,6 +18,7 @@ int printf(const char *fmt, ...)
   {
     putch(out[i]);
     i++;
+    assert(i < PRINTF_LEN_MAX);
   }
   return ret;
 }
@@ -138,7 +140,7 @@ static char decode_fmt(const char *fmt, int *i, int *is_filling_zero, int *fmt_l
       (*i)++;
       continue;
     }
-    if (fmt[*i] == 'd' || fmt[*i] == 'u' || fmt[*i] == 'x' || fmt[*i] == 's')
+    if (fmt[*i] == 'd' || fmt[*i] == 'u' || fmt[*i] == 'x' || fmt[*i] == 'c' || fmt[*i] == 's')
     {
       *fmt_limit_len = str_to_num(fmt + init_i, *i - init_i);
       (*i)++;
@@ -196,6 +198,10 @@ int vsprintf(char *out, const char *fmt, va_list ap)
         num = va_arg(ap, unsigned int);
         num_str_len = num_to_str(num, num_str, 0, 16);
         sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
+        break;
+      case 'c':
+        char c = va_arg(ap, int);
+        sprintf_limit_len(out, &j, fmt_limit_len, 1, 0 , &c);
         break;
       case 's':
         char *s = va_arg(ap, char *);
