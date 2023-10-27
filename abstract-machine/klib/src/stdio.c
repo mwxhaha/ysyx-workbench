@@ -181,22 +181,21 @@ int vsprintf(char *out, const char *fmt, va_list ap)
       char fmt_code = decode_fmt(fmt, &i, &is_filling_zero, &fmt_limit_len);
       switch (fmt_code)
       {
-        int num;
         char num_str[NMU_STR_MAX];
         int num_str_len;
       case 'd':
-        num = va_arg(ap, int);
+        int num = va_arg(ap, int);
         num_str_len = num_to_str(num, num_str, 1, 10);
         sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
         break;
       case 'u':
-        num = va_arg(ap, unsigned int);
-        num_str_len = num_to_str(num, num_str, 0, 10);
+        unsigned int num1 = va_arg(ap, unsigned int);
+        num_str_len = num_to_str(num1, num_str, 0, 10);
         sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
         break;
       case 'x':
-        num = va_arg(ap, unsigned int);
-        num_str_len = num_to_str(num, num_str, 0, 16);
+        unsigned int num2 = va_arg(ap, unsigned int);
+        num_str_len = num_to_str(num2, num_str, 0, 16);
         sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
         break;
       case 'c':

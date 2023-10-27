@@ -32,6 +32,10 @@ int atoi(const char *nptr)
 }
 
 #define MALLOC_ALIGN 8
+static int is_first = 1;
+static void *addr = NULL;
+extern char _heap_start;
+
 void *malloc(size_t size)
 {
   // On native, malloc() will be called during initializaion of C runtime.
@@ -40,11 +44,10 @@ void *malloc(size_t size)
   // #if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
   //   panic("Not implemented");
   // #endif
-  static int is_first = 1;
-  static void *addr = NULL;
   if (is_first)
   {
     addr = heap.start + size;
+    is_first = 0;
     return heap.start;
   }
   for (; (uintptr_t)addr % MALLOC_ALIGN == 0; addr++)
