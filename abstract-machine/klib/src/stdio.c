@@ -7,19 +7,22 @@
 
 static char out[1000];
 
-int printf(const char *fmt, ...) {
+int printf(const char *fmt, ...)
+{
   va_list ap;
   va_start(ap, fmt);
   int ret = vsprintf(out, fmt, ap);
   int i = 0;
-  while (out[i] != '\0') {
+  while (out[i] != '\0')
+  {
     putch(out[i]);
     i++;
   }
   return ret;
 }
 
-char num_to_char(int num) {
+char num_to_char(int num)
+{
   assert(num <= 16);
   if (num <= 9)
     return '0' + num;
@@ -29,7 +32,8 @@ char num_to_char(int num) {
 
 #define NMU_STR_MAX 25
 
-static int num_to_str(uint64_t num,char *num_str,int is_signed,int base) {
+static int num_to_str(uint64_t num, char *num_str, int is_signed, int base)
+{
   assert(base <= 16);
   if (num == 0)
   {
@@ -37,8 +41,10 @@ static int num_to_str(uint64_t num,char *num_str,int is_signed,int base) {
     return 1;
   }
   int num_str_len = 0;
-  if (is_signed) {
-    if (num == (int64_t)(-0x7fffffffffffffffLL - 1LL)) {
+  if (is_signed)
+  {
+    if (num == (int64_t)(-0x7fffffffffffffffLL - 1LL))
+    {
       num_str[0] = '-';
       num_str[1] = '9';
       num_str[2] = '2';
@@ -61,28 +67,35 @@ static int num_to_str(uint64_t num,char *num_str,int is_signed,int base) {
       num_str[19] = '8';
       return 20;
     }
-    if ((int64_t)num < 0) {
+    if ((int64_t)num < 0)
+    {
       num_str[num_str_len] = '-';
       num_str_len++;
       num = -(int64_t)num;
     }
   }
 
-  int i=0;
+  int i = 0;
   char num_str_inverse[NMU_STR_MAX];
-  while (num != 0) {
-    if (is_signed) {
+  while (num != 0)
+  {
+    if (is_signed)
+    {
       num_str_inverse[i] = num_to_char((int64_t)num % base);
       num = (int64_t)num / base;
-    } else {
-      num_str_inverse[i] = num_to_char(num % base);;
+    }
+    else
+    {
+      num_str_inverse[i] = num_to_char(num % base);
+      ;
       num = num / base;
     }
     i++;
     assert(i < NMU_STR_MAX);
   }
   i--;
-  for (; i >= 0; i--) {
+  for (; i >= 0; i--)
+  {
     num_str[num_str_len] = num_str_inverse[i];
     num_str_len++;
     assert(num_str_len < NMU_STR_MAX);
@@ -90,9 +103,10 @@ static int num_to_str(uint64_t num,char *num_str,int is_signed,int base) {
   return num_str_len;
 }
 
-static int str_to_num(const char *num_str, int num_str_len) {
+static int str_to_num(const char *num_str, int num_str_len)
+{
   assert(num_str_len >= 0);
-  if (num_str_len==0)
+  if (num_str_len == 0)
     return 0;
   int num = num_str[0] - '0';
   for (int i = 1; i < num_str_len; i++)
@@ -103,7 +117,8 @@ static int str_to_num(const char *num_str, int num_str_len) {
   return num;
 }
 
-static char decode_fmt(const char *fmt, int *i, int *is_filling_zero, int *fmt_limit_len) {
+static char decode_fmt(const char *fmt, int *i, int *is_filling_zero, int *fmt_limit_len)
+{
   (*i)++;
   int init_i = *i;
   *fmt_limit_len = 0;
@@ -123,10 +138,11 @@ static char decode_fmt(const char *fmt, int *i, int *is_filling_zero, int *fmt_l
       (*i)++;
       continue;
     }
-    if (fmt[*i] == 'd' || fmt[*i] == 'u' || fmt[*i] == 'x' || fmt[*i] == 's') {
+    if (fmt[*i] == 'd' || fmt[*i] == 'u' || fmt[*i] == 'x' || fmt[*i] == 's')
+    {
       *fmt_limit_len = str_to_num(fmt + init_i, *i - init_i);
       (*i)++;
-      return fmt[*i-1];
+      return fmt[*i - 1];
     }
     panic("not support fmt code");
   }
@@ -134,27 +150,30 @@ static char decode_fmt(const char *fmt, int *i, int *is_filling_zero, int *fmt_l
 
 void sprintf_limit_len(char *out, int *j, int fmt_limit_len, int num_str_len, int is_filling_zero, const char *num_str)
 {
-    while (fmt_limit_len>num_str_len)
-    {
-      if (is_filling_zero)
-        out[*j] = '0';
-      else
-        out[*j] = ' ';
-      fmt_limit_len--;
-      (*j)++;
-    }
-    for (int i = 0; i < num_str_len;i++)
-    {
-      out[*j] = num_str[i];
-      (*j)++;
-    }
+  while (fmt_limit_len > num_str_len)
+  {
+    if (is_filling_zero)
+      out[*j] = '0';
+    else
+      out[*j] = ' ';
+    fmt_limit_len--;
+    (*j)++;
+  }
+  for (int i = 0; i < num_str_len; i++)
+  {
+    out[*j] = num_str[i];
+    (*j)++;
+  }
 }
 
-int vsprintf(char *out, const char *fmt, va_list ap) {
+int vsprintf(char *out, const char *fmt, va_list ap)
+{
   int i = 0;
   int j = 0;
-  while (fmt[i] != '\0') {
-    if (fmt[i] == '%') {
+  while (fmt[i] != '\0')
+  {
+    if (fmt[i] == '%')
+    {
       int is_filling_zero;
       int fmt_limit_len;
       char fmt_code = decode_fmt(fmt, &i, &is_filling_zero, &fmt_limit_len);
@@ -165,17 +184,17 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
         int num_str_len;
       case 'd':
         num = va_arg(ap, int);
-        num_str_len=num_to_str(num, num_str, 1,10);
+        num_str_len = num_to_str(num, num_str, 1, 10);
         sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
         break;
       case 'u':
         num = va_arg(ap, unsigned int);
-        num_str_len=num_to_str(num, num_str, 0,10);
+        num_str_len = num_to_str(num, num_str, 0, 10);
         sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
         break;
       case 'x':
         num = va_arg(ap, unsigned int);
-        num_str_len=num_to_str(num, num_str, 0,16);
+        num_str_len = num_to_str(num, num_str, 0, 16);
         sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
         break;
       case 's':
@@ -186,7 +205,9 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
         panic("not support fmt code");
         break;
       }
-    } else {
+    }
+    else
+    {
       out[j] = fmt[i];
       i++;
       j++;
@@ -197,17 +218,20 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   return j;
 }
 
-int sprintf(char *out, const char *fmt, ...) {
+int sprintf(char *out, const char *fmt, ...)
+{
   va_list ap;
   va_start(ap, fmt);
   return vsprintf(out, fmt, ap);
 }
 
-int snprintf(char *out, size_t n, const char *fmt, ...) {
+int snprintf(char *out, size_t n, const char *fmt, ...)
+{
   panic("Not implemented");
 }
 
-int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
+int vsnprintf(char *out, size_t n, const char *fmt, va_list ap)
+{
   panic("Not implemented");
 }
 
