@@ -37,11 +37,8 @@ void device_update();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 {
-#ifdef CONFIG_ITRACE_COND
-    if (CONFIG_ITRACE_COND)
-    {
-        log_write("%s\n", _this->logbuf);
-    }
+#ifdef CONFIG_ITRACE
+    log_write("%s\n", _this->logbuf); // plan todo
     add_iringbuf(_this->logbuf);
 #endif
     if (g_print_step)
@@ -53,7 +50,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     if (check_watchpoint())
     {
         printf("watchpoint trigger at: ");
-#ifdef CONFIG_ITRACE_COND
+#ifdef CONFIG_ITRACE // plan todo
         puts(_this->logbuf);
 #else
         printf(FMT_WORD ", inst: " FMT_INST "\n", _this->pc, _this->isa.inst.val);
@@ -130,8 +127,8 @@ static void statistic()
 void assert_fail_msg()
 {
     isa_reg_display();
-    print_iringbuf();
-    print_ftrace();
+    IFDEF(CONFIG_ITRACE, print_iringbuf());
+    IFDEF(CONFIG_FTRACE, print_ftrace());// plan todo
     statistic();
 }
 
