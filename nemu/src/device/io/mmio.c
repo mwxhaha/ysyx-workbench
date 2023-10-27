@@ -62,10 +62,17 @@ void add_mmio_map(const char *name, paddr_t addr, void *space, uint32_t len, io_
 /* bus interface */
 word_t mmio_read(paddr_t addr, int len)
 {
-    return map_read(addr, len, fetch_mmio_map(addr));
+    word_t ret = map_read(addr, len, fetch_mmio_map(addr));
+#ifdef CONFIG_DTRACE // plan todo
+    printf("device %s read in addr " FMT_WORD " with len %d: " FMT_WORD "\n", fetch_mmio_map(addr)->name, addr, len, ret);
+#endif
+    return ret;
 }
 
 void mmio_write(paddr_t addr, int len, word_t data)
 {
     map_write(addr, len, data, fetch_mmio_map(addr));
+#ifdef CONFIG_DTRACE // plan todo
+    printf("device %s write inn addr " FMT_WORD " with len %d: " FMT_WORD "\n", fetch_mmio_map(addr)->name, addr, len, data);
+#endif
 }
