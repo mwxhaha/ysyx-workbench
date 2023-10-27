@@ -21,7 +21,7 @@ word_t vaddr_ifetch(vaddr_t addr, int len) {
 }
 
 word_t vaddr_read(vaddr_t addr, int len) {
-#ifdef CONFIG_MTRACE
+#ifdef CONFIG_MTRACE  // plan todo
   word_t read_data = paddr_read(addr, len);
   if (likely(in_pmem(addr)))
   {
