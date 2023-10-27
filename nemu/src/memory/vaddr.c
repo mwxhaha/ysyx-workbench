@@ -18,16 +18,16 @@
 
 word_t vaddr_ifetch(vaddr_t addr, int len)
 {
-  IFDEF(CONFIG_MTRACE, disable_mtrace_once()); // plan todo
-  return paddr_read(addr, len);
+	IFDEF(CONFIG_MTRACE, disable_mtrace_once()); // plan todo
+	return paddr_read(addr, len);
 }
 
 word_t vaddr_read(vaddr_t addr, int len) // plan todo
 {
-  return paddr_read(addr, len);
+	return paddr_read(addr, len);
 }
 
 void vaddr_write(vaddr_t addr, int len, word_t data) // plan todo
 {
-  paddr_write(addr, len, data);
+	paddr_write(addr, len, data);
 }
