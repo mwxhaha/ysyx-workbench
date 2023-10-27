@@ -27,14 +27,26 @@ int atoi(const char *nptr) {
   return x;
 }
 
+#define MALLOC_ALIGN 8
 void *malloc(size_t size) {
   // On native, malloc() will be called during initializaion of C runtime.
   // Therefore do not call panic() here, else it will yield a dead recursion:
   //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
-#if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
-  panic("Not implemented");
-#endif
-  return NULL;
+  // #if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
+  //   panic("Not implemented");
+  // #endif
+  static int is_first = 1;
+  static void *addr = NULL;
+  if (is_first)
+  {
+    addr = heap.start + size;
+    return heap.start;
+  }
+  for (; (uintptr_t)addr % MALLOC_ALIGN == 0; addr++)
+    ;
+  void *ret = addr;
+  addr += size;
+  return ret;
 }
 
 void free(void *ptr) {}
