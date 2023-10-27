@@ -16,7 +16,8 @@
 #include <common.h>
 #include <debug.h>
 #include <isa.h>
-#include <memory/vaddr.h>
+#include <memory/vaddr.h> // plan todo
+#include <memory/paddr.h>
 #include <monitor.h>
 #include <regex.h>
 #include <stdbool.h>
@@ -383,7 +384,8 @@ static word_t eval(const int p, const int q, bool *const success)
             case TK_AND:
                 return val1 && val2;
             case TK_DEREF:
-                return vaddr_ifetch(val2, sizeof(word_t));
+                IFDEF(CONFIG_MTRACE, disable_mtrace_once()); // plan todo
+                return vaddr_read(val2, sizeof(word_t));
             case TK_MINUS_ONE:
                 return -val2;
             default:

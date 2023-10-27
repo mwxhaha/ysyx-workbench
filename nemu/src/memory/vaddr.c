@@ -18,38 +18,16 @@
 
 word_t vaddr_ifetch(vaddr_t addr, int len)
 {
+  IFDEF(CONFIG_MTRACE, disable_mtrace_once()); // plan todo
   return paddr_read(addr, len);
 }
 
-word_t vaddr_read(vaddr_t addr, int len)
+word_t vaddr_read(vaddr_t addr, int len) // plan todo
 {
-#ifdef CONFIG_MTRACE // plan todo
-  word_t read_data = paddr_read(addr, len);
-  if (likely(in_pmem(addr)))
-  {
-    printf("memory read in addr " FMT_WORD " with len %d: " FMT_WORD "\n", addr, len, read_data);
-  }
-  return read_data;
-#else
   return paddr_read(addr, len);
-#endif
 }
 
-void vaddr_write(vaddr_t addr, int len, word_t data)
+void vaddr_write(vaddr_t addr, int len, word_t data) // plan todo
 {
-#ifdef CONFIG_MTRACE // plan todo
-  word_t write_data_before, write_data_after;
-  if (likely(in_pmem(addr)))
-  {
-    write_data_before = paddr_read(addr, len);
-  }
   paddr_write(addr, len, data);
-  if (likely(in_pmem(addr)))
-  {
-    write_data_after = paddr_read(addr, len);
-    printf("memory write in addr " FMT_WORD " with len %d: " FMT_WORD "->" FMT_WORD "\n", addr, len, write_data_before, write_data_after);
-  }
-#else
-  paddr_write(addr, len, data);
-#endif
 }

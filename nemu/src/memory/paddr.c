@@ -14,9 +14,11 @@
  ***************************************************************************************/
 
 #include <memory/host.h>
+#include <common.h>
 #include <memory/paddr.h>
 #include <device/mmio.h>
 #include <isa.h>
+#include <stdbool.h>
 
 #if defined(CONFIG_PMEM_MALLOC)
 static uint8_t *pmem = NULL;
@@ -26,16 +28,44 @@ static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 
 uint8_t *guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
+static bool enable_mtrace = true;
+
+void disable_mtrace_once()
+{
+  enable_mtrace = false;
+}
 
 static word_t pmem_read(paddr_t addr, int len)
 {
   word_t ret = host_read(guest_to_host(addr), len);
+#ifdef CONFIG_MTRACE // plan todo
+  if (enable_mtrace)
+  {
+    printf("memory read in addr " FMT_WORD " with len %d: " FMT_WORD "\n", addr, len, ret);
+  }
+  enable_mtrace = true;
+#endif
   return ret;
 }
 
 static void pmem_write(paddr_t addr, int len, word_t data)
 {
+#ifdef CONFIG_MTRACE // plan todo
+  word_t write_data_before, write_data_after;
+  if (enable_mtrace)
+  {
+    write_data_before = host_read(guest_to_host(addr), len);
+  }
+#endif
   host_write(guest_to_host(addr), len, data);
+#ifdef CONFIG_MTRACE // plan todo
+  if (enable_mtrace)
+  {
+    write_data_after = host_read(guest_to_host(addr), len);
+    printf("memory write in addr " FMT_WORD " with len %d: " FMT_WORD "->" FMT_WORD "\n", addr, len, write_data_before, write_data_after);
+  }
+  enable_mtrace = true;
+#endif
 }
 
 static void out_of_bound(paddr_t addr)

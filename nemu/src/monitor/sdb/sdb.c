@@ -21,6 +21,7 @@
 #include <isa.h>
 #include <math.h>
 #include <memory/vaddr.h>
+#include <memory/paddr.h> // plan todo
 #include <monitor.h>
 #include <readline/history.h>
 #include <readline/readline.h>
@@ -160,7 +161,8 @@ static int cmd_x(const char *const args)
             int len = sizeof(word_t);
             for (int i = 0; i < scan_len; i++)
             {
-                printf(FMT_WORD " ", vaddr_ifetch(addr + i * len, len));
+                IFDEF(CONFIG_MTRACE, disable_mtrace_once()); // plan todo
+                printf(FMT_WORD " ", vaddr_read(addr + i * len, len));
                 if (i % COLUMN == COLUMN - 1)
                     printf("\n");
             }
