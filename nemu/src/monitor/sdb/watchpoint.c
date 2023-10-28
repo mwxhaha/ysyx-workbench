@@ -21,7 +21,7 @@
 #include <string.h>
 
 #define NR_WP 32
-#define WP_EXPR_MAX 32
+#define WP_EXPR_MAX 100
 
 typedef struct watchpoint
 {

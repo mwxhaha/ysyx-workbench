@@ -115,8 +115,6 @@ static bool ftrace_full = false;
 
 void ftrace_record(Decode *s)
 {
-    if (ftrace_full)
-        return;
     int call_or_ret = 0;
     if (s->isa.inst.val == 0x00008067)
         call_or_ret = 1;
