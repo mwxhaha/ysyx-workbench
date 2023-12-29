@@ -13,7 +13,7 @@ module gpr (
 );
 
     wire gpr_w_addr_is_not_zero = |(gpr_w_addr ^ `REG_ADDR_WIDTH'b0);
-    wire [`ISA_WIDTH-1:0] wdata = gpr_w & {`ISA_WIDTH{gpr_w_addr_is_not_zero}};
+    wire [`ISA_WIDTH-1:0] wdata = gpr_w & {`ISA_WIDTH{gpr_w_addr_is_not_zero}}; // plan todo
 
     RegisterFile #(
         .ADDR_WIDTH(`REG_ADDR_WIDTH),

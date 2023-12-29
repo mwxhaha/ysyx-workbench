@@ -34,7 +34,7 @@ MTRACE = 0
 EXPR_MATCH = 0
 endif
 WATCHPOINT = 1
-DIFFTEST = 1
+DIFFTEST = 0
 ifeq ($(DEBUG),0)
 COPTIMIZE = -O3
 endif
@@ -143,5 +143,6 @@ VERILATOR_MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 MAKE_FLAGS = -C $(OBJ_DIR) -f $(VERILATOR_MAKE_FILE) -j $(shell nproc)
 
 
-NPC_FLAGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so 
+override NPC_FLAGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
+override IMG += 
 WAVE = $(BUILD_DIR)/wave.vcd

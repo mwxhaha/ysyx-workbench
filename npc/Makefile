@@ -33,7 +33,7 @@ include ../Makefile
 
 sim: $(BIN)
 	@echo "-----simulate------"
-	$(BIN) $(NPC_FLAGS)
+	$(BIN) $(NPC_FLAGS) $(IMG)
 ifeq ($(DISPLAY_WAVE),1)
 	$(WAVE_READER) $(WAVE)
 endif

@@ -1,5 +1,6 @@
 #include <am.h>
 #include <klib-macros.h>
+#include ISA_H
 
 extern char _heap_start;
 int main(const char *args);
