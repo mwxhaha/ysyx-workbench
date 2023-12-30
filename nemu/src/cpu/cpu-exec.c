@@ -20,6 +20,7 @@
 #include <monitor.h>
 #include <stdbool.h>
 #include <utils.h>
+#include <memory/paddr.h>
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -128,7 +129,8 @@ void assert_fail_msg()
 {
     isa_reg_display();
     IFDEF(CONFIG_ITRACE, print_iringbuf());
-    IFDEF(CONFIG_FTRACE, print_ftrace());// plan todo
+    IFDEF(CONFIG_MTRACE, print_mtrace());
+    IFDEF(CONFIG_FTRACE, print_ftrace());
     statistic();
 }
 
@@ -174,6 +176,7 @@ void cpu_exec(uint64_t n)
         {
             isa_reg_display();
             IFDEF(CONFIG_ITRACE, print_iringbuf());
+            IFDEF(CONFIG_MTRACE, print_mtrace());
             IFDEF(CONFIG_FTRACE, print_ftrace());
         }
         // fall through

@@ -34,6 +34,8 @@ static inline bool in_pmem(paddr_t addr)
 
 word_t paddr_read(paddr_t addr, int len);
 void paddr_write(paddr_t addr, int len, word_t data);
-void disable_mtrace_once(); // plan todo
+
+void print_mtrace();
+void disable_mtrace_once();
 
 #endif
