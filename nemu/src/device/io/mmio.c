@@ -72,6 +72,7 @@ static dtrace_t dtrace_array[DTRACE_ARRAY_MAX];
 static int dtrace_array_tail = 0;
 static bool dtrace_array_is_full = false;
 
+#ifdef CONFIG_MATRACE
 static void dtrace_record(bool is_read, paddr_t addr, int len, IOMap *map, word_t data)
 {
     if (addr >= 0x8fffffff && addr <= 0xffffffff)
@@ -89,6 +90,7 @@ static void dtrace_record(bool is_read, paddr_t addr, int len, IOMap *map, word_
         }
     }
 }
+#endif
 
 static void printf_dtrace_once(int i)
 {

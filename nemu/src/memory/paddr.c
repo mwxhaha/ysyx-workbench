@@ -28,6 +28,7 @@ static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 
 uint8_t *guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
+
 static bool enable_mtrace = true;
 typedef struct
 {
@@ -42,6 +43,7 @@ static mtrace_t mtrace_array[MTRACE_ARRAY_MAX];
 static int mtrace_array_tail = 0;
 static bool mtrace_array_is_full = false;
 
+#ifdef CONFIG_MTRACE
 static void mtrace_record(bool is_read, paddr_t addr, int len, word_t read_data, word_t write_data)
 {
     if (enable_mtrace && addr >= 0x80000000 && addr <= 0x8fffffff)
@@ -60,6 +62,7 @@ static void mtrace_record(bool is_read, paddr_t addr, int len, word_t read_data,
     }
     enable_mtrace = true;
 }
+#endif
 
 static void printf_mtrace_once(int i)
 {
