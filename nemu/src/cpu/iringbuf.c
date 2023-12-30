@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define IRINGBUF_MAX 10
+#define IRINGBUF_MAX 20
 
 static int iringbuf_ptr = 0;
 static bool iringbuf_full = false;

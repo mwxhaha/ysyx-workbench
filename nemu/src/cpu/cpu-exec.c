@@ -173,8 +173,8 @@ void cpu_exec(uint64_t n)
         if (nemu_state.state != NEMU_END || nemu_state.halt_ret != 0)
         {
             isa_reg_display();
-            print_iringbuf();
-            print_ftrace();
+            IFDEF(CONFIG_ITRACE, print_iringbuf());
+            IFDEF(CONFIG_FTRACE, print_ftrace());
         }
         // fall through
     case NEMU_QUIT:
