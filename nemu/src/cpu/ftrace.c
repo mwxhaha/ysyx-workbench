@@ -42,7 +42,7 @@ void load_elf(const char *elf_file)
 
     if (elf_file == NULL)
     {
-        panic("No elf is given. ftrace will not work.");
+        Log("No elf is given. ftrace will not work.");
         return;
     }
 
@@ -108,7 +108,7 @@ typedef struct
     int nfunc_num;
     int call_or_ret;
 } ftrace_t;
-#define FTRACES_MAX 10 // plan todo
+#define FTRACES_MAX 20
 static ftrace_t ftraces[FTRACES_MAX];
 static int ftraces_ptr = 0;
 static bool ftrace_full = false;
