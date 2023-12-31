@@ -119,7 +119,11 @@ static int cmd_info(const char *const args)
                 isa_reg_display();
                 break;
             case 'w':
+#ifdef CONFIG_WATCHPOINT
                 printf_watchpoint();
+#else
+                printf("watchpoint is close\n");
+#endif
                 break;
             default:
                 printf("info format error, using like this: info r/w\n");
@@ -200,6 +204,7 @@ static int cmd_p(const char *const args)
 
 static int cmd_w(const char *const args)
 {
+#ifdef CONFIG_WATCHPOINT
     if (args != NULL)
     {
         new_wp(args);
@@ -208,11 +213,15 @@ static int cmd_w(const char *const args)
     {
         printf("w format error, using like this: w EXPR\n");
     }
+#else
+    printf("watchpoint is close\n");
+#endif
     return 0;
 }
 
 static int cmd_d(const char *const args)
 {
+#ifdef CONFIG_WATCHPOINT
     if (args != NULL)
     {
         int n;
@@ -223,13 +232,16 @@ static int cmd_d(const char *const args)
         }
         else
         {
-            printf("w format error, using like this: d N\n");
+            printf("d format error, using like this: d N\n");
         }
     }
     else
     {
-        printf("w format error, using like this: d N\n");
+        printf("d format error, using like this: d N\n");
     }
+#else
+    printf("watchpoint is close\n");
+#endif
     return 0;
 }
 
