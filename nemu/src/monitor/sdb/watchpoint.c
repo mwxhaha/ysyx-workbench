@@ -25,7 +25,7 @@
 
 typedef struct watchpoint
 {
-    bool used;
+    int hit_cnt;
     char e[WP_EXPR_MAX + 1];
     word_t val;
 } WP;
@@ -37,67 +37,66 @@ void init_wp_pool()
     int i;
     for (i = 0; i < NR_WP; i++)
     {
-        wp_pool[i].used = false;
+        wp_pool[i].hit_cnt = 0;
         wp_pool[i].e[0] = '\0';
     }
 }
 
-int new_wp(const char *const e)
+void new_wp(int hit_cnt, const char *const e)
 {
     int len = strlen(e);
     if (len >= WP_EXPR_MAX)
     {
         printf("expression is too long\n");
-        return 1;
+        return;
+    }
+    if (hit_cnt <= 0)
+    {
+        printf("hit cnt must be positive integer\n");
     }
     int i;
     for (i = 0; i < NR_WP; i++)
     {
-        if (!wp_pool[i].used)
+        if (wp_pool[i].hit_cnt == 0)
         {
-            wp_pool[i].used = true;
-            strcpy(wp_pool[i].e, e);
             bool success = true;
-            wp_pool[i].val = expr(wp_pool[i].e, &success);
+            wp_pool[i].val = expr(e, &success);
             if (!success)
             {
                 printf("expression is illegal, can not set the watchpoint\n");
-                wp_pool[i].used = false;
-                return 1;
+                return;
             }
-            printf("successfully set the watchpoint, N: %d, expr: %s\n", i,
-                   wp_pool[i].e);
-            return 0;
+            wp_pool[i].hit_cnt = hit_cnt;
+            strcpy(wp_pool[i].e, e);
+            printf("successfully set the watchpoint, N: %d, hit cnt: %d, expr: %s, val: %d\n", i, wp_pool[i].hit_cnt, wp_pool[i].e, wp_pool[i].val);
+            return;
         }
     }
     printf("there is no free watchpoint\n");
-    return 1;
 }
 
-int free_wp(const int n)
+void free_wp(const int n)
 {
     if (n <= -1 || n >= NR_WP)
     {
         printf("the N is out of range\n");
-        return 1;
+        return;
     }
-    if (!wp_pool[n].used)
+    if (wp_pool[n].hit_cnt == 0)
     {
         printf("the watchpoint is orignally free\n");
-        return 1;
+        return;
     }
-    printf("successfully delete the watchpoint, N: %d, expr: %s\n", n,
-           wp_pool[n].e);
-    wp_pool[n].used = false;
+    printf("successfully delete the watchpoint, N: %d, remaining hit cnt: %d, expr: %s, val: %d\n", n, wp_pool[n].hit_cnt, wp_pool[n].e, wp_pool[n].val);
+    wp_pool[n].hit_cnt = 0;
     wp_pool[n].e[0] = '\0';
-    return 0;
 }
 
 bool check_watchpoint()
 {
     bool stop_flag = false;
     for (int i = 0; i < NR_WP; i++)
-        if (wp_pool[i].used)
+        if (wp_pool[i].hit_cnt > 0)
         {
             bool success = true;
             word_t new_val = expr(wp_pool[i].e, &success);
@@ -105,24 +104,28 @@ bool check_watchpoint()
                 panic("The expression was illegally modified");
             if (wp_pool[i].val != new_val)
             {
-                printf("watchpoint changes, N: %d, expr: %s, value: " FMT_WORD
-                       " -> " FMT_WORD "\n",
-                       i, wp_pool[i].e, wp_pool[i].val, new_val);
-                stop_flag = true;
+                wp_pool[i].hit_cnt--;
+                if (wp_pool[i].hit_cnt == 0)
+                {
+                    stop_flag = true;
+                    printf("watchpoint changes, N: %d, expr: %s, value: " FMT_WORD " -> " FMT_WORD "\n", i, wp_pool[i].e, wp_pool[i].val, new_val);
+                }
             }
             wp_pool[i].val = new_val;
         }
+        else if (wp_pool[i].hit_cnt < 0)
+            panic("The watchpoint cnt error");
     return stop_flag;
 }
 
 void printf_watchpoint()
 {
-    printf("watchpoint                             expr      value\n");
+    printf("index   cnt                             expr      value\n");
     bool empty_flag = true;
     for (int i = 0; i < NR_WP; i++)
-        if (wp_pool[i].used)
+        if (wp_pool[i].hit_cnt > 0)
         {
-            printf("%10d %32s " FMT_WORD "\n", i, wp_pool[i].e, wp_pool[i].val);
+            printf("%5d %5d %32s " FMT_WORD "\n", i, wp_pool[i].hit_cnt, wp_pool[i].e, wp_pool[i].val);
             empty_flag = false;
         }
     if (empty_flag)

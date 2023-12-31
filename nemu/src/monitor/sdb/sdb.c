@@ -244,11 +244,20 @@ static int cmd_w(const char *const args)
 #ifdef CONFIG_WATCHPOINT
     if (args != NULL)
     {
-        new_wp(args);
+        int hit_cnt;
+        int result = sscanf(args, "%d", &hit_cnt);
+        if (result == 1)
+        {
+            new_wp(hit_cnt, args + (int)log10(hit_cnt) + 2);
+        }
+        else
+        {
+            printf("w format error, using like this: w n EXPR\n");
+        }
     }
     else
     {
-        printf("w format error, using like this: w EXPR\n");
+        printf("w format error, using like this: w n EXPR\n");
     }
 #else
     printf("watchpoint is close\n");
