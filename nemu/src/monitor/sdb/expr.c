@@ -28,13 +28,18 @@ enum
 {
     TK_NOTYPE = 256,
     TK_NUMBER,
-    TK_EQ,
-    TK_NEQ,
-    TK_AND,
     TK_NUMBER_HEX,
     TK_REG,
+    TK_NEG,
     TK_DEREF,
-    TK_MINUS_ONE
+    TK_EQ,
+    TK_NE,
+    TK_GE,
+    TK_LE,
+    TK_AND,
+    TK_OR,
+    TK_SL,
+    TK_SR,
 };
 
 static struct rule
@@ -43,6 +48,7 @@ static struct rule
     int token_type;
 } rules[] = {{" +", TK_NOTYPE},
              {"0x[0-9a-fA-F]+", TK_NUMBER_HEX},
+             {"\\$[0-9a-zA-Z\\$]+", TK_REG},
              {"[0-9]+", TK_NUMBER},
              {"\\+", '+'},
              {"-", '-'},
@@ -51,13 +57,26 @@ static struct rule
              {"\\(", '('},
              {"\\)", ')'},
              {"==", TK_EQ},
-             {"!=", TK_NEQ},
+             {"!=", TK_NE},
+             {">=", TK_GE},
+             {"<=", TK_LE},
+             {"<<", TK_SL},
+             {">>", TK_SR},
+             {">", '>'},
+             {"<", '<'},
              {"&&", TK_AND},
-             {"\\$[0-9a-zA-Z\\$]+", TK_REG}};
+             {"\\|\\|", TK_OR},
+             {"!", '!'},
+             {"&", '&'},
+             {"\\|", '|'},
+             {"\\^", '^'},
+             {"~", '~'},};
 
 #define NR_REGEX ARRLEN(rules)
 
-static regex_t re[NR_REGEX] = {};
+static int operator_precedence[300];
+
+static regex_t re[4294963183] = {};
 
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
@@ -77,12 +96,36 @@ void init_regex()
             panic("regex compilation failed: %s\n%s", error_msg, rules[i].regex);
         }
     }
+
+    operator_precedence[TK_NEG] = 2;
+    operator_precedence[TK_DEREF] = 2;
+    operator_precedence['!'] = 2;
+    operator_precedence['~'] = 2;
+    operator_precedence['*'] = 3;
+    operator_precedence['/'] = 3;
+    operator_precedence['+'] = 4;
+    operator_precedence['-'] = 4;
+    operator_precedence[TK_SL] = 5;
+    operator_precedence[TK_SR] = 5;
+    operator_precedence['>'] = 6;
+    operator_precedence['<'] = 6;
+    operator_precedence[TK_GE] = 6;
+    operator_precedence[TK_LE] = 6;
+    operator_precedence[TK_EQ] = 7;
+    operator_precedence[TK_NE] = 7;
+    operator_precedence['&'] = 8;
+    operator_precedence['^'] = 9;
+    operator_precedence['|'] = 10;
+    operator_precedence[TK_AND] = 11;
+    operator_precedence[TK_OR] = 12;
 }
+
+#define TOKEN_STR_MAX 30
 
 typedef struct token
 {
     int type;
-    char str[sizeof(word_t) * 8 + 1];
+    char str[TOKEN_STR_MAX];
 } Token;
 
 #define TOKENS_MAX 65536
@@ -109,8 +152,8 @@ static bool make_token(const char *const e)
                 int substr_len = pmatch.rm_eo;
 
 #ifdef CONFIG_EXPR_MATCH
-                printf("match rules[%d] = \"%s\" at position %d with len %d: %.*s\n", i,
-                       rules[i].regex, position, substr_len, substr_len, substr_start);
+                printf("match rules[%d] = \"%s\" at position %d with len %d: %.*s\n",
+                       i, rules[i].regex, position, substr_len, substr_len, substr_start);
 #endif
 
                 position += substr_len;
@@ -123,8 +166,7 @@ static bool make_token(const char *const e)
                 case TK_NUMBER_HEX:
                 case TK_REG:
                     Assert(substr_len <= sizeof(word_t) * 8, "number is too long");
-                    Assert(memcpy(tokens[nr_token].str, substr_start, substr_len),
-                           "string process error");
+                    Assert(memcpy(tokens[nr_token].str, substr_start, substr_len), "string process error");
                     tokens[nr_token].str[substr_len] = '\0';
                     tokens[nr_token].type = rules[i].token_type;
                     nr_token++;
@@ -147,24 +189,18 @@ static bool make_token(const char *const e)
     for (i = 0; i < nr_token; i++)
     {
         if (tokens[i].type == '*')
-            if (i == 0 || tokens[i - 1].type == '+' || tokens[i - 1].type == '-' ||
-                tokens[i - 1].type == '*' || tokens[i - 1].type == '/' ||
-                tokens[i - 1].type == '(' || tokens[i - 1].type == TK_EQ ||
-                tokens[i - 1].type == TK_NEQ || tokens[i - 1].type == TK_AND ||
-                tokens[i - 1].type == TK_DEREF ||
-                tokens[i - 1].type == TK_MINUS_ONE)
+            if (i == 0 ||
+                !(tokens[i - 1].type == TK_NUMBER || tokens[i - 1].type == TK_NUMBER_HEX ||
+                  tokens[i - 1].type == TK_REG || tokens[i - 1].type == ')'))
             {
                 tokens[i].type = TK_DEREF;
             }
         if (tokens[i].type == '-')
-            if (i == 0 || tokens[i - 1].type == '+' || tokens[i - 1].type == '-' ||
-                tokens[i - 1].type == '*' || tokens[i - 1].type == '/' ||
-                tokens[i - 1].type == '(' || tokens[i - 1].type == TK_EQ ||
-                tokens[i - 1].type == TK_NEQ || tokens[i - 1].type == TK_AND ||
-                tokens[i - 1].type == TK_DEREF ||
-                tokens[i - 1].type == TK_MINUS_ONE)
+            if (i == 0 ||
+                !(tokens[i - 1].type == TK_NUMBER || tokens[i - 1].type == TK_NUMBER_HEX ||
+                  tokens[i - 1].type == TK_REG || tokens[i - 1].type == ')'))
             {
-                tokens[i].type = TK_MINUS_ONE;
+                tokens[i].type = TK_NEG;
             }
     }
 
@@ -219,19 +255,8 @@ static bool check_parentheses(const int p, const int q, bool *const success)
     }
 }
 
-static int operator_precedence[300];
-
 static bool compare_operator_precedence(int operator1, int operator2)
 {
-    operator_precedence['*'] = 3;
-    operator_precedence['/'] = 3;
-    operator_precedence['+'] = 4;
-    operator_precedence['-'] = 4;
-    operator_precedence[TK_EQ] = 7;
-    operator_precedence[TK_NEQ] = 7;
-    operator_precedence[TK_AND] = 11;
-    operator_precedence[TK_DEREF] = 2;
-    operator_precedence[TK_MINUS_ONE] = 2;
     return operator_precedence[operator1] <= operator_precedence[operator2];
 }
 
@@ -247,18 +272,25 @@ static int find_main_op(int p, const int q, bool *const success)
         case '*':
         case '/':
         case TK_EQ:
-        case TK_NEQ:
+        case TK_NE:
+        case '>':
+        case '<':
+        case TK_GE:
+        case TK_LE:
         case TK_AND:
-        case TK_DEREF:
-        case TK_MINUS_ONE:
+        case TK_OR:
+        case '!':
+        case '&':
+        case '|':
+        case '^':
+        case '~':
+        case TK_SL:
+        case TK_SR:
             if (main_op == -1)
                 main_op = p;
-            else if (compare_operator_precedence(tokens[main_op].type,
-                                                 tokens[p].type) &&
-                     !((tokens[main_op].type == TK_DEREF ||
-                        tokens[main_op].type == TK_MINUS_ONE) &&
-                       (tokens[p].type == TK_DEREF ||
-                        tokens[p].type == TK_MINUS_ONE)))
+            else if (compare_operator_precedence(tokens[main_op].type, tokens[p].type) &&
+                     !(operator_precedence[tokens[main_op].type] == 2 &&
+                       operator_precedence[tokens[p].type] == 2))
                 main_op = p;
             p++;
             break;
@@ -301,7 +333,7 @@ static word_t eval(const int p, const int q, bool *const success)
             }
             break;
         case TK_NUMBER_HEX:
-            if (sscanf(tokens[p].str, FMT_WORD, &number) == 1)
+            if (sscanf(tokens[p].str, "0x%x", &number) == 1)
             {
                 return number;
             }
@@ -351,8 +383,7 @@ static word_t eval(const int p, const int q, bool *const success)
             if (!(*success))
                 return -1;
             word_t val1 = 0;
-            if (tokens[main_op].type != TK_DEREF &&
-                tokens[main_op].type != TK_MINUS_ONE)
+            if (operator_precedence[tokens[main_op].type] != 2)
             {
                 val1 = eval(p, main_op - 1, success);
                 if (!(*success))
@@ -377,17 +408,41 @@ static word_t eval(const int p, const int q, bool *const success)
                 return val1 * val2;
             case '/':
                 return val1 / val2;
+            case TK_NEG:
+                return -val2;
+            case TK_DEREF:
+                IFDEF(CONFIG_MTRACE, disable_mtrace_once());
+                return vaddr_read(val2, sizeof(word_t));
             case TK_EQ:
                 return val1 == val2;
-            case TK_NEQ:
+            case TK_NE:
                 return val1 != val2;
+            case '>':
+                return val1 > val2;
+            case '<':
+                return val1 < val2;
+            case TK_GE:
+                return val1 >= val2;
+            case TK_LE:
+                return val1 <= val2;
             case TK_AND:
                 return val1 && val2;
-            case TK_DEREF:
-                IFDEF(CONFIG_MTRACE, disable_mtrace_once()); // plan todo
-                return vaddr_read(val2, sizeof(word_t));
-            case TK_MINUS_ONE:
-                return -val2;
+            case TK_OR:
+                return val1 || val2;
+            case '!':
+                return !val2;
+            case '&':
+                return val1 & val2;
+            case '|':
+                return val1 | val2;
+            case '^':
+                return val1 ^ val2;
+            case '~':
+                return ~val2;
+            case TK_SL:
+                return val1 << val2;
+            case TK_SR:
+                return val1 >> val2;
             default:
                 *success = false;
                 printf("operator analysis failed\n");
