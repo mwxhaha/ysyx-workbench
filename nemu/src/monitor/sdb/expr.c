@@ -16,7 +16,7 @@
 #include <common.h>
 #include <debug.h>
 #include <isa.h>
-#include <memory/vaddr.h> // plan todo
+#include <memory/vaddr.h>
 #include <memory/paddr.h>
 #include <monitor.h>
 #include <regex.h>
@@ -46,37 +46,39 @@ static struct rule
 {
     const char *regex;
     int token_type;
-} rules[] = {{" +", TK_NOTYPE},
-             {"0x[0-9a-fA-F]+", TK_NUMBER_HEX},
-             {"\\$[0-9a-zA-Z\\$]+", TK_REG},
-             {"[0-9]+", TK_NUMBER},
-             {"\\+", '+'},
-             {"-", '-'},
-             {"\\*", '*'},
-             {"/", '/'},
-             {"\\(", '('},
-             {"\\)", ')'},
-             {"==", TK_EQ},
-             {"!=", TK_NE},
-             {">=", TK_GE},
-             {"<=", TK_LE},
-             {"<<", TK_SL},
-             {">>", TK_SR},
-             {">", '>'},
-             {"<", '<'},
-             {"&&", TK_AND},
-             {"\\|\\|", TK_OR},
-             {"!", '!'},
-             {"&", '&'},
-             {"\\|", '|'},
-             {"\\^", '^'},
-             {"~", '~'},};
+} rules[] = {
+    {" +", TK_NOTYPE},
+    {"0x[0-9a-fA-F]+", TK_NUMBER_HEX},
+    {"\\$[0-9a-zA-Z\\$]+", TK_REG},
+    {"[0-9]+", TK_NUMBER},
+    {"\\+", '+'},
+    {"-", '-'},
+    {"\\*", '*'},
+    {"/", '/'},
+    {"\\(", '('},
+    {"\\)", ')'},
+    {"==", TK_EQ},
+    {"!=", TK_NE},
+    {">=", TK_GE},
+    {"<=", TK_LE},
+    {"<<", TK_SL},
+    {">>", TK_SR},
+    {">", '>'},
+    {"<", '<'},
+    {"&&", TK_AND},
+    {"\\|\\|", TK_OR},
+    {"!", '!'},
+    {"&", '&'},
+    {"\\|", '|'},
+    {"\\^", '^'},
+    {"~", '~'},
+};
 
 #define NR_REGEX ARRLEN(rules)
 
 static int operator_precedence[300];
 
-static regex_t re[4294963183] = {};
+static regex_t re[NR_REGEX] = {};
 
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
@@ -475,29 +477,28 @@ void test_expr()
     printf(FMT_WORD_T "\n", val);
 }
 
-static char buf[TOKENS_MAX];
+static char expr_str[TOKENS_MAX];
 
 void test_expr_auto()
 {
-    FILE *fp =
-        fopen("/home/mwxhaha/ysyx-workbench/nemu/tools/gen-expr/input", "r");
+    FILE *fp = fopen("/home/mwxhaha/ysyx-workbench/nemu/tools/gen-expr/build/test_expr.txt", "r");
     Assert(fp, "file does not exist");
     while (1)
     {
-        word_t result;
-        int ret = fscanf(fp, FMT_WORD_T "\n", &result);
+        word_t real_result;
+        int ret = fscanf(fp, FMT_WORD_T "\n", &real_result);
         if (ret == EOF)
             break;
         Assert(ret == 1, "read file error");
-        char *ret2 = fgets(buf, TOKENS_MAX, fp);
-        buf[strlen(buf) - 1] = '\0';
+        char *ret2 = fgets(expr_str, TOKENS_MAX, fp);
         Assert(ret2, "read file error");
+        expr_str[strlen(expr_str) - 1] = '\0';
 
         bool success = true;
-        word_t val = expr(buf, &success);
+        word_t cal_result = expr(expr_str, &success);
         Assert(success, "expression is illegal");
-        printf(FMT_WORD_T "\n%s\n" FMT_WORD_T "\n", result, buf, val);
-        Assert(result == val, "wrong answer");
+        printf(FMT_WORD_T " == " FMT_WORD_T "\n%s\n", real_result, cal_result, expr_str);
+        Assert(real_result == cal_result, "wrong answer");
     }
     fclose(fp);
 }

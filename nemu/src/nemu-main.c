@@ -22,6 +22,10 @@ void am_monitor_quit();
 void engine_start();
 int is_exit_status_bad();
 
+#define TEST_EXPR
+void test_expr();
+void test_expr_auto();
+
 int main(int argc, char *argv[])
 {
     /* Initialize the monitor. */
@@ -31,8 +35,11 @@ int main(int argc, char *argv[])
     init_monitor(argc, argv);
 #endif
 
+#ifndef TEST_EXPR
     /* Start engine. */
     engine_start();
+    test_expr_auto();
+    return 0;
 
 #ifdef CONFIG_TARGET_AM
     am_monitor_quit();
@@ -41,4 +48,9 @@ int main(int argc, char *argv[])
 #endif
 
     return is_exit_status_bad();
+#else
+    // test_expr();
+    test_expr_auto();
+    return 0;
+#endif
 }

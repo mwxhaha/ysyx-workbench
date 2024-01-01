@@ -15,5 +15,7 @@
 
 NAME = gen-expr
 SRCS = gen-expr.c
-CFLAGS += -g
 include $(NEMU_HOME)/scripts/build.mk
+
+run: $(BINARY)
+	build/gen-expr $(mainargs)
