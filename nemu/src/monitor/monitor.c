@@ -17,6 +17,7 @@
 #include <elf.h>
 #include <isa.h>
 #include <memory/paddr.h>
+#include <device/map.h>
 #include <monitor.h>
 #include <stdio.h>
 #include <utils.h>
@@ -28,9 +29,6 @@ void init_difftest(char *ref_so_file, long img_size, int port);
 void init_device();
 void init_sdb();
 void init_disasm(const char *triple);
-
-void device_quit();
-void mem_quit();
 
 static void welcome()
 {
@@ -157,7 +155,7 @@ void init_monitor(int argc, char *argv[])
     /* Load the image to memory. This will overwrite the built-in image. */
     long img_size = load_img();
 
-    IFDEF(CONFIG_FTRACE, load_elf(elf_file));// plan todo
+    IFDEF(CONFIG_FTRACE, load_elf(elf_file)); // plan todo
 
     /* Initialize differential testing. */
     init_difftest(diff_so_file, img_size, difftest_port);
@@ -179,7 +177,8 @@ void init_monitor(int argc, char *argv[])
     welcome();
 }
 
-void monitor_quit(int argc, char *argv[]) {
+void monitor_quit()
+{
     mem_quit();
     IFDEF(CONFIG_DEVICE, device_quit());
 }
@@ -204,7 +203,8 @@ void am_init_monitor()
     welcome();
 }
 
-void am_monitor_quit(int argc, char *argv[]) {
+void am_monitor_quit()
+{
     mem_quit();
     IFDEF(CONFIG_DEVICE, device_quit());
 }

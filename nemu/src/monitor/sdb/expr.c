@@ -273,6 +273,8 @@ static int find_main_op(int p, const int q, bool *const success)
         case '-':
         case '*':
         case '/':
+        case TK_NEG:
+        case TK_DEREF:
         case TK_EQ:
         case TK_NE:
         case '>':
@@ -472,7 +474,7 @@ word_t expr(const char *const e, bool *const success)
 void test_expr()
 {
     bool success = true;
-    word_t val = expr("  **0x80000010", &success);
+    word_t val = expr("  -*0x80000010", &success);
     Assert(success, "expression is illegal");
     printf(FMT_WORD_T "\n", val);
 }
