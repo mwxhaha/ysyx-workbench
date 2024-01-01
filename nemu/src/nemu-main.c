@@ -18,7 +18,7 @@
 void engine_start();
 int is_exit_status_bad();
 
-#define TEST_EXPR
+// #define TEST_EXPR
 
 int main(int argc, char *argv[])
 {

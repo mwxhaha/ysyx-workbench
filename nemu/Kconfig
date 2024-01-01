@@ -119,7 +119,7 @@ config CC_DEBUG
   default y
 
 config CC_ASAN
-  depends on MODE_SYSTEM && !VGA_SHOW_SCREEN
+  depends on MODE_SYSTEM
   bool "Enable address sanitizer"
   default y
 endmenu
