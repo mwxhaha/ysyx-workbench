@@ -322,6 +322,7 @@ static word_t eval(const int p, const int q, bool *const success)
     else if (p == q)
     {
         word_t number;
+        bool success_tmp = true;
         switch (tokens[p].type)
         {
         case TK_NUMBER:
@@ -349,7 +350,6 @@ static word_t eval(const int p, const int q, bool *const success)
             }
             break;
         case TK_REG:
-            bool success_tmp = true;
             number = isa_reg_str2val(tokens[p].str + 1, &success_tmp);
             if (!success_tmp)
             {
