@@ -49,19 +49,19 @@ using vaddr_t = word_t;
 
 #define CYCLE 10
 
-enum state_t
+enum
 {
-    npc_running,
-    npc_stop,
-    npc_end,
-    npc_absort,
-    npc_quit
+    NPC_RUNNING,
+    NPC_STOP,
+    NPC_END,
+    NPC_ABSORT,
+    NPC_QUIT
 };
 typedef struct npc_state_t
 {
-    word_t ret;
-    state_t state;
-    vaddr_t pc;
+    int state;
+    vaddr_t halt_pc;
+    word_t halt_ret;
 } npc_state_t;
 extern npc_state_t npc_state;
 

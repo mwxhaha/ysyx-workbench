@@ -18,6 +18,7 @@
 #include <cpu/cpu_iringbuf.hpp>
 #include <cpu/cpu_ftrace.hpp>
 #include <cpu/cpu_dut.hpp>
+#include <cpu/cpu_log.hpp>
 
 #define MAX_INST_TO_PRINT 20
 uint64_t g_nr_guest_inst = 0;
@@ -27,6 +28,7 @@ static bool g_print_step = false;
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 {
 #ifdef CONFIG_ITRACE
+    log_write("%s\n", _this->logbuf);
     if (g_print_step)
         puts(_this->logbuf);
     add_iringbuf(_this->logbuf);
@@ -37,8 +39,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     {
         printf("watchpoint trigger at: ");
         MUXDEF(CONFIG_ITRACE, puts(_this->logbuf), printf(FMT_WORD ", inst: " FMT_INST "\n", _this->pc, _this->isa.inst.val));
-        if (npc_state.state == npc_running)
-            npc_state.state = npc_stop;
+        if (npc_state.state == NPC_RUNNING)
+            npc_state.state = NPC_STOP;
     }
 #endif
 }
@@ -81,7 +83,7 @@ static void execute(uint64_t n)
         exec_once(&s, top->rootp->cpu__DOT__pc_out);
         g_nr_guest_inst++;
         trace_and_difftest(&s, top->rootp->cpu__DOT__pc_out);
-        if (npc_state.state != npc_running)
+        if (npc_state.state != NPC_RUNNING)
             break;
     }
 }
@@ -90,14 +92,14 @@ static void statistic()
 {
     setlocale(LC_NUMERIC, "");
 #define NUMBERIC_FMT "%'lu"
-    printf("host time spent = " NUMBERIC_FMT " us\n", g_timer);
-    printf("total guest instructions = " NUMBERIC_FMT "\n", g_nr_guest_inst);
+    Log("host time spent = " NUMBERIC_FMT " us", g_timer);
+    Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
     if (g_timer > 0)
-        printf("simulation frequency = " NUMBERIC_FMT " inst/s\n",
+        Log("simulation frequency = " NUMBERIC_FMT " inst/s",
                g_nr_guest_inst * 1000000 / g_timer);
     else
-        printf("Finish running in less than 1 us and can not calculate the simulation "
-               "frequency\n");
+        Log("Finish running in less than 1 us and can not calculate the simulation "
+               "frequency");
 }
 
 void assert_fail_msg()
@@ -114,14 +116,14 @@ void cpu_exec(uint64_t n)
     g_print_step = (n <= MAX_INST_TO_PRINT);
     switch (npc_state.state)
     {
-    case npc_end:
-    case npc_absort:
+    case NPC_END:
+    case NPC_ABSORT:
         printf(
             "Program execution has ended. To restart the program, exit NEMU and "
             "run again.\n");
         return;
     default:
-        npc_state.state = npc_running;
+        npc_state.state = NPC_RUNNING;
     }
 
     uint64_t timer_start = get_time();
@@ -133,23 +135,27 @@ void cpu_exec(uint64_t n)
 
     switch (npc_state.state)
     {
-    case npc_running:
-    case npc_stop:
-        npc_state.state = npc_stop;
+    case NPC_RUNNING:
+    case NPC_STOP:
+        npc_state.state = NPC_STOP;
         break;
-    case npc_end:
-    case npc_absort:
-        printf("npc: %s at pc = " FMT_WORD "\n",
-               npc_state.state == npc_absort ? "ABORT" : (npc_state.ret == 0 ? "HIT GOOD TRAP" : "HIT BAD TRAP"),
-               npc_state.pc);
-        if (npc_state.state != npc_end || npc_state.ret != 0)
+    case NPC_END:
+    case NPC_ABSORT:
+        Log("npc: %s at pc = " FMT_WORD,
+            (npc_state.state == NPC_ABSORT
+                 ? ANSI_FMT("ABORT", ANSI_FG_RED)
+                 : (npc_state.halt_ret == 0
+                        ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)
+                        : ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
+            npc_state.halt_pc);
+        if (npc_state.state != NPC_END || npc_state.halt_ret != 0)
         {
             isa_reg_display();
             IFDEF(CONFIG_ITRACE, print_iringbuf());
             IFDEF(CONFIG_MTRACE, print_mtrace());
             IFDEF(CONFIG_FTRACE, print_ftrace());
         }
-    case npc_quit:
+    case NPC_QUIT:
         statistic();
     }
 }

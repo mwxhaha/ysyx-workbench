@@ -58,7 +58,7 @@ static int cmd_q(const char *const args)
         printf("q format error, using like this: q\n");
         return 0;
     }
-    npc_state.state = npc_quit;
+    npc_state.state = NPC_QUIT;
     return -1;
 }
 

@@ -5,7 +5,7 @@
 #include <cpu/cpu_mem.hpp>
 #include <util/debug.hpp>
 
-npc_state_t npc_state = {1, npc_stop, MEM_BASE_ADDR};
+npc_state_t npc_state = {1, NPC_STOP, MEM_BASE_ADDR};
 
 void sim()
 {

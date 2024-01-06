@@ -6,16 +6,16 @@
 
 extern "C" void absort_dpic(int pc)
 {
-    npc_state.ret = 1;
-    npc_state.state = npc_absort;
-    npc_state.pc = pc;
+    npc_state.halt_ret = 1;
+    npc_state.state = NPC_ABSORT;
+    npc_state.halt_pc = pc;
 }
 
 extern "C" void ebreak_dpic(int ret, int pc)
 {
-    npc_state.ret = ret;
-    npc_state.state = npc_end;
-    npc_state.pc = pc;
+    npc_state.halt_ret = ret;
+    npc_state.state = NPC_END;
+    npc_state.halt_pc = pc;
 }
 
 extern "C" void mem_read(int raddr, int *rdata)
