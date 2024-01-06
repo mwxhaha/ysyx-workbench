@@ -73,7 +73,7 @@ static void exec_once(Decode *s, vaddr_t pc)
     {
         p += snprintf(p, 4, " %02x", inst[i]);
     }
-    int ilen_max = MUXDEF(CONFIG_ISA_x86, 8, 4);
+    int ilen_max = INST_LEN / 8;
     int space_len = ilen_max - ilen;
     if (space_len < 0)
         space_len = 0;
@@ -133,7 +133,7 @@ void assert_fail_msg()
 /* Simulate how the CPU works. */
 void cpu_exec(uint64_t n)
 {
-    g_print_step = (n < MAX_INST_TO_PRINT);
+    g_print_step = (n <= MAX_INST_TO_PRINT);
     switch (nemu_state.state)
     {
     case NEMU_END:
@@ -176,7 +176,6 @@ void cpu_exec(uint64_t n)
             IFDEF(CONFIG_FTRACE, print_ftrace());
             IFDEF(CONFIG_DTRACE, print_dtrace());
         }
-        // fall through
     case NEMU_QUIT:
         statistic();
     }
