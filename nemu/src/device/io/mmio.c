@@ -106,6 +106,11 @@ static void printf_dtrace_once(int i)
 
 void print_dtrace()
 {
+    if (!dtrace_array_is_full && dtrace_array_tail==0)
+    {
+        printf("dtrace is empty now\n");
+        return;
+    }
     if (dtrace_array_is_full)
     {
         int i = dtrace_array_tail;

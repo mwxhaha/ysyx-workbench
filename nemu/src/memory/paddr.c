@@ -78,6 +78,11 @@ static void printf_mtrace_once(int i)
 
 void print_mtrace()
 {
+    if (!mtrace_array_is_full && mtrace_array_tail==0)
+    {
+        printf("mtrace is empty now\n");
+        return;
+    }
     if (mtrace_array_is_full)
     {
         int i = mtrace_array_tail;

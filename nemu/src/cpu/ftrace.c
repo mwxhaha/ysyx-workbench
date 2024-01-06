@@ -184,6 +184,11 @@ void print_ftrace()
         printf("No elf is given. ftrace will not work\n");
         return;
     }
+    if (!ftrace_full && ftraces_ptr==0)
+    {
+        printf("ftrace is empty now\n");
+        return;
+    }
     if (ftrace_full)
     {
         int i = ftraces_ptr;

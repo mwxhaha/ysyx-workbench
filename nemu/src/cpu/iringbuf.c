@@ -22,6 +22,11 @@ void add_iringbuf(const char *inst)
 
 void print_iringbuf()
 {
+    if (!iringbuf_full && iringbuf_ptr==0)
+    {
+        printf("itrace is empty now\n");
+        return;
+    }
     if (iringbuf_full)
     {
         int i = iringbuf_ptr;
