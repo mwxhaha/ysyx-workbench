@@ -4,8 +4,8 @@
 #include <cstdbool>
 
 void init_wp_pool();
-int new_wp(const char *const e);
-int free_wp(const int n);
+void new_wp(int hit_cnt, const char *const e);
+void free_wp(const int n);
 bool check_watchpoint();
 void printf_watchpoint();
 

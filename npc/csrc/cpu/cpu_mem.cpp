@@ -57,7 +57,7 @@ static void printf_mtrace_once(int i)
     }
     else
     {
-        printf("memory write in addr " FMT_WORD " with mask %4x: " FMT_WORD "->" FMT_WORD "\n", mtrace_array[i].addr, mtrace_array[i].len, mtrace_array[i].read_data, mtrace_array[i].write_data);
+        printf("memory write in addr " FMT_WORD " with mask 0x%04x: " FMT_WORD "->" FMT_WORD "\n", mtrace_array[i].addr, mtrace_array[i].len, mtrace_array[i].read_data, mtrace_array[i].write_data);
     }
 }
 
@@ -116,10 +116,10 @@ void pmem_write(vaddr_t waddr, word_t wdata, uint8_t wmask)
 #else
     Assert(waddr >= MEM_BASE_ADDR, "memory out of bound");
     Assert(waddr <= MEM_BASE_ADDR + MEM_MAX - 1, "memory out of bound");
-#ifdef CONFIG_MTRACE
-    mtrace_record(false, addr, wmask, *addr_real, data);
-#endif
     word_t *addr_real = (word_t *)(intptr_t)waddr - (word_t *)MEM_BASE_ADDR + (word_t *)mem;
+#ifdef CONFIG_MTRACE
+    mtrace_record(false, waddr, wmask, *addr_real, wdata);
+#endif
     switch (wmask)
     {
     case 1:

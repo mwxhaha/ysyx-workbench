@@ -200,9 +200,11 @@ static int cmd_x(const char *const args)
                 case 4:
                     printf("0x%08x ", data);
                     break;
+#ifdef CONFIG_ISA64
                 case 8:
-                    printf("0x%016x ", data);
+                    printf("0x%016lx ", data);
                     break;
+#endif
                 }
                 if ((i + 1) * scan_len % COLUMN == 0)
                     printf("\n");
