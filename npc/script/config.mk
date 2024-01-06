@@ -116,6 +116,10 @@ VERILATOR_CFLAGS += -DCONFIG_RECORD_WAVE=1
 VERILATOR_FLAGS += --trace
 endif
 
+ifeq ($(TRACE),1)
+VERILATOR_CFLAGS += -DCONFIG_TRACE=1
+endif
+
 ifeq ($(ITRACE),1)
 VERILATOR_CFLAGS += -I/usr/lib/llvm-14/include -DCONFIG_ITRACE=1
 VERILATOR_LDFLAGS += -lLLVM-14
@@ -143,6 +147,7 @@ VERILATOR_MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 MAKE_FLAGS = -C $(OBJ_DIR) -f $(VERILATOR_MAKE_FILE) -j $(shell nproc)
 
 
+override NPC_FLAGS ?= --log=$(BUILD_DIR)/npc-log.txt
 override NPC_FLAGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
 override IMG += 
 WAVE = $(BUILD_DIR)/wave.vcd
