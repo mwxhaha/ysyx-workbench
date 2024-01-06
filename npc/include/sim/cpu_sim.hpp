@@ -49,10 +49,6 @@ using vaddr_t = word_t;
 
 #define CYCLE 10
 
-#define MEM_BASE_ADDR 0x80000000
-#define MEM_MAX 0x8000000
-
-extern uint8_t mem[MEM_MAX];
 enum state_t
 {
     npc_running,

@@ -9,7 +9,7 @@
 #include <util/debug.hpp>
 #include <monitor/cpu_watchpoint.hpp>
 #include <cpu/cpu_reg.hpp>
-#include <Vtop__Dpi.h>
+#include <cpu/cpu_mem.hpp>
 
 enum
 {
@@ -372,7 +372,7 @@ static word_t eval(const int p, const int q, bool *const success)
                 return val1 && val2;
             case TK_DEREF:
                 word_t val;
-                pmem_read(val2, (int *)&val, 1);
+                pmem_read(val2, &val);
                 return val;
             case TK_MINUS_ONE:
                 return -val2;

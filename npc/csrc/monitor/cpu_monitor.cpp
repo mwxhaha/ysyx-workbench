@@ -16,6 +16,7 @@
 #include <cpu/cpu_ftrace.hpp>
 #include <cpu/cpu_dut.hpp>
 #include <cpu/cpu_log.hpp>
+#include <cpu/cpu_mem.hpp>
 
 static char *log_file = NULL;
 static char *diff_so_file = NULL;

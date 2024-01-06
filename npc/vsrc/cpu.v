@@ -5,12 +5,11 @@ import "DPI-C" function void ebreak_dpic(
     input int ret,
     input int pc
 );
-import "DPI-C" function void pmem_read(
+import "DPI-C" function void mem_read(
     input  int raddr,
-    output int rdata,
-    input  int is_fetch
+    output int rdata
 );
-import "DPI-C" function void pmem_write(
+import "DPI-C" function void mem_write(
     input int  waddr,
     input int  wdata,
     input byte wmask
@@ -134,7 +133,7 @@ module cpu (
 
     always @(*) begin
         if (!rst && mem_r_en_1) begin
-            pmem_read(mem_addr_1, mem_r_1, 1);
+            mem_read(mem_addr_1, mem_r_1);
         end else begin
             mem_r_1 = `ISA_WIDTH'b0;
         end
@@ -142,7 +141,7 @@ module cpu (
 
     always @(*) begin
         if (!rst && mem_r_en_2) begin
-            pmem_read(mem_addr_2, mem_r_2, 0);
+            mem_read(mem_addr_2, mem_r_2);
         end else begin
             mem_r_2 = `ISA_WIDTH'b0;
         end
@@ -150,7 +149,7 @@ module cpu (
 
     always @(posedge clk) begin
         if (!rst && mem_w_en_2) begin
-            pmem_write(mem_addr_2, mem_w_2, {4'b0000, mem_mask});
+            mem_write(mem_addr_2, mem_w_2, {4'b0000, mem_mask});
         end
     end
 

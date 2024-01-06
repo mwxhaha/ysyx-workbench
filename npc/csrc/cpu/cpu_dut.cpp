@@ -9,6 +9,7 @@
 #include <sim/cpu_sim.hpp>
 #include <util/sim_tool.hpp>
 #include <cpu/cpu_reg.hpp>
+#include <cpu/cpu_mem.hpp>
 #include <Vtop.h>
 #include <Vtop___024root.h>
 

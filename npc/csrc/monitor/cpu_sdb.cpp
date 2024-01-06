@@ -11,9 +11,9 @@
 #include <sim/cpu_sim.hpp>
 #include <cpu/cpu_cpu_exec.hpp>
 #include <cpu/cpu_reg.hpp>
+#include <cpu/cpu_mem.hpp>
 #include <monitor/cpu_expr.hpp>
 #include <monitor/cpu_watchpoint.hpp>
-#include <Vtop__Dpi.h>
 
 static int is_batch_mode = false;
 
@@ -143,7 +143,7 @@ static int cmd_x(const char *const args)
       for (int i = 0; i < scan_len; i++)
       {
         word_t val;
-        pmem_read(addr + i * len, (int *)&val, 1);
+        pmem_read(addr + i * len, &val);
         printf(FMT_WORD " ", val);
         if (i % COLUMN == COLUMN - 1)
           printf("\n");
