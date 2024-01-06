@@ -14,23 +14,28 @@
  ***************************************************************************************/
 
 #include <common.h>
+#include <stdbool.h>
+#include <debug.h>
 
 extern uint64_t g_nr_guest_inst;
 FILE *log_fp = NULL;
+static bool log_close = false;
 
 void init_log(const char *log_file)
 {
-    log_fp = stdout;
-    if (log_file != NULL)
+    if (!log_file)
     {
-        FILE *fp = fopen(log_file, "w");
-        Assert(fp, "Can not open '%s'", log_file);
-        log_fp = fp;
+        printf(ANSI_FMT("No log file is given. Log will not work\n", ANSI_FG_BLUE));
+        log_close = true;
+        return;
     }
+    FILE *fp = fopen(log_file, "w");
+    Assert(fp, "Can not open '%s'", log_file);
+    log_fp = fp;
     Log("Log is written to %s", log_file ? log_file : "stdout");
 }
 
 bool log_enable()
 {
-    return MUXDEF(CONFIG_TRACE, (g_nr_guest_inst >= CONFIG_TRACE_START) && (g_nr_guest_inst <= CONFIG_TRACE_END), false);
+    return MUXDEF(CONFIG_TRACE, (g_nr_guest_inst >= CONFIG_TRACE_START) && (g_nr_guest_inst <= CONFIG_TRACE_END), false) && !log_close;
 }
