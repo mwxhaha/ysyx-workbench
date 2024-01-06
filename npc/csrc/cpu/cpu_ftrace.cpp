@@ -9,6 +9,7 @@
 #include <util/debug.hpp>
 #include <util/io.hpp>
 #include <cpu/cpu_cpu_exec.hpp>
+#include <cpu/cpu_log.hpp>
 
 #if (ISA_WIDTH == 64)
 typedef Elf64_Ehdr Elf_Ehdr;
@@ -24,7 +25,7 @@ typedef Elf32_Sym Elf_Sym;
 static Elf_Shdr section_headers[SECTION_HEADERS_MAX];
 
 #define SYM_NAME_MAX 100
-#define SYM_TAB_MAX 100
+#define SYM_TAB_MAX 1000
 static Elf_Sym sym_tab[SYM_TAB_MAX];
 static char shstr[SYM_NAME_MAX];
 
@@ -38,18 +39,16 @@ typedef struct
 } func_info_t;
 static func_info_t func_infos[FUNC_INFOS_MAX];
 static int func_infos_max = 0;
-static bool open_ftrace = true;
 
 void load_elf(const char *elf_file)
 {
 #if (ISA_WIDTH == 64)
-    panic("do not support rv64");
+    panic("do not support isa 64");
 #endif
 
     if (elf_file == NULL)
     {
-        printf("No elf is given. ftrace will not work.\n");
-        open_ftrace = false;
+        Log("No elf is given. ftrace will not work.");
         return;
     }
 
@@ -115,14 +114,13 @@ typedef struct
     int nfunc_num;
     int call_or_ret;
 } ftrace_t;
-#define FTRACES_MAX 10000
-ftrace_t ftraces[FTRACES_MAX];
-int ftraces_max = 0;
+#define FTRACES_MAX 20
+static ftrace_t ftraces[FTRACES_MAX];
+static int ftraces_ptr = 0;
+static bool ftrace_full = false;
 
 void ftrace_record(Decode *s)
 {
-    if (!open_ftrace)
-        return;
     int call_or_ret = 0;
     if (s->isa.inst.val == 0x00008067)
         call_or_ret = 1;
@@ -146,41 +144,67 @@ void ftrace_record(Decode *s)
     }
     if (func_num != -1 && nfunc_num != -1)
     {
-        ftraces[ftraces_max].pc = s->pc;
-        ftraces[ftraces_max].func_num = func_num;
-        ftraces[ftraces_max].npc = s->dnpc;
-        ftraces[ftraces_max].nfunc_num = nfunc_num;
-        ftraces[ftraces_max].call_or_ret = call_or_ret;
-        ftraces_max++;
-        if (ftraces_max >= FTRACES_MAX)
+        ftraces[ftraces_ptr].pc = s->pc;
+        ftraces[ftraces_ptr].func_num = func_num;
+        ftraces[ftraces_ptr].npc = s->dnpc;
+        ftraces[ftraces_ptr].nfunc_num = nfunc_num;
+        ftraces[ftraces_ptr].call_or_ret = call_or_ret;
+        ftraces_ptr++;
+        if (ftraces_ptr >= FTRACES_MAX)
         {
-            printf("too many ftrace record\n");
-            open_ftrace = false;
+            ftrace_full = true;
+            ftraces_ptr = 0;
         }
     }
 }
 
+static void print_ftrace_one(int i, int *func_stack)
+{
+    printf(FMT_WORD ":", ftraces[i].pc);
+    if (ftraces[i].call_or_ret == 1)
+        (*func_stack)--;
+    for (int j = 0; j < *func_stack; j++)
+        printf("| ");
+    if (ftraces[i].call_or_ret == 0)
+    {
+        printf("%s call %s " FMT_WORD, func_infos[ftraces[i].func_num].func_name,
+               func_infos[ftraces[i].nfunc_num].func_name, ftraces[i].npc);
+        (*func_stack)++;
+    }
+    else
+    {
+        printf("%s ret %s " FMT_WORD, func_infos[ftraces[i].func_num].func_name,
+               func_infos[ftraces[i].nfunc_num].func_name, ftraces[i].npc);
+    }
+    printf("\n");
+}
+
 void print_ftrace()
 {
-    int func_stack = 0;
-    for (int i = 0; i < ftraces_max; i++)
+    if (ftrace_full)
     {
-        printf(FMT_WORD ":", ftraces[i].pc);
-        if (ftraces[i].call_or_ret == 1)
-            func_stack--;
-        for (int j = 0; j < func_stack; j++)
-            printf("|   ");
-        if (ftraces[i].call_or_ret == 0)
+        int i = ftraces_ptr;
+        int func_stack = FTRACES_MAX;
+        print_ftrace_one(i, &func_stack);
+        i++;
+        if (i == FTRACES_MAX)
+            i = 0;
+        while (i != ftraces_ptr)
         {
-            printf("%s call %s " FMT_WORD, func_infos[ftraces[i].func_num].func_name,
-                   func_infos[ftraces[i].nfunc_num].func_name, ftraces[i].npc);
-            func_stack++;
+            print_ftrace_one(i, &func_stack);
+            i++;
+            if (i == FTRACES_MAX)
+                i = 0;
         }
-        else
+    }
+    else
+    {
+        int i = 0;
+        int func_stack = FTRACES_MAX;
+        while (i != ftraces_ptr)
         {
-            printf("%s ret %s " FMT_WORD, func_infos[ftraces[i].func_num].func_name,
-                   func_infos[ftraces[i].nfunc_num].func_name, ftraces[i].npc);
+            print_ftrace_one(i, &func_stack);
+            i++;
         }
-        printf("\n");
     }
 }

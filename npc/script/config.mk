@@ -31,6 +31,7 @@ TRACE = 1
 ifeq ($(TRACE),1)
 ITRACE = 1
 MTRACE = 0
+FTRACE = 1
 EXPR_MATCH = 0
 endif
 WATCHPOINT = 1
@@ -52,6 +53,7 @@ endif
 ifeq ($(TRACE),0)
 ITRACE = 0
 MTRACE = 0
+FTRACE = 0
 EXPR_MATCH = 0
 endif
 ifeq ($(DEBUG),1)
@@ -127,6 +129,10 @@ endif
 
 ifeq ($(MTRACE),1)
 VERILATOR_CFLAGS += -DCONFIG_MTRACE=1
+endif
+
+ifeq ($(FTRACE),1)
+VERILATOR_CFLAGS += -DCONFIG_FTRACE=1
 endif
 
 ifeq ($(EXPR_MATCH),1)
