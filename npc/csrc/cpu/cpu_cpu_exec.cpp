@@ -13,6 +13,7 @@
 #include <sim/cpu_sim.hpp>
 #include <Vtop___024root.h>
 #include <cpu/cpu_reg.hpp>
+#include <cpu/cpu_mem.hpp>
 #include <monitor/cpu_watchpoint.hpp>
 #include <cpu/cpu_iringbuf.hpp>
 #include <cpu/cpu_ftrace.hpp>
@@ -103,6 +104,7 @@ void assert_fail_msg()
 {
     isa_reg_display();
     IFDEF(CONFIG_ITRACE, print_iringbuf());
+    IFDEF(CONFIG_MTRACE, print_mtrace());
     IFDEF(CONFIG_FTRACE, print_ftrace());
     statistic();
 }
@@ -144,6 +146,7 @@ void cpu_exec(uint64_t n)
         {
             isa_reg_display();
             IFDEF(CONFIG_ITRACE, print_iringbuf());
+            IFDEF(CONFIG_MTRACE, print_mtrace());
             IFDEF(CONFIG_FTRACE, print_ftrace());
         }
     case npc_quit:

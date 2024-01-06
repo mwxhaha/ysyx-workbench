@@ -121,7 +121,7 @@ static word_t pmem_read(paddr_t addr, int len)
 static void pmem_write(paddr_t addr, int len, word_t data)
 {
 #ifdef CONFIG_MTRACE
-    mtrace_record(true, addr, len, host_read(guest_to_host(addr), len), data);
+    mtrace_record(false, addr, len, host_read(guest_to_host(addr), len), data);
 #endif
     host_write(guest_to_host(addr), len, data);
 }
