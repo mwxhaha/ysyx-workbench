@@ -11,7 +11,7 @@ extern uint8_t mem[MEM_MAX];
 
 void print_mtrace();
 void disable_mtrace_once();
-void pmem_read(vaddr_t raddr, word_t *rdata);
-void pmem_write(vaddr_t waddr, word_t wdata, uint8_t wmask);
+void pmem_read(paddr_t raddr, word_t *rdata);
+void pmem_write(paddr_t waddr, word_t wdata, uint8_t wmask);
 
 #endif

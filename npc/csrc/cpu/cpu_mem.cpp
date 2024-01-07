@@ -1,5 +1,6 @@
 #include <cpu/cpu_mem.hpp>
 
+#include <cstdio>
 #include <cstdint>
 #include <cstdbool>
 
@@ -18,7 +19,7 @@ static bool enable_mtrace = true;
 typedef struct
 {
     bool is_read;
-    vaddr_t addr;
+    paddr_t addr;
     int len;
     word_t read_data;
     word_t write_data;
@@ -29,7 +30,7 @@ static int mtrace_array_tail = 0;
 static bool mtrace_array_is_full = false;
 
 #ifdef CONFIG_MTRACE
-static void mtrace_record(bool is_read, vaddr_t addr, int len, word_t read_data, word_t write_data)
+static void mtrace_record(bool is_read, paddr_t addr, int len, word_t read_data, word_t write_data)
 {
     if (enable_mtrace && addr >= 0x80000000 && addr <= 0x8fffffff)
     {
@@ -63,6 +64,11 @@ static void printf_mtrace_once(int i)
 
 void print_mtrace()
 {
+    if (!mtrace_array_is_full && mtrace_array_tail==0)
+    {
+        printf("mtrace is empty now\n");
+        return;
+    }
     if (mtrace_array_is_full)
     {
         int i = mtrace_array_tail;
@@ -94,7 +100,7 @@ void disable_mtrace_once()
     enable_mtrace = false;
 }
 
-void pmem_read(vaddr_t raddr, word_t *rdata)
+void pmem_read(paddr_t raddr, word_t *rdata)
 {
 #if (ISA_WIDTH == 64)
     panic("do not isa64");
@@ -109,7 +115,7 @@ void pmem_read(vaddr_t raddr, word_t *rdata)
 #endif
 }
 
-void pmem_write(vaddr_t waddr, word_t wdata, uint8_t wmask)
+void pmem_write(paddr_t waddr, word_t wdata, uint8_t wmask)
 {
 #if (ISA_WIDTH == 64)
     panic("do not isa64");
