@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstdint>
 #include <cstdbool>
+#include <cstddef>
 
 #include <util/debug.hpp>
 #include <util/macro.hpp>

@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstdbool>
 #include <cstring>
+#include <cstddef>
 #include <elf.h>
 
 #include <sim/cpu_sim.hpp>

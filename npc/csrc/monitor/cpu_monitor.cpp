@@ -1,22 +1,21 @@
 #include <monitor/cpu_monitor.hpp>
 
-#include <cstring>
 #include <cstdio>
-#include <getopt.h>
+#include <cstring>
 #include <cstddef>
-#include <cstdlib>
+#include <getopt.h>
 
-#include <verilated.h>
 #include <sim/cpu_sim.hpp>
-#include <util/disasm.hpp>
-#include <util/sim_tool.hpp>
-#include <util/macro.hpp>
 #include <util/debug.hpp>
-#include <monitor/cpu_sdb.hpp>
-#include <cpu/cpu_ftrace.hpp>
+#include <util/disasm.hpp>
+#include <util/macro.hpp>
+#include <util/sim_tool.hpp>
 #include <cpu/cpu_dut.hpp>
+#include <cpu/cpu_ftrace.hpp>
 #include <cpu/cpu_log.hpp>
 #include <cpu/cpu_mem.hpp>
+#include <monitor/cpu_sdb.hpp>
+#include <verilated.h>
 
 static char *log_file = NULL;
 static char *diff_so_file = NULL;
@@ -33,7 +32,7 @@ static void welcome()
               "to record the trace. This may lead to a large log file. "
               "If it is not necessary, you can disable it in menuconfig"));
     Log("Build time: %s, %s", __TIME__, __DATE__);
-    printf("Welcome to NPC\n");
+    printf("Welcome to NPC! %s.\n", ANSI_FMT("ISA-" str(CONFIG_ISA), ANSI_FG_YELLOW ANSI_BG_RED));
     printf("For help, type \"help\"\n");
     // Log("Exercise: Please remove me in the source code and compile NEMU
     // again."); assert(0);
@@ -43,7 +42,7 @@ static long load_img()
 {
     if (img_file == NULL)
     {
-        printf("No image is given. Use the default build-in image.\n");
+        Log("No image is given. Use the default build-in image.");
         return 4096; // built-in image size
     }
 
@@ -53,7 +52,7 @@ static long load_img()
     fseek(fp, 0, SEEK_END);
     long size = ftell(fp);
 
-    printf("The image is %s, size = %ld\n", img_file, size);
+    Log("The image is %s, size = %ld", img_file, size);
 
     fseek(fp, 0, SEEK_SET);
     int ret = fread(mem, size, 1, fp);
@@ -105,19 +104,18 @@ static int parse_args(int argc, char *argv[])
             printf("\t-v,--verilator=\"verilator argv\"      verilator argv\n");
             printf("\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
             printf("\n");
-            exit(0);
+            panic("cannot decode parameter");
         }
     }
     return 0;
 }
 
-#define VERILATOR_ARGV_MAX 10
+#define VERILATOR_ARGV_MAX 100
 
 static void init_verilator(char *argv0)
 {
     if (verilator_argv == NULL)
     {
-        printf("No verilator argv is given\n");
         return;
     }
     int argc = 1;
@@ -146,7 +144,7 @@ void init_monitor(int argc, char *argv[])
     /* Load the image to memory. This will overwrite the built-in image. */
     long img_size = load_img();
 
-    load_elf(elf_file);
+    IFDEF(CONFIG_FTRACE, load_elf(elf_file));
 
     /* Initialize differential testing. */
 #ifdef CONFIG_DIFFTEST

@@ -1,25 +1,27 @@
 #include <monitor/cpu_sdb.hpp>
 
-#include <cstdint>
 #include <cstdio>
+#include <cstdint>
 #include <cstdbool>
-
+#include <cmath>
+#include <cstdlib>
 #include <readline/history.h>
 #include <readline/readline.h>
 
-#include <util/sim_tool.hpp>
-#include <util/macro.hpp>
 #include <sim/cpu_sim.hpp>
+#include <util/macro.hpp>
 #include <cpu/cpu_cpu_exec.hpp>
-#include <cpu/cpu_reg.hpp>
-#include <cpu/cpu_mem.hpp>
 #include <cpu/cpu_ftrace.hpp>
 #include <cpu/cpu_iringbuf.hpp>
+#include <cpu/cpu_mem.hpp>
+#include <cpu/cpu_reg.hpp>
 #include <monitor/cpu_expr.hpp>
 #include <monitor/cpu_watchpoint.hpp>
 
 static int is_batch_mode = false;
 
+/* We use the `readline' library to provide more flexibility to read from stdin.
+ */
 static char *rl_gets()
 {
     static char *line_read = NULL;
@@ -183,7 +185,7 @@ static int cmd_x(const char *const args)
                     break;
 #if (ISA_WIDTH == 64)
                 case 8:
-                    printf("0x%016lx ", val & 0xffffffffffffffff);
+                    printf("0x%016lx ", val);
                     break;
 #endif
                 }

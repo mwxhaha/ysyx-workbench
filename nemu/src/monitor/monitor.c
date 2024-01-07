@@ -21,6 +21,7 @@
 #include <monitor.h>
 #include <stdio.h>
 #include <utils.h>
+#include <debug.h>
 
 void init_rand();
 void init_log(const char *log_file);
@@ -39,8 +40,7 @@ static void welcome()
               "to record the trace. This may lead to a large log file. "
               "If it is not necessary, you can disable it in menuconfig"));
     Log("Build time: %s, %s", __TIME__, __DATE__);
-    printf("Welcome to %s-NEMU!\n",
-           ANSI_FMT(str(__GUEST_ISA__), ANSI_FG_YELLOW ANSI_BG_RED));
+    printf("Welcome to %s-NEMU!\n", ANSI_FMT(str(__GUEST_ISA__), ANSI_FG_YELLOW ANSI_BG_RED));
     printf("For help, type \"help\"\n");
     // Log("Exercise: Please remove me in the source code and compile NEMU
     // again."); assert(0);
@@ -120,11 +120,10 @@ static int parse_args(int argc, char *argv[])
             printf("\t-b,--batch              run with batch mode\n");
             printf("\t-l,--log=FILE           output log to FILE\n");
             printf("\t-e,--elf=FILE           elf FILE for trace\n");
-            printf(
-                "\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
+            printf("\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
             printf("\t-p,--port=PORT          run DiffTest with port PORT\n");
             printf("\n");
-            exit(0);
+            panic("cannot decode parameter");
         }
     }
     return 0;
@@ -155,7 +154,7 @@ void init_monitor(int argc, char *argv[])
     /* Load the image to memory. This will overwrite the built-in image. */
     long img_size = load_img();
 
-    IFDEF(CONFIG_FTRACE, load_elf(elf_file)); 
+    IFDEF(CONFIG_FTRACE, load_elf(elf_file));
 
     /* Initialize differential testing. */
     init_difftest(diff_so_file, img_size, difftest_port);
