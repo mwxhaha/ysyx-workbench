@@ -1,17 +1,16 @@
 #include <monitor/cpu_expr.hpp>
 
-#include <cstdbool>
 #include <cstdio>
+#include <cstdbool>
 #include <cstring>
 #include <regex.h>
 
 #include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
-#include <monitor/cpu_watchpoint.hpp>
-#include <cpu/cpu_reg.hpp>
 #include <cpu/cpu_log.hpp>
 #include <cpu/cpu_mem.hpp>
+#include <cpu/cpu_reg.hpp>
 
 enum
 {

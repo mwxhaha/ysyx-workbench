@@ -1,7 +1,7 @@
 #include <cpu/cpu_reg.hpp>
 
-#include <cstdbool>
 #include <cstdio>
+#include <cstdbool>
 #include <cstring>
 
 #include <sim/cpu_sim.hpp>

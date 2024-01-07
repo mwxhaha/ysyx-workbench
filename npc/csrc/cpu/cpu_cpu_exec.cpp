@@ -18,6 +18,7 @@
 #include <cpu/cpu_mem.hpp>
 #include <cpu/cpu_reg.hpp>
 #include <monitor/cpu_watchpoint.hpp>
+#include <Vtop.h>
 #include <Vtop___024root.h>
 
 #define MAX_INST_TO_PRINT 20

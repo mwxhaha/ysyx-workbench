@@ -42,9 +42,10 @@ endif
 
 
 
+run: sim
 all: build
 
 clean: 
 	rm -rf $(BUILD_DIR)
 
-.PHONY : verilate build sim all clean
+.PHONY : verilate build sim run all clean
