@@ -1,7 +1,7 @@
 #include <monitor/cpu_watchpoint.hpp>
 
-#include <cstdbool>
 #include <cstdio>
+#include <cstdbool>
 #include <cstring>
 
 #include <sim/cpu_sim.hpp>

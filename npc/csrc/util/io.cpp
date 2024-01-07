@@ -1,4 +1,7 @@
+#include <util/io.hpp>
+
 #include <cstdio>
+#include <cstddef>
 
 char *fgetstr(char *s, int n, FILE *stream)
 {
