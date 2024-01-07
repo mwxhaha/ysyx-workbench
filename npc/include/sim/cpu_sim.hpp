@@ -50,7 +50,7 @@ using paddr_t = word_t;
 #error "do not support ISA " #CONFIG_ISA
 #endif
 
-#define CYCLE 10
+#define CYCLE 2
 
 enum
 {

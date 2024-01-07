@@ -403,6 +403,7 @@ static word_t eval(const int p, const int q, bool *const success)
             case TK_NEG:
                 return -val2;
             case TK_DEREF:
+                IFDEF(CONFIG_MTRACE, disable_mtrace_once());
                 word_t val;
                 pmem_read(val2, &val);
                 return val;

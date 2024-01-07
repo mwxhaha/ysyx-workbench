@@ -1,8 +1,8 @@
 #include <Vtop__Dpi.h>
 
 #ifdef SIM_ALL
-#include <cpu/cpu_mem.hpp>
 #include <sim/cpu_sim.hpp>
+#include <cpu/cpu_mem.hpp>
 
 extern "C" void absort_dpic(int pc)
 {
@@ -18,12 +18,17 @@ extern "C" void ebreak_dpic(int ret, int pc)
     npc_state.halt_pc = pc;
 }
 
-extern "C" void mem_read(int raddr, int *rdata)
+extern "C" void disable_mtrace_once_dpic()
+{
+    disable_mtrace_once();
+}
+
+extern "C" void pmem_read_dpic(int raddr, int *rdata)
 {
     pmem_read(raddr, (word_t *)rdata);
 }
 
-extern "C" void mem_write(int waddr, int wdata, char wmask)
+extern "C" void pmem_write_dpic(int waddr, int wdata, char wmask)
 {
     pmem_write(waddr, wdata, wmask);
 }
@@ -32,7 +37,8 @@ extern "C" void mem_write(int waddr, int wdata, char wmask)
 
 extern "C" void absort_dpic(int pc) {}
 extern "C" void ebreak_dpic(int ret, int pc) {}
-extern "C" void mem_read(int raddr, int *rdata) {}
-extern "C" void mem_write(int waddr, int wdata, char wmask) {}
+extern "C" void disable_mtrace_once_dpic() {}
+extern "C" void pmem_read_dpic(int raddr, int *rdata) {}
+extern "C" void pmem_write_dpic(int waddr, int wdata, char wmask) {}
 
 #endif
