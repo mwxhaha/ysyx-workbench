@@ -7,7 +7,7 @@
 extern "C" void absort_dpic(int pc)
 {
     npc_state.halt_ret = 1;
-    npc_state.state = NPC_ABSORT;
+    npc_state.state = NPC_ABORT;
     npc_state.halt_pc = pc;
 }
 

@@ -6,19 +6,19 @@
 #include <cstring>
 #include <locale.h>
 
+#include <sim/cpu_sim.hpp>
 #include <util/sim_tool.hpp>
 #include <util/timer.hpp>
 #include <util/disasm.hpp>
 #include <util/macro.hpp>
-#include <sim/cpu_sim.hpp>
-#include <Vtop___024root.h>
-#include <cpu/cpu_reg.hpp>
-#include <cpu/cpu_mem.hpp>
-#include <monitor/cpu_watchpoint.hpp>
-#include <cpu/cpu_iringbuf.hpp>
-#include <cpu/cpu_ftrace.hpp>
 #include <cpu/cpu_dut.hpp>
+#include <cpu/cpu_ftrace.hpp>
+#include <cpu/cpu_iringbuf.hpp>
 #include <cpu/cpu_log.hpp>
+#include <cpu/cpu_mem.hpp>
+#include <cpu/cpu_reg.hpp>
+#include <monitor/cpu_watchpoint.hpp>
+#include <Vtop___024root.h>
 
 #define MAX_INST_TO_PRINT 20
 uint64_t g_nr_guest_inst = 0;
@@ -52,8 +52,10 @@ static void exec_once(Decode *s, vaddr_t pc)
     cycle(1, CYCLE);
     s->snpc = pc + INST_LEN / 8;
     s->dnpc = top->rootp->cpu__DOT__pc_out;
+#ifdef CONFIG_FTRACE
     if ((s->isa.inst.val & 0x7f) == 0x6f || (s->isa.inst.val & 0x707f) == 0x67)
         ftrace_record(s);
+#endif
 #ifdef CONFIG_ITRACE
     char *p = s->logbuf;
     p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
@@ -71,7 +73,11 @@ static void exec_once(Decode *s, vaddr_t pc)
     space_len = space_len * 3 + 1;
     memset(p, ' ', space_len);
     p += space_len;
+#if (CONFIG_ISA == CONFIG_RV32I || CONFIG_ISA == CONFIG_RV32E || CONFIG_ISA == CONFIG_RV64I)
     disassemble(p, s->logbuf + sizeof(s->logbuf) - p, s->pc, (uint8_t *)&s->isa.inst.val, ilen);
+#else
+    panic("disassemble do not support other isa");
+#endif
 #endif
 }
 
@@ -91,15 +97,13 @@ static void execute(uint64_t n)
 static void statistic()
 {
     setlocale(LC_NUMERIC, "");
-#define NUMBERIC_FMT "%'lu"
+#define NUMBERIC_FMT "%'" PRIu64
     Log("host time spent = " NUMBERIC_FMT " us", g_timer);
     Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
     if (g_timer > 0)
-        Log("simulation frequency = " NUMBERIC_FMT " inst/s",
-               g_nr_guest_inst * 1000000 / g_timer);
+        Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
     else
-        Log("Finish running in less than 1 us and can not calculate the simulation "
-               "frequency");
+        Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
 
 void assert_fail_msg()
@@ -111,13 +115,14 @@ void assert_fail_msg()
     statistic();
 }
 
+/* Simulate how the CPU works. */
 void cpu_exec(uint64_t n)
 {
     g_print_step = (n <= MAX_INST_TO_PRINT);
     switch (npc_state.state)
     {
     case NPC_END:
-    case NPC_ABSORT:
+    case NPC_ABORT:
         printf(
             "Program execution has ended. To restart the program, exit NEMU and "
             "run again.\n");
@@ -136,13 +141,12 @@ void cpu_exec(uint64_t n)
     switch (npc_state.state)
     {
     case NPC_RUNNING:
-    case NPC_STOP:
         npc_state.state = NPC_STOP;
         break;
     case NPC_END:
-    case NPC_ABSORT:
+    case NPC_ABORT:
         Log("npc: %s at pc = " FMT_WORD,
-            (npc_state.state == NPC_ABSORT
+            (npc_state.state == NPC_ABORT
                  ? ANSI_FMT("ABORT", ANSI_FG_RED)
                  : (npc_state.halt_ret == 0
                         ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)

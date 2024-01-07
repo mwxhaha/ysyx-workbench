@@ -54,7 +54,7 @@ enum
     NPC_RUNNING,
     NPC_STOP,
     NPC_END,
-    NPC_ABSORT,
+    NPC_ABORT,
     NPC_QUIT
 };
 typedef struct npc_state_t
