@@ -19,6 +19,7 @@ using sword_t = int32_t;
 using inst_t = uint32_t;
 #define FMT_INST "0x%08x"
 using vaddr_t = word_t;
+using paddr_t = word_t;
 #elif CONFIG_ISA == CONFIG_RV32E
 #define ISA_WIDTH 32
 using word_t = uint32_t;
@@ -31,6 +32,7 @@ using sword_t = int32_t;
 using inst_t = uint32_t;
 #define FMT_INST "0x%08x"
 using vaddr_t = word_t;
+using paddr_t = word_t;
 #elif CONFIG_ISA == CONFIG_RV64I
 #define ISA_WIDTH 64
 using word_t = uint64_t;
@@ -43,6 +45,7 @@ using sword_t = int64_t;
 using inst_t = uint32_t;
 #define FMT_INST "0x%08x"
 using vaddr_t = word_t;
+using paddr_t = word_t;
 #else
 #error "do not support ISA " #CONFIG_ISA
 #endif

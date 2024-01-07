@@ -1,12 +1,10 @@
 #include <cpu/cpu_iringbuf.hpp>
 
-#include <cstdbool>
 #include <cstdio>
+#include <cstdbool>
 #include <cstring>
 
-#include <sim/cpu_sim.hpp>
-
-#define IRINGBUF_MAX 10
+#define IRINGBUF_MAX 20
 
 static int iringbuf_ptr = 0;
 static bool iringbuf_full = false;
@@ -25,6 +23,11 @@ void add_iringbuf(const char *inst)
 
 void print_iringbuf()
 {
+    if (!iringbuf_full && iringbuf_ptr==0)
+    {
+        printf("itrace is empty now\n");
+        return;
+    }
     if (iringbuf_full)
     {
         int i = iringbuf_ptr;

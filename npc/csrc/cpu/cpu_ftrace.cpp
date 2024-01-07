@@ -1,9 +1,9 @@
 #include <cpu/cpu_ftrace.hpp>
 
-#include <elf.h>
 #include <cstdio>
 #include <cstdbool>
 #include <cstring>
+#include <elf.h>
 
 #include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
@@ -39,6 +39,7 @@ typedef struct
 } func_info_t;
 static func_info_t func_infos[FUNC_INFOS_MAX];
 static int func_infos_max = 0;
+static bool ftrace_close=false;
 
 void load_elf(const char *elf_file)
 {
@@ -48,7 +49,8 @@ void load_elf(const char *elf_file)
 
     if (elf_file == NULL)
     {
-        Log("No elf is given. ftrace will not work.");
+        Log("No elf is given. ftrace will not work");
+        ftrace_close = true;
         return;
     }
 
@@ -121,6 +123,8 @@ static bool ftrace_full = false;
 
 void ftrace_record(Decode *s)
 {
+    if (ftrace_close)
+        return;
     int call_or_ret = 0;
     if (s->isa.inst.val == 0x00008067)
         call_or_ret = 1;
@@ -181,6 +185,16 @@ static void print_ftrace_one(int i, int *func_stack)
 
 void print_ftrace()
 {
+    if (ftrace_close)
+    {
+        printf("No elf is given. ftrace will not work\n");
+        return;
+    }
+    if (!ftrace_full && ftraces_ptr==0)
+    {
+        printf("ftrace is empty now\n");
+        return;
+    }
     if (ftrace_full)
     {
         int i = ftraces_ptr;
