@@ -21,13 +21,16 @@ void set_pin(auto f, int cycle_time = 2)
 #ifdef HAVE_CLK
     top->clk = 1;
 #endif
-    update(1);
-    f();
     update(cycle_time / 2 - 1);
+    f();
 #ifdef HAVE_CLK
     top->clk = 0;
 #endif
     update(cycle_time / 2);
+#ifdef HAVE_CLK
+    top->clk = 1;
+#endif
+    update(1);
 }
 void reset(int reset_cycle_number = 3, int cycle_time = 2);
 void pin_output(auto pin, int data_len, bool binary_mode, bool hex_mode, bool unsigned_mode, bool signed_mode)

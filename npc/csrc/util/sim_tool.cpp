@@ -16,7 +16,7 @@ void nvboard_bind_all_pins(Vtop *top);
 VerilatedContext *contextp;
 Vtop *top;
 VerilatedVcdC *tfp;
-#define MAX_RECORD_WAVE 100000
+#define MAX_RECORD_WAVE 10000
 #define HIERARCHY_DEEP 100
 
 void sim_init(int argc, char *argv[])
@@ -41,6 +41,12 @@ void sim_init(int argc, char *argv[])
     nvboard_bind_all_pins(top);
     nvboard_init();
 #endif
+
+#ifdef HAVE_CLK
+    top->clk = 1;
+    top->rst = 1;
+#endif
+    update(1);
 }
 
 void sim_exit()
@@ -85,11 +91,15 @@ void cycle(int cycle_number, int cycle_time)
 #ifdef HAVE_CLK
         top->clk = 1;
 #endif
-        update(cycle_time / 2);
+        update(cycle_time / 2 - 1);
 #ifdef HAVE_CLK
         top->clk = 0;
 #endif
         update(cycle_time / 2);
+#ifdef HAVE_CLK
+        top->clk = 1;
+#endif
+        update(1);
         cycle_number--;
     }
 }
