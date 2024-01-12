@@ -204,7 +204,7 @@ module exu_alu
         .key(inst_num),
         .default_out(`ALU_FUNCT_WIDTH'd`NO_FUNCT),
         .lut({
-            `INST_NUM_WIDTH'd`auipc,
+            `INST_NUM_WIDTH'd`lui,
             `ALU_FUNCT_WIDTH'd`NO_FUNCT,
             `INST_NUM_WIDTH'd`auipc,
             `ALU_FUNCT_WIDTH'd`ADD,

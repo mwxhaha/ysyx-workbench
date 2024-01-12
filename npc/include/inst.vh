@@ -13,7 +13,7 @@
 `define sll 30
 
 `define INST_SLT_ADD_NUM_MAX 1
-`define slt 30
+`define slt 31
 
 `define INST_SLTU_ADD_NUM_MAX 1
 `define sltu 32
