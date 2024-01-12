@@ -32,7 +32,7 @@ void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
 
 static bool difftest_close = false;
 
-void init_difftest(const char *ref_so_file, long img_size)
+void init_difftest(char *ref_so_file, long img_size)
 {
     if (!ref_so_file)
     {
