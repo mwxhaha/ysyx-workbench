@@ -33,7 +33,8 @@
         {                                                                       \
             fflush(stdout);                                                     \
             fprintf(stderr, ANSI_FMT(format, ANSI_FG_RED) "\n", ##__VA_ARGS__); \
-            printf(format "\n", ##__VA_ARGS__);                                 \
+            extern FILE *log_fp;                                                \
+            fflush(log_fp);                                                     \
             extern void assert_fail_msg();                                      \
             assert_fail_msg();                                                  \
             assert(cond);                                                       \
@@ -42,14 +43,14 @@
 
 #else
 
-#define Assert(cond, format, ...)               \
-    do                                          \
-    {                                           \
-        if (!(cond))                            \
-        {                                       \
-            printf(format "\n", ##__VA_ARGS__); \
-            assert(cond);                       \
-        }                                       \
+#define Assert(cond, format, ...)                                      \
+    do                                                                 \
+    {                                                                  \
+        if (!(cond))                                                   \
+        {                                                              \
+            printf(ANSI_FMT(format, ANSI_FG_RED) "\n", ##__VA_ARGS__); \
+            assert(cond);                                              \
+        }                                                              \
     } while (0)
 
 #endif

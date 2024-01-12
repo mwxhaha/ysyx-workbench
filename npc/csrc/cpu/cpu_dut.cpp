@@ -59,7 +59,7 @@ void init_difftest(const char *ref_so_file, long img_size)
         ref_so_file);
 
     ref_difftest_init();
-    ref_difftest_memcpy(MEM_BASE_ADDR, mem, img_size, DIFFTEST_TO_REF);
+    ref_difftest_memcpy(MEM_BASE_ADDR, pmem, img_size, DIFFTEST_TO_REF);
 
     CPU_state cpu;
     cpu.pc = MEM_BASE_ADDR;

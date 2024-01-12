@@ -6,14 +6,18 @@
 
 #include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
+#include <util/macro.hpp>
+#include <util/sim_tool.hpp>
+#include <Vtop.h>
+#include <Vtop___024root.h>
 
-uint8_t mem[MEM_MAX] = {0x97, 0x14, 0x00, 0x00,  // auipc 9 4096
-                        0xb3, 0x86, 0xb4, 0x00,  // add 13 9 11
-                        0xa3, 0xaf, 0x96, 0xfe,  // sw 9 -1(13)
-                        0x83, 0xa5, 0xf4, 0xff,  // lw 11 -1(9)
-                        0x63, 0x84, 0xb6, 0x00,  // beq 11 13 4
-                        0xef, 0x04, 0x40, 0x00,  // jal 9 4
-                        0x73, 0x00, 0x10, 0x00}; // ebreak
+uint8_t pmem[MEM_MAX] = {0x97, 0x14, 0x00, 0x00,  // auipc 9 4096
+                         0xb3, 0x86, 0xb4, 0x00,  // add 13 9 11
+                         0xa3, 0xaf, 0x96, 0xfe,  // sw 9 -1(13)
+                         0x83, 0xa5, 0xf4, 0xff,  // lw 11 -1(9)
+                         0x63, 0x84, 0xb6, 0x00,  // beq 11 13 4
+                         0xef, 0x04, 0x40, 0x00,  // jal 9 4
+                         0x73, 0x00, 0x10, 0x00}; // ebreak
 
 static bool enable_mtrace = true;
 typedef struct
@@ -28,6 +32,58 @@ typedef struct
 static mtrace_t mtrace_array[MTRACE_ARRAY_MAX];
 static int mtrace_array_tail = 0;
 static bool mtrace_array_is_full = false;
+
+static void in_pmem(paddr_t addr)
+{
+    Assert(addr >= MEM_BASE_ADDR, "address = " FMT_PADDR " is out of bound of pmem at pc = " FMT_WORD, addr, top->rootp->cpu__DOT__pc_out);
+    Assert(addr <= MEM_BASE_ADDR + MEM_MAX - 1, "address = " FMT_PADDR "is out of bound of pmem at pc = " FMT_WORD, addr, top->rootp->cpu__DOT__pc_out);
+}
+
+static uint8_t *guest_to_host(paddr_t paddr)
+{
+    return pmem + paddr - MEM_BASE_ADDR;
+}
+
+static word_t host_read(void *addr, int len)
+{
+    switch (len)
+    {
+    case 1:
+        return *(uint8_t *)addr;
+    case 2:
+        return *(uint16_t *)addr;
+    case 4:
+        return *(uint32_t *)addr;
+#if ISA_WIDTH == 64
+    case 8:
+        return *(uint64_t *)addr;
+#endif
+    default:
+        panic("memory read len error");
+    }
+}
+
+static void host_write(void *addr, int len, word_t data)
+{
+    switch (len)
+    {
+    case 1:
+        *(uint8_t *)addr = data;
+        return;
+    case 2:
+        *(uint16_t *)addr = data;
+        return;
+    case 4:
+        *(uint32_t *)addr = data;
+        return;
+#if ISA_WIDTH == 64
+    case 8:
+        *(uint64_t *)addr = data;
+        return;
+#endif
+        panic("memory write len error");
+    }
+}
 
 #ifdef CONFIG_MTRACE
 static void mtrace_record(bool is_read, paddr_t addr, int len, word_t read_data, word_t write_data)
@@ -54,17 +110,17 @@ static void printf_mtrace_once(int i)
 {
     if (mtrace_array[i].is_read)
     {
-        printf("memory read in addr " FMT_WORD " : " FMT_WORD "\n", mtrace_array[i].addr, mtrace_array[i].read_data);
+        printf("memory read in addr " FMT_WORD " with len %d: " FMT_WORD "\n", mtrace_array[i].addr, mtrace_array[i].len, mtrace_array[i].read_data);
     }
     else
     {
-        printf("memory write in addr " FMT_WORD " with mask 0x%04x: " FMT_WORD "->" FMT_WORD "\n", mtrace_array[i].addr, mtrace_array[i].len, mtrace_array[i].read_data, mtrace_array[i].write_data);
+        printf("memory write in addr " FMT_WORD " with len %d: " FMT_WORD "->" FMT_WORD "\n", mtrace_array[i].addr, mtrace_array[i].len, mtrace_array[i].read_data, mtrace_array[i].write_data);
     }
 }
 
 void print_mtrace()
 {
-    if (!mtrace_array_is_full && mtrace_array_tail==0)
+    if (!mtrace_array_is_full && mtrace_array_tail == 0)
     {
         printf("mtrace is empty now\n");
         return;
@@ -100,46 +156,21 @@ void disable_mtrace_once()
     enable_mtrace = false;
 }
 
-void pmem_read(paddr_t raddr, word_t *rdata)
+word_t pmem_read(paddr_t addr, int len)
 {
-#if (ISA_WIDTH == 64)
-    panic("do not isa64");
-#else
-    Assert(raddr >= MEM_BASE_ADDR, "memory out of bound");
-    Assert(raddr <= MEM_BASE_ADDR + MEM_MAX - 1, "memory out of bound");
-    word_t *addr_real = (word_t *)(intptr_t)raddr - (word_t *)MEM_BASE_ADDR + (word_t *)mem;
-    *rdata = *addr_real;
+    in_pmem(addr);
+    word_t ret = host_read(guest_to_host(addr), len);
 #ifdef CONFIG_MTRACE
-    mtrace_record(true, raddr, 4, *rdata, 0);
+    mtrace_record(true, addr, len, ret, 0);
 #endif
-#endif
+    return ret;
 }
 
-void pmem_write(paddr_t waddr, word_t wdata, uint8_t wmask)
+void pmem_write(paddr_t addr, int len, word_t data)
 {
-#if (ISA_WIDTH == 64)
-    panic("do not isa64");
-#else
-    Assert(waddr >= MEM_BASE_ADDR, "memory out of bound");
-    Assert(waddr <= MEM_BASE_ADDR + MEM_MAX - 1, "memory out of bound");
-    word_t *addr_real = (word_t *)(intptr_t)waddr - (word_t *)MEM_BASE_ADDR + (word_t *)mem;
+    in_pmem(addr);
 #ifdef CONFIG_MTRACE
-    mtrace_record(false, waddr, wmask, *addr_real, wdata);
+    mtrace_record(false, addr, len, host_read(guest_to_host(addr), len), data);
 #endif
-    switch (wmask)
-    {
-    case 1:
-        *(uint8_t *)addr_real = wdata;
-        break;
-    case 3:
-        *(uint16_t *)addr_real = wdata;
-        break;
-    case 15:
-        *(uint32_t *)addr_real = wdata;
-        break;
-    default:
-        panic("memory write mask error");
-        break;
-    }
-#endif
+    host_write(guest_to_host(addr), len, data);
 }

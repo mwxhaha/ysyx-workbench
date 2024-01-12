@@ -19,10 +19,8 @@ TOP_NAME = cpu
 ISA = RV32E
 NVBOARD = 0
 HAVE_CLK = 1
-ifeq ($(NVBOARD),0)
 RECORD_WAVE = 1
 FSANITIZE = 1
-endif
 ifeq ($(RECORD_WAVE),1)
 DISPLAY_WAVE = 0
 endif

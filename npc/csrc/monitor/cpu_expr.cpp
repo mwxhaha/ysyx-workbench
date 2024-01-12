@@ -404,9 +404,7 @@ static word_t eval(const int p, const int q, bool *const success)
                 return -val2;
             case TK_DEREF:
                 IFDEF(CONFIG_MTRACE, disable_mtrace_once());
-                word_t val;
-                pmem_read(val2, &val);
-                return val;
+                return pmem_read(val2, sizeof(word_t));
             case TK_EQ:
                 return val1 == val2;
             case TK_NE:

@@ -20,6 +20,7 @@ using inst_t = uint32_t;
 #define FMT_INST "0x%08x"
 using vaddr_t = word_t;
 using paddr_t = word_t;
+#define FMT_PADDR FMT_WORD
 #elif CONFIG_ISA == CONFIG_RV32E
 #define ISA_WIDTH 32
 using word_t = uint32_t;
@@ -33,6 +34,7 @@ using inst_t = uint32_t;
 #define FMT_INST "0x%08x"
 using vaddr_t = word_t;
 using paddr_t = word_t;
+#define FMT_PADDR FMT_WORD
 #elif CONFIG_ISA == CONFIG_RV64I
 #define ISA_WIDTH 64
 using word_t = uint64_t;
@@ -46,6 +48,7 @@ using inst_t = uint32_t;
 #define FMT_INST "0x%08x"
 using vaddr_t = word_t;
 using paddr_t = word_t;
+#define FMT_PADDR FMT_WORD
 #else
 #error "do not support ISA " #CONFIG_ISA
 #endif
@@ -73,5 +76,8 @@ typedef struct
     word_t gpr[GPR_NUM];
     vaddr_t pc;
 } CPU_state;
+
+void sim();
+word_t pc_in();
 
 #endif

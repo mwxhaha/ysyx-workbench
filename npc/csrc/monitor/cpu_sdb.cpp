@@ -170,22 +170,21 @@ static int cmd_x(const char *const args)
             for (int i = 0; i < scan_num; i++)
             {
                 IFDEF(CONFIG_MTRACE, disable_mtrace_once());
-                word_t val;
-                pmem_read(addr + i * scan_len, &val);
+                word_t data = pmem_read(addr + i * scan_len, scan_len);
                 switch (scan_len)
                 {
                 case 1:
-                    printf("0x%02x ", val & 0xff);
+                    printf("0x%02x ", data);
                     break;
                 case 2:
-                    printf("0x%04x ", val & 0xffff);
+                    printf("0x%04x ", data);
                     break;
                 case 4:
-                    printf("0x%08x ", val & 0xffffffff);
+                    printf("0x%08x ", data);
                     break;
-#if (ISA_WIDTH == 64)
+#ifdef CONFIG_ISA64
                 case 8:
-                    printf("0x%016lx ", val);
+                    printf("0x%016lx ", data);
                     break;
 #endif
                 }
