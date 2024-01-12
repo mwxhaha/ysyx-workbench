@@ -1,8 +1,15 @@
 #ifndef DEBUG_HPP
 #define DEBUF_HPP
 
-#include <cstdio>
-#include <cassert>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 
 #define ANSI_FG_BLACK "\33[1;30m"
 #define ANSI_FG_RED "\33[1;31m"

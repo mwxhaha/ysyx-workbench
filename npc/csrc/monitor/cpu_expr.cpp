@@ -1,13 +1,20 @@
 #include <monitor/cpu_expr.hpp>
 
-#include <cstdio>
-#include <cstdbool>
-#include <cstring>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 #include <regex.h>
 
 #include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
+#include <util/sim_tool.hpp>
 #include <cpu/cpu_log.hpp>
 #include <cpu/cpu_mem.hpp>
 #include <cpu/cpu_reg.hpp>

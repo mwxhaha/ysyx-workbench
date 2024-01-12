@@ -1,15 +1,21 @@
 #include <monitor/cpu_sdb.hpp>
 
-#include <cstdio>
-#include <cstdint>
-#include <cstdbool>
-#include <cmath>
-#include <cstdlib>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 
 #include <sim/cpu_sim.hpp>
+#include <util/debug.hpp>
 #include <util/macro.hpp>
+#include <util/sim_tool.hpp>
 #include <cpu/cpu_cpu_exec.hpp>
 #include <cpu/cpu_ftrace.hpp>
 #include <cpu/cpu_iringbuf.hpp>

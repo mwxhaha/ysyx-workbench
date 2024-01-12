@@ -1,7 +1,15 @@
 #ifndef TIMER_HPP
 #define TIMER_HPP
 
-#include <cstdint>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 
 uint64_t get_time();
 

@@ -5,9 +5,8 @@
 #include <bitset>
 
 #include <verilated.h>
-#include <verilated_vcd_c.h>
-
 #include <Vtop.h>
+#include <verilated_vcd_c.h>
 
 extern VerilatedContext *contextp;
 extern Vtop *top;

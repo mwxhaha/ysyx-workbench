@@ -3,8 +3,8 @@
 #include <iostream>
 
 #include <verilated.h>
-#include <verilated_vcd_c.h>
 #include <Vtop.h>
+#include <verilated_vcd_c.h>
 #ifdef NV_SIM
 #include <nvboard.h>
 void nvboard_bind_all_pins(Vtop *top);

@@ -1,7 +1,15 @@
 #ifndef MACRO_HPP
 #define MACRO_HPP
 
-#include <cstring>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 
 // macro stringizing
 #define str_temp(x) #x

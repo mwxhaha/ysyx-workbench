@@ -1,15 +1,21 @@
 #include <monitor/cpu_monitor.hpp>
 
-#include <cstdio>
-#include <cstring>
-#include <cstddef>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 #include <getopt.h>
 
 #include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
-#include <util/disasm.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
+#include <util/disasm.hpp>
 #include <cpu/cpu_dut.hpp>
 #include <cpu/cpu_ftrace.hpp>
 #include <cpu/cpu_log.hpp>

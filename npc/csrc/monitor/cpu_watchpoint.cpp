@@ -1,11 +1,19 @@
 #include <monitor/cpu_watchpoint.hpp>
 
-#include <cstdio>
-#include <cstdbool>
-#include <cstring>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 
 #include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
+#include <util/macro.hpp>
+#include <util/sim_tool.hpp>
 #include <monitor/cpu_expr.hpp>
 
 #define NR_WP 32

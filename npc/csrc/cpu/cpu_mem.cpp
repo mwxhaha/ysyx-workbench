@@ -1,8 +1,14 @@
 #include <cpu/cpu_mem.hpp>
 
-#include <cstdio>
-#include <cstdint>
-#include <cstdbool>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 
 #include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>

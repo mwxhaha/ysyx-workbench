@@ -1,12 +1,19 @@
 #include <cpu/cpu_log.hpp>
 
-#include <cstdio>
-#include <cstdint>
-#include <cstdbool>
-#include <cstddef>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 
+#include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
+#include <util/sim_tool.hpp>
 
 extern uint64_t g_nr_guest_inst;
 FILE *log_fp = NULL;

@@ -1,9 +1,21 @@
 #ifndef CPU_REG_HPP
 #define CPU_REG_HPP
 
-#include <cstdbool>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 
 #include <sim/cpu_sim.hpp>
+#include <util/debug.hpp>
+#include <util/macro.hpp>
+#include <util/sim_tool.hpp>
+
 
 void isa_reg_display();
 word_t isa_reg_str2val(const char *s, bool *success);

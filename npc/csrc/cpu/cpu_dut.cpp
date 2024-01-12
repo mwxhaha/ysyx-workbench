@@ -1,12 +1,20 @@
 #include <cpu/cpu_dut.hpp>
 
-#include <cstddef>
-#include <cstdbool>
-#include <cstdint>
-#include <cassert>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 #include <dlfcn.h>
 
 #include <sim/cpu_sim.hpp>
+#include <util/debug.hpp>
+#include <util/macro.hpp>
+#include <util/sim_tool.hpp>
 #include <cpu/cpu_reg.hpp>
 #include <cpu/cpu_log.hpp>
 #include <cpu/cpu_mem.hpp>

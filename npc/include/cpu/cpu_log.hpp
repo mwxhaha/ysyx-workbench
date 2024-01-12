@@ -1,11 +1,23 @@
 #ifndef CPU_LOG_HPP
 #define CPU_LOG_HPP
 
-#include <cstdio>
-#include <cstdbool>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
+#include <util/macro.hpp>
+#include <util/sim_tool.hpp>
 
 extern FILE *log_fp;
+
 void init_log(const char *log_file);
 bool log_enable();
 

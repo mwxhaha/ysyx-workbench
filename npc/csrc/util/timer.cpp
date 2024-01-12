@@ -1,7 +1,14 @@
 #include <util/timer.hpp>
 
-#include <cstdint>
-#include <cstddef>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 #include <sys/time.h>
 
 static uint64_t boot_time = 0;
