@@ -56,9 +56,9 @@ static void exec_once(Decode *s, vaddr_t pc)
 {
     s->pc = pc;
     s->snpc = pc + INST_LEN / 8;
-    cycle(1, CYCLE);
     s->isa.inst.val = top->rootp->cpu__DOT__mem_r_1;
-    s->dnpc = pc_in();
+    cycle(1, CYCLE);
+    s->dnpc = top->rootp->cpu__DOT__pc_out;
 #ifdef CONFIG_FTRACE
     if ((s->isa.inst.val & 0x7f) == 0x6f || (s->isa.inst.val & 0x707f) == 0x67)
         ftrace_record(s);
@@ -93,7 +93,7 @@ static void execute(uint64_t n)
     Decode s;
     for (; n > 0; n--)
     {
-        exec_once(&s, pc_in());
+        exec_once(&s, top->rootp->cpu__DOT__pc_out);
         g_nr_guest_inst++;
         trace_and_difftest(&s, s.dnpc);
         if (npc_state.state != NPC_RUNNING)

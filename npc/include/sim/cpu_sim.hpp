@@ -86,6 +86,5 @@ typedef struct
 } CPU_state;
 
 void sim();
-word_t pc_in();
 
 #endif
