@@ -12,11 +12,13 @@ module gpr (
 );
 
     wire                  gpr_w_addr_is_not_zero = |(gpr_w_addr ^ `REG_ADDR_WIDTH'b0);
+    wire                  gpr_1_addr_is_not_zero = |(gpr_1_addr ^ `REG_ADDR_WIDTH'b0);
+    wire                  gpr_2_addr_is_not_zero = |(gpr_2_addr ^ `REG_ADDR_WIDTH'b0);
     wire [`ISA_WIDTH-1:0] wdata = gpr_w & {`ISA_WIDTH{gpr_w_addr_is_not_zero}};
     wire [`ISA_WIDTH-1:0] rdata_1;
     wire [`ISA_WIDTH-1:0] rdata_2;
-    assign gpr_1_r = rdata_1 & {`ISA_WIDTH{gpr_w_addr_is_not_zero}};
-    assign gpr_2_r = rdata_2 & {`ISA_WIDTH{gpr_w_addr_is_not_zero}};
+    assign gpr_1_r = rdata_1 & {`ISA_WIDTH{gpr_1_addr_is_not_zero}};
+    assign gpr_2_r = rdata_2 & {`ISA_WIDTH{gpr_2_addr_is_not_zero}};
 
     RegisterFile #(
         .ADDR_WIDTH(`REG_ADDR_WIDTH),

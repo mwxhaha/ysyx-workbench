@@ -73,7 +73,7 @@ module ctrl (
             `OPCODE_WIDTH'b1101111,
             `ALU_FUNCT_WIDTH'd`NO_FUNCT,
             `OPCODE_WIDTH'b1100111,
-            `ALU_FUNCT_WIDTH'd`NO_FUNCT,
+            `ALU_FUNCT_WIDTH'd`ADD,
             `OPCODE_WIDTH'b1100011,
             alu_funct_1100011,
             `OPCODE_WIDTH'b0000011,
@@ -91,7 +91,7 @@ module ctrl (
 
     assign mem_r_en = opcode == `OPCODE_WIDTH'b0000011;
     assign mem_w_en = opcode == `OPCODE_WIDTH'b0100011;
-    assign mem_mask = funct3 == `FUNCT3_WIDTH'b000 ? `MEM_MASK_WIDTH'b0001 : (funct3 == `FUNCT3_WIDTH'b001 ? `MEM_MASK_WIDTH'b0011 : `MEM_MASK_WIDTH'b111);
+    assign mem_mask = funct3 == `FUNCT3_WIDTH'b000 ? `MEM_MASK_WIDTH'b0001 : (funct3 == `FUNCT3_WIDTH'b001 ? `MEM_MASK_WIDTH'b0011 : `MEM_MASK_WIDTH'b1111);
     assign rd_is_mem = opcode == `OPCODE_WIDTH'b0000011;
     assign is_lui = opcode == `OPCODE_WIDTH'b0110111;
     assign is_auipc = opcode == `OPCODE_WIDTH'b0010111;

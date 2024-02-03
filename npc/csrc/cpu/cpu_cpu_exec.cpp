@@ -118,6 +118,7 @@ void assert_fail_msg()
     IFDEF(CONFIG_MTRACE, print_mtrace());
     IFDEF(CONFIG_FTRACE, print_ftrace());
     statistic();
+    sim_exit();
 }
 
 /* Simulate how the CPU works. */
