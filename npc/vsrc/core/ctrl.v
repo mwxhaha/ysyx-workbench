@@ -31,15 +31,16 @@ module ctrl (
     assign gpr_w_en = inst_type == `INST_TYPE_WIDTH'd`R | inst_type == `INST_TYPE_WIDTH'd`I | inst_type == `INST_TYPE_WIDTH'd`U | inst_type == `INST_TYPE_WIDTH'd`J;
     assign alu_b_is_imm = inst_type == `INST_TYPE_WIDTH'd`I | inst_type == `INST_TYPE_WIDTH'd`S;
 
-    wire [`ALU_FUNCT_WIDTH-1:0] alu_funct_1100011;
-    wire [`ALU_FUNCT_WIDTH-1:0] alu_funct_0010011 = funct3 == `FUNCT3_WIDTH'b101 ? {funct7[5],funct3} : {1'b0,funct3};
+    wire [`ALU_FUNCT_WIDTH-1:0] alu_funct_beq;
+    wire [`ALU_FUNCT_WIDTH-1:0] alu_funct_addi = funct3 == `FUNCT3_WIDTH'b101 ? {funct7[5],funct3} : ( funct3 == `FUNCT3_WIDTH'b010 | funct3 == `FUNCT3_WIDTH'b011 ? {1'b1,funct3} : {1'b0,funct3});
+    wire [`ALU_FUNCT_WIDTH-1:0] alu_funct_add = funct3 == `FUNCT3_WIDTH'b010 | funct3 == `FUNCT3_WIDTH'b011 ? {1'b1,funct3} : {funct7[5],funct3};
 
     MuxKeyWithDefault #(
         .NR_KEY  (6),
         .KEY_LEN (`FUNCT3_WIDTH),
         .DATA_LEN(`ALU_FUNCT_WIDTH)
-    ) muxkeywithdefault_alu_funct_1100011 (
-        .out(alu_funct_1100011),
+    ) muxkeywithdefault_alu_funct_beq (
+        .out(alu_funct_beq),
         .key(funct3),
         .default_out(`ALU_FUNCT_WIDTH'd`NO_FUNCT),
         .lut({
@@ -57,6 +58,7 @@ module ctrl (
             `ALU_FUNCT_WIDTH'd`GEU
         })
     );
+
     MuxKeyWithDefault #(
         .NR_KEY  (`OPCODE_NUMBER_MAX),
         .KEY_LEN (`OPCODE_WIDTH),
@@ -75,15 +77,15 @@ module ctrl (
             `OPCODE_WIDTH'b1100111,
             `ALU_FUNCT_WIDTH'd`ADD,
             `OPCODE_WIDTH'b1100011,
-            alu_funct_1100011,
+            alu_funct_beq,
             `OPCODE_WIDTH'b0000011,
             `ALU_FUNCT_WIDTH'd`ADD,
             `OPCODE_WIDTH'b0100011,
             `ALU_FUNCT_WIDTH'd`ADD,
             `OPCODE_WIDTH'b0010011,
-            alu_funct_0010011,
+            alu_funct_addi,
             `OPCODE_WIDTH'b0110011,
-            {funct7[5],funct3} ,
+            alu_funct_add,
             `OPCODE_WIDTH'b1110011,
             `ALU_FUNCT_WIDTH'd`NO_FUNCT
         })

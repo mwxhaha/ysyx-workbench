@@ -49,7 +49,7 @@ module cpu (
     end
 
     always @(posedge clk) begin
-        if (!rst && core_1.opcode == 7'b1110011)
+        if (!rst && core_1.opcode == 7'b1110011 && core_1.funct3 == 3'b000 && core_1.imm == `ISA_WIDTH'b1)
             ebreak_dpic(core_1.idu_1.gpr_1.registerfile_gpr.rf[10], core_1.ifu_1.pc);
     end
 
@@ -71,9 +71,9 @@ module cpu (
         end
     end
 
-// verilator lint_off UNUSEDSIGNAL
+    // verilator lint_off UNUSEDSIGNAL
     wire [`ISA_WIDTH-1:0] mtrace_mem_2_r;
-// verilator lint_on UNUSEDSIGNAL
+    // verilator lint_on UNUSEDSIGNAL
     always @(negedge clk) begin
         if (!rst && mem_2_r_en) begin
             pmem_read_dpic(mem_2_addr, mtrace_mem_2_r);

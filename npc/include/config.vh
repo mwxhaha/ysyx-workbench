@@ -12,11 +12,11 @@
 
 `define ALU_FUNCT_WIDTH 4
 `define ALU_FUNCT_MAX 14
-`define NO_FUNCT 15
+`define NO_FUNCT 2
 `define ADD 0
 `define SUB 8
-`define LT 2
-`define LTU 3
+`define LT 10
+`define LTU 11
 `define SLL 1
 `define SRL 5
 `define SRA 13
@@ -24,9 +24,9 @@
 `define OR 6
 `define AND 7
 `define EQ 9
-`define NE 10
-`define GE 11
-`define GEU 12
+`define NE 12
+`define GE 14
+`define GEU 15
 
 `define INST_TYPE_WIDTH 3
 `define INST_TYPE_MAX 6
