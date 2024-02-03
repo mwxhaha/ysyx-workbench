@@ -3,12 +3,12 @@ module barrel_shifter #(
 ) (
     input wire [data_len-1:0] din,
     input wire [4:0] shamt,
-    input wire left_or_right,
-    input wire algorism_or_logic,
+    input wire is_right,
+    input wire is_algorism,
     output wire [data_len-1:0] dout
 );
 
-    wire sign = ~algorism_or_logic & din[data_len-1];
+    wire sign = is_algorism & din[data_len-1];
 
     wire [data_len-1:0] d_1;
     wire [data_len-1:0] d_2;
@@ -21,7 +21,7 @@ module barrel_shifter #(
         .DATA_LEN(data_len)
     ) muxkey_d_1 (
         .out(d_1),
-        .key({shamt[0], left_or_right}),
+        .key({shamt[0], is_right}),
         .lut({
             2'b00,
             din,
@@ -40,7 +40,7 @@ module barrel_shifter #(
         .DATA_LEN(data_len)
     ) muxkey_d_2 (
         .out(d_2),
-        .key({shamt[1], left_or_right}),
+        .key({shamt[1], is_right}),
         .lut({
             2'b00,
             d_1,
@@ -59,7 +59,7 @@ module barrel_shifter #(
         .DATA_LEN(data_len)
     ) muxkey_d_3 (
         .out(d_3),
-        .key({shamt[2], left_or_right}),
+        .key({shamt[2], is_right}),
         .lut({
             2'b00,
             d_2,
@@ -78,7 +78,7 @@ module barrel_shifter #(
         .DATA_LEN(data_len)
     ) muxkey_d_4 (
         .out(d_4),
-        .key({shamt[3], left_or_right}),
+        .key({shamt[3], is_right}),
         .lut({
             2'b00,
             d_3,
@@ -97,7 +97,7 @@ module barrel_shifter #(
         .DATA_LEN(data_len)
     ) muxkey_d_5 (
         .out(dout),
-        .key({shamt[4], left_or_right}),
+        .key({shamt[4], is_right}),
         .lut({
             2'b00,
             d_4,

@@ -24,8 +24,6 @@
 #include <cpu/cpu_mem.hpp>
 #include <cpu/cpu_reg.hpp>
 #include <monitor/cpu_watchpoint.hpp>
-#include <Vtop.h>
-#include <Vtop___024root.h>
 
 #define MAX_INST_TO_PRINT 20
 uint64_t g_nr_guest_inst = 0;
@@ -56,9 +54,9 @@ static void exec_once(Decode *s, vaddr_t pc)
 {
     s->pc = pc;
     s->snpc = pc + INST_LEN / 8;
-    s->isa.inst.val = top->rootp->cpu__DOT__mem_r_1;
+    s->isa.inst.val = TOP_INST;
     cycle(1, CYCLE);
-    s->dnpc = top->rootp->cpu__DOT__pc_out;
+    s->dnpc = TOP_PC;
 #ifdef CONFIG_FTRACE
     if ((s->isa.inst.val & 0x7f) == 0x6f || (s->isa.inst.val & 0x707f) == 0x67)
         ftrace_record(s);
@@ -93,7 +91,7 @@ static void execute(uint64_t n)
     Decode s;
     for (; n > 0; n--)
     {
-        exec_once(&s, top->rootp->cpu__DOT__pc_out);
+        exec_once(&s, top->rootp->cpu__DOT__core_1__DOT__pc);
         g_nr_guest_inst++;
         trace_and_difftest(&s, s.dnpc);
         if (npc_state.state != NPC_RUNNING)

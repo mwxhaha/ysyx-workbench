@@ -14,6 +14,8 @@
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
+#include <Vtop.h>
+#include <Vtop___024root.h>
 
 #define CONFIG_RV32I 0
 #define CONFIG_RV32E 1
@@ -61,6 +63,9 @@ typedef word_t paddr_t;
 #define FMT_PADDR FMT_WORD
 
 #define CYCLE 2
+#define TOP_INST top->rootp->cpu__DOT__mem_1_r
+#define TOP_PC top->rootp->cpu__DOT__core_1__DOT__pc
+#define TOP_GPR top->rootp->cpu__DOT__core_1__DOT__idu_1__DOT__gpr_1__DOT__registerfile_gpr__DOT__rf
 
 enum
 {

@@ -14,8 +14,6 @@
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <Vtop.h>
-#include <Vtop___024root.h>
 
 uint8_t pmem[MEM_MAX] = {0x97, 0x14, 0x00, 0x00,  // auipc 9 4096
                          0xb3, 0x86, 0xb4, 0x00,  // add 13 9 11
@@ -41,8 +39,8 @@ static bool mtrace_array_is_full = false;
 
 static void in_pmem(paddr_t addr)
 {
-    Assert(addr >= MEM_BASE_ADDR, "address = " FMT_PADDR " is out of bound of pmem at pc = " FMT_WORD, addr, top->rootp->cpu__DOT__pc_out);
-    Assert(addr <= MEM_BASE_ADDR + MEM_MAX - 1, "address = " FMT_PADDR "is out of bound of pmem at pc = " FMT_WORD, addr, top->rootp->cpu__DOT__pc_out);
+    Assert(addr >= MEM_BASE_ADDR, "address = " FMT_PADDR " is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
+    Assert(addr <= MEM_BASE_ADDR + MEM_MAX - 1, "address = " FMT_PADDR "is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
 }
 
 static uint8_t *guest_to_host(paddr_t paddr)
