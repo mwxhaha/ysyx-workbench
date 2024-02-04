@@ -64,19 +64,19 @@ extern "C" void pmem_write_dpic(int addr, char mask, int data)
     {
         addr_shift = addr + 1;
         mask_shift = (unsigned)mask >> 1;
-        data_shift = (unsigned)data >> 1;
+        data_shift = (unsigned)data >> 8;
     }
     else if ((mask & 4) == 4)
     {
         addr_shift = addr + 2;
         mask_shift = (unsigned)mask >> 2;
-        data_shift = (unsigned)data >> 2;
+        data_shift = (unsigned)data >> 16;
     }
     else if ((mask & 8) == 8)
     {
         addr_shift = addr + 3;
         mask_shift = (unsigned)mask >> 3;
-        data_shift = (unsigned)data >> 3;
+        data_shift = (unsigned)data >> 24;
     }
     else
     {

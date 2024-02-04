@@ -53,7 +53,7 @@ module wbu (
             mem_r_shift,
             `FUNCT3_WIDTH'b100,
             {24'b0, mem_r_shift[7:0]},
-            `FUNCT3_WIDTH'b111,
+            `FUNCT3_WIDTH'b101,
             {16'b0, mem_r_shift[15:0]}
         })
     );
