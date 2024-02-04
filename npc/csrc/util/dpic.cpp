@@ -38,6 +38,9 @@ extern "C" void disable_mtrace_once_dpic()
 
 extern "C" void pmem_read_dpic(int addr, int *data)
 {
+#if ISA_WIDTH == 64
+    panic("memory read do not support ISA64");
+#endif
     *data = pmem_read(addr, 4);
 }
 
@@ -45,24 +48,54 @@ extern void assert_fail_msg();
 
 extern "C" void pmem_write_dpic(int addr, char mask, int data)
 {
-    switch (mask)
+#if ISA_WIDTH == 64
+    panic("memory write do not support ISA64");
+#endif
+    int addr_shift;
+    char mask_shift;
+    int data_shift;
+    if (((mask & 1) == 1))
+    {
+        addr_shift = addr;
+        mask_shift = mask;
+        data_shift = data;
+    }
+    else if ((mask & 2) == 2)
+    {
+        addr_shift = addr + 1;
+        mask_shift = (unsigned)mask >> 1;
+        data_shift = (unsigned)data >> 1;
+    }
+    else if ((mask & 4) == 4)
+    {
+        addr_shift = addr + 2;
+        mask_shift = (unsigned)mask >> 2;
+        data_shift = (unsigned)data >> 2;
+    }
+    else if ((mask & 8) == 8)
+    {
+        addr_shift = addr + 3;
+        mask_shift = (unsigned)mask >> 3;
+        data_shift = (unsigned)data >> 3;
+    }
+    else
+    {
+        panic("memory write mask 0x%x shift error at addr = " FMT_PADDR " at pc = " FMT_WORD, mask, addr, TOP_PC);
+    }
+
+    switch (mask_shift)
     {
     case 1:
-        pmem_write(addr, 1, data);
+        pmem_write(addr_shift, 1, data_shift);
         break;
     case 3:
-        pmem_write(addr, 2, data);
+        pmem_write(addr_shift, 2, data_shift);
         break;
     case 15:
-        pmem_write(addr, 4, data);
+        pmem_write(addr_shift, 4, data_shift);
         break;
-#if ISA_WIDTH == 64
-    case 255:
-        pmem_write(addr, 8, data);
-        break;
-#endif
     default:
-        panic("memory write mask error");
+        panic("memory write mask 0x%x change error at addr = " FMT_PADDR " at pc = " FMT_WORD, mask, addr, TOP_PC);
     }
 }
 

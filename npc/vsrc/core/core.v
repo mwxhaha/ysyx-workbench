@@ -86,6 +86,7 @@ module core (
     wire                       mem_r_en;
     wire                       mem_w_en;
     memu memu_1 (
+        .funct3    (funct3),
         .alu_result(alu_result),
         .src2      (src2),
         .mem_r     (mem_r),
@@ -105,11 +106,12 @@ module core (
     wire is_auipc;
 
     wbu wbu_1 (
+        .mem_r     (mem_r),
+        .alu_result(alu_result),
+        .funct3    (funct3),
         .imm       (imm),
         .snpc      (snpc),
         .pc_imm    (pc_imm),
-        .mem_r     (mem_r),
-        .alu_result(alu_result),
         .srd       (srd),
         .rd_is_mem (rd_is_mem),
         .is_lui    (is_lui),
