@@ -59,100 +59,13 @@ void add_mmio_map(const char *name, paddr_t addr, void *space, uint32_t len, io_
     nr_map++;
 }
 
-typedef struct
-{
-    bool is_read;
-    paddr_t addr;
-    int len;
-    IOMap *map;
-    word_t data;
-} dtrace_t;
-#define DTRACE_ARRAY_MAX 20
-static dtrace_t dtrace_array[DTRACE_ARRAY_MAX];
-static int dtrace_array_tail = 0;
-static bool dtrace_array_is_full = false;
-
-#ifdef CONFIG_DTRACE
-static void dtrace_record(bool is_read, paddr_t addr, int len, IOMap *map, word_t data)
-{
-    if (addr >= 0x8fffffff && addr <= 0xffffffff)
-    {
-        dtrace_array[dtrace_array_tail].is_read = is_read;
-        dtrace_array[dtrace_array_tail].addr = addr;
-        dtrace_array[dtrace_array_tail].len = len;
-        dtrace_array[dtrace_array_tail].data = data;
-        dtrace_array[dtrace_array_tail].map = map;
-        dtrace_array_tail++;
-        if (dtrace_array_tail >= DTRACE_ARRAY_MAX)
-        {
-            dtrace_array_tail = 0;
-            dtrace_array_is_full = true;
-        }
-    }
-}
-#endif
-
-static void printf_dtrace_once(int i)
-{
-    if (dtrace_array[i].is_read)
-    {
-        printf("device %s read in addr " FMT_WORD " with len %d: " FMT_WORD "\n", dtrace_array[i].map->name, dtrace_array[i].addr, dtrace_array[i].len, dtrace_array[i].data);
-    }
-    else
-    {
-        printf("device %s write in addr " FMT_WORD " with len %d: " FMT_WORD "\n", dtrace_array[i].map->name, dtrace_array[i].addr, dtrace_array[i].len, dtrace_array[i].data);
-    }
-}
-
-void print_dtrace()
-{
-    if (!dtrace_array_is_full && dtrace_array_tail==0)
-    {
-        printf("dtrace is empty now\n");
-        return;
-    }
-    if (dtrace_array_is_full)
-    {
-        int i = dtrace_array_tail;
-        printf_dtrace_once(i);
-        i++;
-        if (i == DTRACE_ARRAY_MAX)
-            i = 0;
-        while (i != dtrace_array_tail)
-        {
-            printf_dtrace_once(i);
-            i++;
-            if (i == DTRACE_ARRAY_MAX)
-                i = 0;
-        }
-    }
-    else
-    {
-        int i = 0;
-        while (i != dtrace_array_tail)
-        {
-            printf_dtrace_once(i);
-            i++;
-        }
-    }
-}
-
 /* bus interface */
 word_t mmio_read(paddr_t addr, int len)
 {
-    IOMap *map = fetch_mmio_map(addr);
-    word_t ret = map_read(addr, len, map);
-#ifdef CONFIG_DTRACE
-    dtrace_record(true, addr, len, map, ret);
-#endif
-    return ret;
+    return map_read(addr, len, fetch_mmio_map(addr));
 }
 
 void mmio_write(paddr_t addr, int len, word_t data)
 {
-    IOMap *map = fetch_mmio_map(addr);
-    map_write(addr, len, data, map);
-#ifdef CONFIG_DTRACE
-    dtrace_record(false, addr, len, map, data);
-#endif
+    map_write(addr, len, data, fetch_mmio_map(addr));
 }

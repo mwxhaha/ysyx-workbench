@@ -66,6 +66,85 @@ void map_quit()
 {
     free(io_space);
 }
+typedef struct
+{
+    bool is_read;
+    paddr_t addr;
+    int len;
+    IOMap *map;
+    word_t read_data;
+    word_t write_data;
+} dtrace_t;
+#define DTRACE_ARRAY_MAX 20
+static dtrace_t dtrace_array[DTRACE_ARRAY_MAX];
+static int dtrace_array_tail = 0;
+static bool dtrace_array_is_full = false;
+
+#ifdef CONFIG_DTRACE
+static void dtrace_record(bool is_read, paddr_t addr, int len, IOMap *map, word_t read_data, word_t write_data)
+{
+    if (addr >= 0x8fffffff && addr <= 0xffffffff)
+    {
+        dtrace_array[dtrace_array_tail].is_read = is_read;
+        dtrace_array[dtrace_array_tail].addr = addr;
+        dtrace_array[dtrace_array_tail].len = len;
+        dtrace_array[dtrace_array_tail].map = map;
+        dtrace_array[dtrace_array_tail].read_data = read_data;
+        dtrace_array[dtrace_array_tail].write_data = write_data;
+        dtrace_array_tail++;
+        if (dtrace_array_tail >= DTRACE_ARRAY_MAX)
+        {
+            dtrace_array_tail = 0;
+            dtrace_array_is_full = true;
+        }
+    }
+}
+#endif
+
+static void printf_dtrace_once(int i)
+{
+    if (dtrace_array[i].is_read)
+    {
+        printf("device %s read in addr " FMT_WORD " with len %d: " FMT_WORD "\n", dtrace_array[i].map->name, dtrace_array[i].addr, dtrace_array[i].len, dtrace_array[i].read_data);
+    }
+    else
+    {
+        printf("device %s write in addr " FMT_WORD " with len %d: " FMT_WORD "->" FMT_WORD "\n", dtrace_array[i].map->name, dtrace_array[i].addr, dtrace_array[i].len, dtrace_array[i].read_data, dtrace_array[i].write_data);
+    }
+}
+
+void print_dtrace()
+{
+    if (!dtrace_array_is_full && dtrace_array_tail == 0)
+    {
+        printf("dtrace is empty now\n");
+        return;
+    }
+    if (dtrace_array_is_full)
+    {
+        int i = dtrace_array_tail;
+        printf_dtrace_once(i);
+        i++;
+        if (i == DTRACE_ARRAY_MAX)
+            i = 0;
+        while (i != dtrace_array_tail)
+        {
+            printf_dtrace_once(i);
+            i++;
+            if (i == DTRACE_ARRAY_MAX)
+                i = 0;
+        }
+    }
+    else
+    {
+        int i = 0;
+        while (i != dtrace_array_tail)
+        {
+            printf_dtrace_once(i);
+            i++;
+        }
+    }
+}
 
 word_t map_read(paddr_t addr, int len, IOMap *map)
 {
@@ -74,6 +153,9 @@ word_t map_read(paddr_t addr, int len, IOMap *map)
     paddr_t offset = addr - map->low;
     invoke_callback(map->callback, offset, len, false); // prepare data to read
     word_t ret = host_read(map->space + offset, len);
+#ifdef CONFIG_DTRACE
+    dtrace_record(true, addr, len, map, ret, 0);
+#endif
     return ret;
 }
 
@@ -82,6 +164,9 @@ void map_write(paddr_t addr, int len, word_t data, IOMap *map)
     assert(len >= 1 && len <= 8);
     check_bound(map, addr);
     paddr_t offset = addr - map->low;
+#ifdef CONFIG_DTRACE
+    dtrace_record(false, addr, len, map, host_read(map->space + offset, len), data);
+#endif
     host_write(map->space + offset, len, data);
     invoke_callback(map->callback, offset, len, true);
 }

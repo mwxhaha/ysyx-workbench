@@ -164,7 +164,7 @@ config DECODE_RESULT
 config MTRACE
   depends on TRACE
   bool "Enable memory trace"
-  default n
+  default y
 
 config FTRACE
   depends on TRACE
@@ -174,7 +174,7 @@ config FTRACE
 config DTRACE
   depends on TRACE
   bool "Enable device trace"
-  default n
+  default y
 
 config WATCHPOINT
   bool "Enable watchpoint"
