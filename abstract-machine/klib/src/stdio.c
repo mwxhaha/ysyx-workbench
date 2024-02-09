@@ -5,25 +5,7 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-#define PRINTF_LEN_MAX 1000
-static char out[PRINTF_LEN_MAX];
-
-int printf(const char *fmt, ...)
-{
-    va_list ap;
-    va_start(ap, fmt);
-    int ret = vsprintf(out, fmt, ap);
-    int i = 0;
-    while (out[i] != '\0')
-    {
-        putch(out[i]);
-        i++;
-        assert(i < PRINTF_LEN_MAX);
-    }
-    return ret;
-}
-
-char num_to_char(int num)
+static char num_to_char(int num)
 {
     assert(num <= 16);
     if (num <= 9)
@@ -32,7 +14,7 @@ char num_to_char(int num)
         return 'a' + num - 10;
 }
 
-#define NMU_STR_MAX 25
+#define NUM_STR_MAX 20
 
 static int num_to_str(uint64_t num, char *num_str, int is_signed, int base)
 {
@@ -45,7 +27,7 @@ static int num_to_str(uint64_t num, char *num_str, int is_signed, int base)
     int num_str_len = 0;
     if (is_signed)
     {
-        if (num == (int64_t)(-0x7fffffffffffffffLL - 1LL))
+        if (num == -0x7fffffffffffffffLL - 1LL)
         {
             num_str[0] = '-';
             num_str[1] = '9';
@@ -78,7 +60,7 @@ static int num_to_str(uint64_t num, char *num_str, int is_signed, int base)
     }
 
     int i = 0;
-    char num_str_inverse[NMU_STR_MAX];
+    char num_str_inverse[NUM_STR_MAX];
     while (num != 0)
     {
         if (is_signed)
@@ -89,32 +71,31 @@ static int num_to_str(uint64_t num, char *num_str, int is_signed, int base)
         else
         {
             num_str_inverse[i] = num_to_char(num % base);
-            ;
             num = num / base;
         }
         i++;
-        assert(i < NMU_STR_MAX);
+        assert(i <= NUM_STR_MAX);
     }
     i--;
     for (; i >= 0; i--)
     {
         num_str[num_str_len] = num_str_inverse[i];
         num_str_len++;
-        assert(num_str_len < NMU_STR_MAX);
+        assert(num_str_len <= NUM_STR_MAX);
     }
     return num_str_len;
 }
 
-static int str_to_num(const char *num_str, int num_str_len)
+static uint64_t str_to_num(const char *num_str, int num_str_len)
 {
     assert(num_str_len >= 0);
     if (num_str_len == 0)
         return 0;
-    int num = num_str[0] - '0';
+    uint64_t num = num_str[0] - '0';
     for (int i = 1; i < num_str_len; i++)
     {
         num = num * 10 + num_str[i] - '0';
-        assert(num < 1000);
+        assert(num <= 0x7fffffffffffffffLL * 2ULL + 1ULL);
     }
     return num;
 }
@@ -150,7 +131,7 @@ static char decode_fmt(const char *fmt, int *i, int *is_filling_zero, int *fmt_l
     }
 }
 
-void sprintf_limit_len(char *out, int *j, int fmt_limit_len, int num_str_len, int is_filling_zero, const char *num_str)
+static void sprintf_limit_len(char *out, int *j, int fmt_limit_len, int num_str_len, int is_filling_zero, const char *num_str)
 {
     while (fmt_limit_len > num_str_len)
     {
@@ -168,6 +149,8 @@ void sprintf_limit_len(char *out, int *j, int fmt_limit_len, int num_str_len, in
     }
 }
 
+#define PRINTF_LEN_MAX 1000
+
 int vsprintf(char *out, const char *fmt, va_list ap)
 {
     int i = 0;
@@ -181,7 +164,7 @@ int vsprintf(char *out, const char *fmt, va_list ap)
             char fmt_code = decode_fmt(fmt, &i, &is_filling_zero, &fmt_limit_len);
             switch (fmt_code)
             {
-                char num_str[NMU_STR_MAX];
+                char num_str[NUM_STR_MAX];
                 int num_str_len;
             case 'd':
                 int num = va_arg(ap, int);
@@ -216,10 +199,10 @@ int vsprintf(char *out, const char *fmt, va_list ap)
             out[j] = fmt[i];
             i++;
             j++;
+            assert(j < PRINTF_LEN_MAX);
         }
     }
     out[j] = '\0';
-    va_end(ap);
     return j;
 }
 
@@ -228,6 +211,23 @@ int sprintf(char *out, const char *fmt, ...)
     va_list ap;
     va_start(ap, fmt);
     return vsprintf(out, fmt, ap);
+    va_end(ap);
+}
+
+int printf(const char *fmt, ...)
+{
+    char *out = malloc(PRINTF_LEN_MAX);
+    va_list ap;
+    va_start(ap, fmt);
+    int ret = vsprintf(out, fmt, ap);
+    va_end(ap);
+    int i = 0;
+    while (out[i] != '\0')
+    {
+        putch(out[i]);
+        i++;
+    }
+    return ret;
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...)
