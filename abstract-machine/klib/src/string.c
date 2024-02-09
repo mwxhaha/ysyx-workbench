@@ -76,24 +76,21 @@ void *memset(void *s, int c, size_t n)
     return s;
 }
 
-#define MEMMOVE_LEN_MAX 10000
-static char out[MEMMOVE_LEN_MAX];
-
 void *memmove(void *dst, const void *src, size_t n)
 {
-    assert(n < MEMMOVE_LEN_MAX);
+    char *move_tmp = malloc(n);
     for (int i = 0; i < n; i++)
-        out[i] = ((char *)src)[i];
+        move_tmp[i] = ((char *)src)[i];
     for (int i = 0; i < n; i++)
-        ((char *)dst)[i] = out[i];
+        ((char *)dst)[i] = move_tmp[i];
     return dst;
 }
 
-void *memcpy(void *out, const void *in, size_t n)
+void *memcpy(void *dst, const void *src, size_t n)
 {
     for (int i = 0; i < n; i++)
-        ((char *)out)[i] = ((char *)in)[i];
-    return out;
+        ((char *)dst)[i] = ((char *)src)[i];
+    return dst;
 }
 
 int memcmp(const void *s1, const void *s2, size_t n)
