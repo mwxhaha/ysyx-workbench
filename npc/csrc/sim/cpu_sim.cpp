@@ -15,9 +15,6 @@
 #include <util/sim_tool.hpp>
 #include <cpu/cpu_mem.hpp>
 #include <monitor/cpu_sdb.hpp>
-#include <verilated.h>
-#include <Vtop.h>
-#include <Vtop___024root.h>
 
 npc_state_t npc_state = {1, NPC_STOP, MEM_BASE_ADDR};
 
