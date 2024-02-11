@@ -16,7 +16,7 @@ BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 
-TOP_NAME = cpu
+TOP_NAME = ysyx_23060075_cpu
 ISA = RV32E
 NVBOARD = 0
 HAVE_CLK = 1
