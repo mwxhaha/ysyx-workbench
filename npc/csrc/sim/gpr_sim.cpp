@@ -1,47 +1,47 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#include <util/debug.hpp>
+#include <util/macro.hpp>
+#include <util/sim_tool.hpp>
 #include <verilated.h>
 #include <Vtop.h>
-#include <verilated_vcd_c.h>
-#include <util/sim_tool.hpp>
-#include <iostream>
-#include <cassert>
 
 void sim()
 {
 #ifdef NV_SIM
-        while (!contextp->gotFinish())
-        {
-                update();
-        }
+    while (!contextp->gotFinish())
+    {
+        cycle();
+    }
 #else
-        int sim_time = 1000;
-        reset();
-        while (contextp->time() < sim_time && !contextp->gotFinish())
-        {
-                set_pin([&]
-                        { top->gpr_w_en = 1;
-        top->gpr_w_addr = 0x00;
-        top->gpr_w = 0x12131415; });
-                set_pin([&]
-                        { 
-        top->gpr_w_addr = 0x01;
-        top->gpr_w = 0x22232425; });
-                set_pin([&]
-                        { 
-        top->gpr_w_addr = 0x1e;
-        top->gpr_w = 0x32333435; });
-                set_pin([&]
-                        { 
-        top->gpr_w_addr = 0x1f;
-        top->gpr_w = 0x42434445; });
-                set_pin([&]
-                        { 
-        top->gpr_w_en = 0;
-        top->gpr_r_1_addr = 0x00;
-        top->gpr_r_2_addr = 0x01; });
-                set_pin([&]
-                        { 
-        top->gpr_r_1_addr = 0x1e;
-        top->gpr_r_2_addr = 0x1f; });
-        }
+    int sim_time = 100;
+    reset();
+    while (contextp->time() < sim_time && !contextp->gotFinish())
+    {
+        set_pin([&]
+                { top->gpr_w_en = 1; top->gpr_w_addr = 0x0; top->gpr_w = 0x12131415; });
+        set_pin([&]
+                { top->gpr_w_en = 1; top->gpr_w_addr = 0x1; top->gpr_w = 0x22232425; });
+        set_pin([&]
+                { top->gpr_w_en = 1; top->gpr_w_addr = 0xf; top->gpr_w = 0x32333435; });
+        set_pin([&]
+                { top->gpr_w_en = 0; top->gpr_w_addr = 0xe; top->gpr_w = 0x42434445; });
+        set_pin([&]
+                { top->gpr_1_addr = 0x0; top->gpr_2_addr = 0x1; });
+        assert(top->gpr_1_r == 0x00000000);
+        assert(top->gpr_2_r == 0x22232425);
+        set_pin([&]
+                { top->gpr_1_addr = 0xe; top->gpr_2_addr = 0xf; });
+        assert(top->gpr_1_r == 0x00000000);
+        assert(top->gpr_2_r == 0x32333435);
+    }
 #endif
 }

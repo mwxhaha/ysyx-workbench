@@ -11,17 +11,19 @@
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
+#include <verilated.h>
+#include <Vtop.h>
 
 void sim()
 {
 #ifdef NV_SIM
     while (!contextp->gotFinish())
     {
-        update();
+        cycle();
     }
 #else
     int sim_time = 100;
-    reset(3);
+    reset();
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
         set_pin([&]
