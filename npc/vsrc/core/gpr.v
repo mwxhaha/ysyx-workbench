@@ -20,10 +20,10 @@ module gpr (
     assign gpr_1_r = rdata_1 & {`ISA_WIDTH{gpr_1_addr_is_not_zero}};
     assign gpr_2_r = rdata_2 & {`ISA_WIDTH{gpr_2_addr_is_not_zero}};
 
-    RegisterFile #(
+    reg_file #(
         .ADDR_WIDTH(`REG_ADDR_WIDTH),
         .DATA_WIDTH(`ISA_WIDTH)
-    ) registerfile_gpr (
+    ) reg_file_gpr (
         .clk    (clk),
         .wdata  (wdata),
         .waddr  (gpr_w_addr),

@@ -8,10 +8,10 @@ module pc (
     input  wire                  pc_en
 );
 
-    Reg #(
+    register #(
         .WIDTH    (`ISA_WIDTH),
         .RESET_VAL(`PC_BASE_ADDR)
-    ) reg_pc (
+    ) register_pc (
         .clk (clk),
         .rst (rst),
         .din (pc_in),

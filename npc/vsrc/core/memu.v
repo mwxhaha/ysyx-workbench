@@ -19,11 +19,11 @@ module memu (
     assign mem_r = mem_2_r;
 
     wire [`ISA_WIDTH-1:0] mem_w_extend;
-    MuxKeyWithDefault #(
+    mux_def #(
         .NR_KEY  (3),
         .KEY_LEN (`FUNCT3_WIDTH),
         .DATA_LEN(`ISA_WIDTH)
-    ) muxkeywithdefault_mem_w_extend (
+    ) mux_def_mem_w_extend (
         .out(mem_w_extend),
         .key(funct3),
         .default_out(`ISA_WIDTH'b0),
@@ -36,11 +36,11 @@ module memu (
             src2
         })
     );
-    MuxKey #(
+    mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(`ISA_WIDTH)
-    ) muxkey_mem_2_w (
+    ) mux_mem_2_w (
         .out(mem_2_w),
         .key(alu_result[1:0]),
         .lut({
@@ -57,11 +57,11 @@ module memu (
 
     assign mem_2_addr = {alu_result[`ISA_WIDTH-1:2], 2'b0};
 
-    MuxKey #(
+    mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(`MEM_MASK_WIDTH)
-    ) muxkey_mem_2_mask (
+    ) mux_mem_2_mask (
         .out(mem_2_mask),
         .key(alu_result[1:0]),
         .lut({

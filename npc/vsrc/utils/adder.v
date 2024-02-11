@@ -1,11 +1,11 @@
 module adder #(
     parameter data_len = 4
 ) (
-    input wire [data_len-1:0] a,
-    input wire [data_len-1:0] b,
-    input wire cin,
+    input  wire [data_len-1:0] a,
+    input  wire [data_len-1:0] b,
+    input  wire                cin,
     output wire [data_len-1:0] s,
-    output wire cout
+    output wire                cout
 );
 
     wire [data_len-2:0] c;
@@ -22,6 +22,7 @@ module adder #(
             );
         end
     endgenerate
+
     full_adder full_adder_1 (
         .a   (a[0]),
         .b   (b[0]),
@@ -29,6 +30,7 @@ module adder #(
         .s   (s[0]),
         .cout(c[0])
     );
+
     full_adder full_adder_2 (
         .a   (a[data_len-1]),
         .b   (b[data_len-1]),

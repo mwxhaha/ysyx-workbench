@@ -8,13 +8,13 @@ module full_adder (
 
     wire s_1, c_1, c_2;
 
-    half_adder half_adder_1 (
+    half_adder half_adder_s_1 (
         .a(a),
         .b(b),
         .s(s_1),
         .c(c_1)
     );
-    half_adder half_adder_2 (
+    half_adder half_adder_s (
         .a(cin),
         .b(s_1),
         .s(s),
@@ -23,4 +23,3 @@ module full_adder (
     assign cout = c_1 | c_2;
 
 endmodule
-

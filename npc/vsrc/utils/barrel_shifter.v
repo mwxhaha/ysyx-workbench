@@ -1,10 +1,10 @@
 module barrel_shifter #(
     parameter data_len = 32
 ) (
-    input wire [data_len-1:0] din,
-    input wire [4:0] shamt,
-    input wire is_right,
-    input wire is_algorism,
+    input  wire [data_len-1:0] din,
+    input  wire [         4:0] shamt,
+    input  wire                is_right,
+    input  wire                is_algorism,
     output wire [data_len-1:0] dout
 );
 
@@ -15,11 +15,11 @@ module barrel_shifter #(
     wire [data_len-1:0] d_3;
     wire [data_len-1:0] d_4;
 
-    MuxKey #(
+    mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(data_len)
-    ) muxkey_d_1 (
+    ) mux_d_1 (
         .out(d_1),
         .key({shamt[0], is_right}),
         .lut({
@@ -34,11 +34,11 @@ module barrel_shifter #(
         })
     );
 
-    MuxKey #(
+    mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(data_len)
-    ) muxkey_d_2 (
+    ) mux_d_2 (
         .out(d_2),
         .key({shamt[1], is_right}),
         .lut({
@@ -53,11 +53,11 @@ module barrel_shifter #(
         })
     );
 
-    MuxKey #(
+    mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(data_len)
-    ) muxkey_d_3 (
+    ) mux_d_3 (
         .out(d_3),
         .key({shamt[2], is_right}),
         .lut({
@@ -72,11 +72,11 @@ module barrel_shifter #(
         })
     );
 
-    MuxKey #(
+    mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(data_len)
-    ) muxkey_d_4 (
+    ) mux_d_4 (
         .out(d_4),
         .key({shamt[3], is_right}),
         .lut({
@@ -91,11 +91,11 @@ module barrel_shifter #(
         })
     );
 
-    MuxKey #(
+    mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(data_len)
-    ) muxkey_d_5 (
+    ) mux_d_5 (
         .out(dout),
         .key({shamt[4], is_right}),
         .lut({

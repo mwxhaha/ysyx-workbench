@@ -1,4 +1,4 @@
-module Reg #(
+module register #(
     parameter WIDTH = 1,
     parameter RESET_VAL = 0
 ) (

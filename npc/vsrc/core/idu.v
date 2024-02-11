@@ -14,11 +14,11 @@ module idu (
     input  wire                        gpr_w_en
 );
 
-    MuxKeyWithDefault #(
+    mux_def #(
         .NR_KEY  (`OPCODE_NUMBER_MAX),
         .KEY_LEN (`OPCODE_WIDTH),
         .DATA_LEN(`INST_TYPE_WIDTH)
-    ) muxkeywithdefault_inst_type (
+    ) mux_def_inst_type (
         .out(inst_type),
         .key(inst[`OPCODE_WIDTH-1:0]),
         .default_out(`INST_TYPE_WIDTH'd`N),
@@ -46,11 +46,11 @@ module idu (
         })
     );
 
-    MuxKeyWithDefault #(
+    mux_def #(
         .NR_KEY  (`INST_TYPE_MAX),
         .KEY_LEN (`INST_TYPE_WIDTH),
         .DATA_LEN(`IMM_WIDTH)
-    ) muxkeywithdefault_imm (
+    ) mux_def_imm (
         .out(imm),
         .key(inst_type),
         .default_out(`IMM_WIDTH'b0),

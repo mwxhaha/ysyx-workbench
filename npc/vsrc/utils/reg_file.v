@@ -1,4 +1,4 @@
-module RegisterFile #(
+module reg_file #(
     parameter ADDR_WIDTH = 1,
     parameter DATA_WIDTH = 1
 ) (

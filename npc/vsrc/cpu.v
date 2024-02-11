@@ -50,7 +50,7 @@ module cpu (
 
     always @(posedge clk) begin
         if (!rst && core_1.opcode == 7'b1110011 && core_1.funct3 == 3'b000 && core_1.imm == `ISA_WIDTH'b1)
-            ebreak_dpic(core_1.idu_1.gpr_1.registerfile_gpr.rf[10], core_1.ifu_1.pc);
+            ebreak_dpic(core_1.idu_1.gpr_1.reg_file_gpr.rf[10], core_1.ifu_1.pc);
     end
 
     always @(*) begin

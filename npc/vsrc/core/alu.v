@@ -8,17 +8,17 @@ module alu (
 );
 
     wire                  is_sub = alu_funct[3];
-    wire [`ISA_WIDTH-1:0] adder_suber_alu_result;
+    wire [`ISA_WIDTH-1:0] adder_alu_alu_result;
     wire                  carry;
     wire                  overflow;
     
-    adder_suber #(
+    adder_alu #(
         .data_len(`ISA_WIDTH)
-    ) adder_suber_alu (
+    ) adder_alu_alu (
         .a       (alu_a),
         .b       (alu_b),
         .is_sub  (is_sub),
-        .result  (adder_suber_alu_result),
+        .result  (adder_alu_alu_result),
         .carry   (carry),
         .overflow(overflow)
     );
@@ -37,21 +37,21 @@ module alu (
         .dout       (barrel_shifter_alu_result)
     );
 
-    MuxKeyWithDefault #(
+    mux_def #(
         .NR_KEY  (`ALU_FUNCT_MAX),
         .KEY_LEN (`ALU_FUNCT_WIDTH),
         .DATA_LEN(`ISA_WIDTH)
-    ) muxkeywithdefault_result (
+    ) mux_def_result (
         .out(alu_result),
         .key(alu_funct),
         .default_out(`ISA_WIDTH'b0),
         .lut({
             `ALU_FUNCT_WIDTH'd`ADD,
-            adder_suber_alu_result,
+            adder_alu_alu_result,
             `ALU_FUNCT_WIDTH'd`SUB,
-            adder_suber_alu_result,
+            adder_alu_alu_result,
             `ALU_FUNCT_WIDTH'd`LT,
-            {{`ISA_WIDTH - 1{1'b0}}, adder_suber_alu_result[`ISA_WIDTH-1] ^ overflow},
+            {{`ISA_WIDTH - 1{1'b0}}, adder_alu_alu_result[`ISA_WIDTH-1] ^ overflow},
             `ALU_FUNCT_WIDTH'd`LTU,
             {{`ISA_WIDTH - 1{1'b0}}, carry},
             `ALU_FUNCT_WIDTH'd`SLL,
@@ -71,7 +71,7 @@ module alu (
             `ALU_FUNCT_WIDTH'd`NE,
             {{`ISA_WIDTH - 1{1'b0}}, |(alu_a ^ alu_b)},
             `ALU_FUNCT_WIDTH'd`GE,
-            {{`ISA_WIDTH - 1{1'b0}}, adder_suber_alu_result[`ISA_WIDTH-1] ~^ overflow},
+            {{`ISA_WIDTH - 1{1'b0}}, adder_alu_alu_result[`ISA_WIDTH-1] ~^ overflow},
             `ALU_FUNCT_WIDTH'd`GEU,
             {{`ISA_WIDTH - 1{1'b0}}, ~carry}
         })

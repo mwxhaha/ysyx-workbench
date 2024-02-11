@@ -1,13 +1,13 @@
-module MuxKeyInternal #(
+module mux_in #(
     parameter NR_KEY = 2,
     parameter KEY_LEN = 1,
     parameter DATA_LEN = 1,
     parameter HAS_DEFAULT = 0
 ) (
-    output reg [DATA_LEN-1:0] out,
-    input [KEY_LEN-1:0] key,
-    input [DATA_LEN-1:0] default_out,
-    input [NR_KEY*(KEY_LEN + DATA_LEN)-1:0] lut
+    output reg [                   DATA_LEN-1:0] out,
+    input      [                    KEY_LEN-1:0] key,
+    input      [                   DATA_LEN-1:0] default_out,
+    input      [NR_KEY*(KEY_LEN + DATA_LEN)-1:0] lut
 );
 
     localparam PAIR_LEN = KEY_LEN + DATA_LEN;
@@ -37,4 +37,5 @@ module MuxKeyInternal #(
         if (!HAS_DEFAULT) out = lut_out;
         else out = (hit ? lut_out : default_out);
     end
+
 endmodule

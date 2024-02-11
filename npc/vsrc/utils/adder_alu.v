@@ -1,4 +1,4 @@
-module adder_suber #(
+module adder_alu #(
     parameter data_len = 4
 ) (
     input  wire [data_len-1:0] a,

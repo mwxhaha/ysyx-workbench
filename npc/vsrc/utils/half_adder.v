@@ -9,4 +9,3 @@ module half_adder (
     assign c = a & b;
 
 endmodule
-

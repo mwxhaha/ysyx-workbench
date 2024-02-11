@@ -16,11 +16,11 @@ module wbu (
 );
 
     wire [`ISA_WIDTH-1:0] mem_r_shift;
-    MuxKey #(
+    mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(`ISA_WIDTH)
-    ) muxkey_mem_r_shift (
+    ) mux_mem_r_shift (
         .out(mem_r_shift),
         .key(alu_result[1:0]),
         .lut({
@@ -36,11 +36,11 @@ module wbu (
     );
 
     wire [`ISA_WIDTH-1:0] mem_r_extend;
-    MuxKeyWithDefault #(
+    mux_def #(
         .NR_KEY  (5),
         .KEY_LEN (`FUNCT3_WIDTH),
         .DATA_LEN(`ISA_WIDTH)
-    ) muxkeywithdefault_mem_r_extend (
+    ) mux_def_mem_r_extend (
         .out(mem_r_extend),
         .key(funct3),
         .default_out(`ISA_WIDTH'b0),

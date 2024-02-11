@@ -35,11 +35,11 @@ module ctrl (
     wire [`ALU_FUNCT_WIDTH-1:0] alu_funct_addi = funct3 == `FUNCT3_WIDTH'b101 ? {funct7[5],funct3} : ( funct3 == `FUNCT3_WIDTH'b010 | funct3 == `FUNCT3_WIDTH'b011 ? {1'b1,funct3} : {1'b0,funct3});
     wire [`ALU_FUNCT_WIDTH-1:0] alu_funct_add = funct3 == `FUNCT3_WIDTH'b010 | funct3 == `FUNCT3_WIDTH'b011 ? {1'b1,funct3} : {funct7[5],funct3};
 
-    MuxKeyWithDefault #(
+    mux_def #(
         .NR_KEY  (6),
         .KEY_LEN (`FUNCT3_WIDTH),
         .DATA_LEN(`ALU_FUNCT_WIDTH)
-    ) muxkeywithdefault_alu_funct_beq (
+    ) mux_def_alu_funct_beq (
         .out(alu_funct_beq),
         .key(funct3),
         .default_out(`ALU_FUNCT_WIDTH'd`NO_FUNCT),
@@ -59,11 +59,11 @@ module ctrl (
         })
     );
 
-    MuxKeyWithDefault #(
+    mux_def #(
         .NR_KEY  (`OPCODE_NUMBER_MAX),
         .KEY_LEN (`OPCODE_WIDTH),
         .DATA_LEN(`ALU_FUNCT_WIDTH)
-    ) muxkeywithdefault_alu_funct (
+    ) mux_def_alu_funct (
         .out(alu_funct),
         .key(opcode),
         .default_out(`ALU_FUNCT_WIDTH'd`NO_FUNCT),
