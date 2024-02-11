@@ -15,22 +15,22 @@ import "DPI-C" function void pmem_write_dpic(
     input int  data
 );
 
-module cpu (
+module ysyx_23060075_cpu (
     input wire clk,
     input wire rst
 );
 
-    reg  [     `ISA_WIDTH-1:0] mem_1_r;
-    wire [     `ISA_WIDTH-1:0] mem_1_addr;
-    wire                       mem_1_r_en;
-    reg  [     `ISA_WIDTH-1:0] mem_2_r;
-    wire [     `ISA_WIDTH-1:0] mem_2_w;
-    wire [     `ISA_WIDTH-1:0] mem_2_addr;
-    wire [`MEM_MASK_WIDTH-1:0] mem_2_mask;
-    wire                       mem_2_r_en;
-    wire                       mem_2_w_en;
+    reg  [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_r;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_addr;
+    wire                                     mem_1_r_en;
+    reg  [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_r;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_w;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_addr;
+    wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] mem_2_mask;
+    wire                                     mem_2_r_en;
+    wire                                     mem_2_w_en;
 
-    core core_1 (
+    ysyx_23060075_core core_1 (
         .clk       (clk),
         .rst       (rst),
         .mem_1_r   (mem_1_r),
@@ -45,11 +45,11 @@ module cpu (
     );
 
     always @(posedge clk) begin
-        if (!rst && core_1.idu_1.inst_type == `N) absort_dpic(core_1.ifu_1.pc);
+        if (!rst && core_1.idu_1.inst_type == `ysyx_23060075_N) absort_dpic(core_1.ifu_1.pc);
     end
 
     always @(posedge clk) begin
-        if (!rst && core_1.opcode == 7'b1110011 && core_1.funct3 == 3'b000 && core_1.imm == `ISA_WIDTH'b1)
+        if (!rst && core_1.opcode == 7'b1110011 && core_1.funct3 == 3'b000 && core_1.imm == `ysyx_23060075_ISA_WIDTH'b1)
             ebreak_dpic(core_1.idu_1.gpr_1.reg_file_gpr.rf[10], core_1.ifu_1.pc);
     end
 
@@ -58,7 +58,7 @@ module cpu (
             disable_mtrace_once_dpic();
             pmem_read_dpic(mem_1_addr, mem_1_r);
         end else begin
-            mem_1_r = `ISA_WIDTH'b0;
+            mem_1_r = `ysyx_23060075_ISA_WIDTH'b0;
         end
     end
 
@@ -67,12 +67,12 @@ module cpu (
             disable_mtrace_once_dpic();
             pmem_read_dpic(mem_2_addr, mem_2_r);
         end else begin
-            mem_2_r = `ISA_WIDTH'b0;
+            mem_2_r = `ysyx_23060075_ISA_WIDTH'b0;
         end
     end
 
     // verilator lint_off UNUSEDSIGNAL
-    wire [`ISA_WIDTH-1:0] mtrace_mem_2_r;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] mtrace_mem_2_r;
     // verilator lint_on UNUSEDSIGNAL
     always @(negedge clk) begin
         if (!rst && mem_2_r_en) begin

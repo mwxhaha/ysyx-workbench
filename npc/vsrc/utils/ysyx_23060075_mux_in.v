@@ -1,4 +1,4 @@
-module mux_in #(
+module ysyx_23060075_mux_in #(
     parameter NR_KEY = 2,
     parameter KEY_LEN = 1,
     parameter DATA_LEN = 1,

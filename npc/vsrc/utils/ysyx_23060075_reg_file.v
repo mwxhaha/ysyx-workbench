@@ -1,4 +1,4 @@
-module reg_file #(
+module ysyx_23060075_reg_file #(
     parameter ADDR_WIDTH = 1,
     parameter DATA_WIDTH = 1
 ) (

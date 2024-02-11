@@ -1,4 +1,4 @@
-module full_adder (
+module ysyx_23060075_full_adder (
     input  wire a,
     input  wire b,
     input  wire cin,
@@ -8,13 +8,13 @@ module full_adder (
 
     wire s_1, c_1, c_2;
 
-    half_adder half_adder_s_1 (
+    ysyx_23060075_half_adder half_adder_s_1 (
         .a(a),
         .b(b),
         .s(s_1),
         .c(c_1)
     );
-    half_adder half_adder_s (
+    ysyx_23060075_half_adder half_adder_s (
         .a(cin),
         .b(s_1),
         .s(s),

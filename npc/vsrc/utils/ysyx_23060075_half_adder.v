@@ -1,4 +1,4 @@
-module half_adder (
+module ysyx_23060075_half_adder (
     input  wire a,
     input  wire b,
     output wire s,

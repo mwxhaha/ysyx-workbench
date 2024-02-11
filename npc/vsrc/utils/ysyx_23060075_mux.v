@@ -1,18 +1,17 @@
-module mux_def #(
+module ysyx_23060075_mux #(
     parameter NR_KEY   = 2,
     parameter KEY_LEN  = 1,
     parameter DATA_LEN = 1
 ) (
     output [                   DATA_LEN-1:0] out,
     input  [                    KEY_LEN-1:0] key,
-    input  [                   DATA_LEN-1:0] default_out,
     input  [NR_KEY*(KEY_LEN + DATA_LEN)-1:0] lut
 );
 
-    mux_in #(NR_KEY, KEY_LEN, DATA_LEN, 1) i0 (
+    ysyx_23060075_mux_in #(NR_KEY, KEY_LEN, DATA_LEN, 0) i0 (
         out,
         key,
-        default_out,
+        {DATA_LEN{1'b0}},
         lut
     );
 

@@ -1,31 +1,31 @@
 `include "config.vh"
 
-module core (
-    input  wire                       clk,
-    input  wire                       rst,
-    input  wire [     `ISA_WIDTH-1:0] mem_1_r,
-    output wire [     `ISA_WIDTH-1:0] mem_1_addr,
-    output wire                       mem_1_r_en,
-    input  wire [     `ISA_WIDTH-1:0] mem_2_r,
-    output wire [     `ISA_WIDTH-1:0] mem_2_w,
-    output wire [     `ISA_WIDTH-1:0] mem_2_addr,
-    output wire [`MEM_MASK_WIDTH-1:0] mem_2_mask,
-    output wire                       mem_2_r_en,
-    output wire                       mem_2_w_en
+module ysyx_23060075_core (
+    input  wire                                     clk,
+    input  wire                                     rst,
+    input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_r,
+    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_addr,
+    output wire                                     mem_1_r_en,
+    input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_r,
+    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_w,
+    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_addr,
+    output wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] mem_2_mask,
+    output wire                                     mem_2_r_en,
+    output wire                                     mem_2_w_en
 );
 
-    wire [`ISA_WIDTH-1:0] pc_imm;
-    wire [`ISA_WIDTH-1:0] alu_result;
-    wire                  is_branch;
-    wire                  is_jal;
-    wire                  is_jalr;
-    wire [`ISA_WIDTH-1:0] pc;
-    wire [`ISA_WIDTH-1:0] snpc;
-    wire                  pc_en;
-    wire                  mem_if_en;
-    wire [`ISA_WIDTH-1:0] inst;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] pc_imm;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] alu_result;
+    wire                                is_branch;
+    wire                                is_jal;
+    wire                                is_jalr;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] pc;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] snpc;
+    wire                                pc_en;
+    wire                                mem_if_en;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] inst;
 
-    ifu ifu_1 (
+    ysyx_23060075_ifu ifu_1 (
         .clk       (clk),
         .rst       (rst),
         .pc_imm    (pc_imm),
@@ -43,17 +43,17 @@ module core (
         .inst      (inst)
     );
 
-    wire [`INST_TYPE_WIDTH-1:0] inst_type;
-    wire [      `IMM_WIDTH-1:0] imm;
-    wire [   `OPCODE_WIDTH-1:0] opcode;
-    wire [   `FUNCT3_WIDTH-1:0] funct3;
-    wire [   `FUNCT7_WIDTH-1:0] funct7;
-    wire [      `ISA_WIDTH-1:0] srd;
-    wire [      `ISA_WIDTH-1:0] src1;
-    wire [      `ISA_WIDTH-1:0] src2;
-    wire                        gpr_w_en;
+    wire [`ysyx_23060075_INST_TYPE_WIDTH-1:0] inst_type;
+    wire [      `ysyx_23060075_IMM_WIDTH-1:0] imm;
+    wire [   `ysyx_23060075_OPCODE_WIDTH-1:0] opcode;
+    wire [   `ysyx_23060075_FUNCT3_WIDTH-1:0] funct3;
+    wire [   `ysyx_23060075_FUNCT7_WIDTH-1:0] funct7;
+    wire [      `ysyx_23060075_ISA_WIDTH-1:0] srd;
+    wire [      `ysyx_23060075_ISA_WIDTH-1:0] src1;
+    wire [      `ysyx_23060075_ISA_WIDTH-1:0] src2;
+    wire                                      gpr_w_en;
 
-    idu idu_1 (
+    ysyx_23060075_idu idu_1 (
         .clk      (clk),
         .inst     (inst),
         .inst_type(inst_type),
@@ -67,10 +67,10 @@ module core (
         .gpr_w_en (gpr_w_en)
     );
 
-    wire                        alu_b_is_imm;
-    wire [`ALU_FUNCT_WIDTH-1:0] alu_funct;
+    wire                                      alu_b_is_imm;
+    wire [`ysyx_23060075_ALU_FUNCT_WIDTH-1:0] alu_funct;
 
-    exu exu_1 (
+    ysyx_23060075_exu exu_1 (
         .imm         (imm),
         .src1        (src1),
         .src2        (src2),
@@ -81,11 +81,11 @@ module core (
         .pc_imm      (pc_imm)
     );
 
-    wire [     `ISA_WIDTH-1:0] mem_r;
-    wire [`MEM_MASK_WIDTH-1:0] mem_mask;
-    wire                       mem_r_en;
-    wire                       mem_w_en;
-    memu memu_1 (
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_r;
+    wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] mem_mask;
+    wire                                     mem_r_en;
+    wire                                     mem_w_en;
+    ysyx_23060075_memu memu_1 (
         .funct3    (funct3),
         .alu_result(alu_result),
         .src2      (src2),
@@ -105,7 +105,7 @@ module core (
     wire is_lui;
     wire is_auipc;
 
-    wbu wbu_1 (
+    ysyx_23060075_wbu wbu_1 (
         .mem_r     (mem_r),
         .alu_result(alu_result),
         .funct3    (funct3),
@@ -120,7 +120,7 @@ module core (
         .is_jalr   (is_jalr)
     );
 
-    ctrl ctrl_1 (
+    ysyx_23060075_ctrl ctrl_1 (
         .inst_type   (inst_type),
         .opcode      (opcode),
         .funct3      (funct3),

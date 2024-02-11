@@ -1,4 +1,4 @@
-module register #(
+module ysyx_23060075_register #(
     parameter WIDTH = 1,
     parameter RESET_VAL = 0
 ) (
@@ -13,5 +13,5 @@ module register #(
         if (rst) dout <= RESET_VAL;
         else if (wen) dout <= din;
     end
-    
+
 endmodule

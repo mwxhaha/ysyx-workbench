@@ -1,4 +1,4 @@
-module test (
+module ysyx_23060075_test (
     input  wire clk,
     input  wire rst,
     input  wire in,

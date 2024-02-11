@@ -1,4 +1,4 @@
-module barrel_shifter #(
+module ysyx_23060075_barrel_shifter #(
     parameter data_len = 32
 ) (
     input  wire [data_len-1:0] din,
@@ -15,7 +15,7 @@ module barrel_shifter #(
     wire [data_len-1:0] d_3;
     wire [data_len-1:0] d_4;
 
-    mux #(
+    ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(data_len)
@@ -34,7 +34,7 @@ module barrel_shifter #(
         })
     );
 
-    mux #(
+    ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(data_len)
@@ -53,7 +53,7 @@ module barrel_shifter #(
         })
     );
 
-    mux #(
+    ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(data_len)
@@ -72,7 +72,7 @@ module barrel_shifter #(
         })
     );
 
-    mux #(
+    ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(data_len)
@@ -91,7 +91,7 @@ module barrel_shifter #(
         })
     );
 
-    mux #(
+    ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
         .DATA_LEN(data_len)

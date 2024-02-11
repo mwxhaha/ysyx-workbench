@@ -1,4 +1,4 @@
-module adder #(
+module ysyx_23060075_adder #(
     parameter data_len = 4
 ) (
     input  wire [data_len-1:0] a,
@@ -13,7 +13,7 @@ module adder #(
     genvar i;
     generate
         for (i = 1; i <= data_len - 2; i = i + 1) begin
-            full_adder full_adder_i (
+            ysyx_23060075_full_adder full_adder_i (
                 .a   (a[i]),
                 .b   (b[i]),
                 .cin (c[i-1]),
@@ -23,7 +23,7 @@ module adder #(
         end
     endgenerate
 
-    full_adder full_adder_1 (
+    ysyx_23060075_full_adder full_adder_1 (
         .a   (a[0]),
         .b   (b[0]),
         .cin (cin),
@@ -31,7 +31,7 @@ module adder #(
         .cout(c[0])
     );
 
-    full_adder full_adder_2 (
+    ysyx_23060075_full_adder full_adder_2 (
         .a   (a[data_len-1]),
         .b   (b[data_len-1]),
         .cin (c[data_len-2]),

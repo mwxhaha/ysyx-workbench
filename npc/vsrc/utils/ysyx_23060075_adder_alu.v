@@ -1,4 +1,4 @@
-module adder_alu #(
+module ysyx_23060075_adder_alu #(
     parameter data_len = 4
 ) (
     input  wire [data_len-1:0] a,
@@ -14,7 +14,7 @@ module adder_alu #(
 
     assign b_2_s_complement = b ^ {data_len{is_sub}};
 
-    adder #(
+    ysyx_23060075_adder #(
         .data_len(data_len)
     ) adder_1 (
         .a   (a),
