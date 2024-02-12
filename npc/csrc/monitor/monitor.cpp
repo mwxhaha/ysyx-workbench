@@ -16,6 +16,7 @@
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 #include <util/disasm.hpp>
+#include <util/rand.hpp>
 #include <cpu_exec/dut.hpp>
 #include <cpu_exec/ftrace.hpp>
 #include <cpu_exec/log.hpp>
@@ -144,8 +145,14 @@ void init_monitor(int argc, char *argv[])
     /* Parse arguments. */
     parse_args(argc, argv);
 
+    /* Set random seed. */
+    init_rand();
+
     /* Open the log file. */
     init_log(log_file);
+
+    /* Initialize memory. */
+    init_mem();
 
     /* Load the image to memory. This will overwrite the built-in image. */
     long img_size = load_img();

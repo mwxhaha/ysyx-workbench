@@ -14,14 +14,15 @@
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
+#include <cpu_exec/log.hpp>
 
-uint8_t pmem[MEM_MAX] = {0x97, 0x14, 0x00, 0x00,  // auipc 9 4096
-                         0xb3, 0x86, 0xb4, 0x00,  // add 13 9 11
-                         0xa3, 0xaf, 0x96, 0xfe,  // sw 9 -1(13)
-                         0x83, 0xa5, 0xf4, 0xff,  // lw 11 -1(9)
-                         0x63, 0x84, 0xb6, 0x00,  // beq 11 13 4
-                         0xef, 0x04, 0x40, 0x00,  // jal 9 4
-                         0x73, 0x00, 0x10, 0x00}; // ebreak
+uint8_t pmem[CONFIG_MSIZE] = {0x97, 0x14, 0x00, 0x00,  // auipc 9 4096
+                              0xb3, 0x86, 0xb4, 0x00,  // add 13 9 11
+                              0xa3, 0xaf, 0x96, 0xfe,  // sw 9 -1(13)
+                              0x83, 0xa5, 0xf4, 0xff,  // lw 11 -1(9)
+                              0x63, 0x84, 0xb6, 0x00,  // beq 11 13 4
+                              0xef, 0x04, 0x40, 0x00,  // jal 9 4
+                              0x73, 0x00, 0x10, 0x00}; // ebreak
 
 static bool enable_mtrace = true;
 typedef struct
@@ -39,13 +40,13 @@ static bool mtrace_array_is_full = false;
 
 static void in_pmem(paddr_t addr)
 {
-    Assert(addr >= MEM_BASE_ADDR, "address = " FMT_PADDR " is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
-    Assert(addr <= MEM_BASE_ADDR + MEM_MAX - 1, "address = " FMT_PADDR "is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
+    Assert(addr >= CONFIG_MBASE, "address = " FMT_PADDR " is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
+    Assert(addr <= CONFIG_MBASE + CONFIG_MSIZE - 1, "address = " FMT_PADDR "is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
 }
 
 static uint8_t *guest_to_host(paddr_t paddr)
 {
-    return pmem + paddr - MEM_BASE_ADDR;
+    return pmem + paddr - CONFIG_MBASE;
 }
 
 static word_t host_read(void *addr, int len)
@@ -177,4 +178,17 @@ void pmem_write(paddr_t addr, int len, word_t data)
     mtrace_record(false, addr, len, host_read(guest_to_host(addr), len), data);
 #endif
     host_write(guest_to_host(addr), len, data);
+}
+
+void init_mem()
+{
+#ifdef CONFIG_MEM_RANDOM
+    uint32_t *p = (uint32_t *)pmem;
+    int i;
+    for (i = 0; i < (int)(CONFIG_MSIZE / sizeof(p[0])); i++)
+    {
+        p[i] = rand();
+    }
+#endif
+    Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
 }

@@ -67,10 +67,10 @@ void init_difftest(char *ref_so_file, long img_size)
         ref_so_file);
 
     ref_difftest_init();
-    ref_difftest_memcpy(MEM_BASE_ADDR, pmem, img_size, DIFFTEST_TO_REF);
+    ref_difftest_memcpy(CONFIG_MBASE, pmem, img_size, DIFFTEST_TO_REF);
 
     CPU_state cpu_init;
-    cpu_init.pc = MEM_BASE_ADDR;
+    cpu_init.pc = RESET_VECTOR;
     for (int i = 0; i < GPR_NUM; i++)
         cpu_init.gpr[i] = 0;
     ref_difftest_regcpy(&cpu_init, DIFFTEST_TO_REF);

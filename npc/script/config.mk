@@ -40,6 +40,7 @@ FTRACE = 1
 endif
 WATCHPOINT = 1
 DIFFTEST = 1
+MEM_RANDOM = 1
 VOPTIMIZE = -O3
 CWARNING = -Wall
 VWARNING = -Wall -Wno-fatal

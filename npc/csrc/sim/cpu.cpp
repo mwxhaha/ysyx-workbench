@@ -17,7 +17,7 @@
 #include <cpu_exec/mem.hpp>
 #include <monitor/sdb.hpp>
 
-npc_state_t npc_state = {1, NPC_STOP, MEM_BASE_ADDR};
+npc_state_t npc_state = {NPC_STOP, RESET_VECTOR, 1};
 
 void sim()
 {

@@ -16,14 +16,19 @@
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 
-#define MEM_BASE_ADDR 0x80000000
-#define MEM_MAX 0x8000000
+#define CONFIG_MBASE 0x80000000
+#define CONFIG_MSIZE 0x8000000
+#define CONFIG_PC_RESET_OFFSET 0x0
+#define PMEM_LEFT ((paddr_t)CONFIG_MBASE)
+#define PMEM_RIGHT ((paddr_t)CONFIG_MBASE + CONFIG_MSIZE - 1)
+#define RESET_VECTOR (PMEM_LEFT + CONFIG_PC_RESET_OFFSET)
 
-extern uint8_t pmem[MEM_MAX];
+extern uint8_t pmem[CONFIG_MSIZE];
 
 void print_mtrace();
 void disable_mtrace_once();
 word_t pmem_read(paddr_t addr, int len);
 void pmem_write(paddr_t addr, int len, word_t data);
+void init_mem();
 
 #endif
