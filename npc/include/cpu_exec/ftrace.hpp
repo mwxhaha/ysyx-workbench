@@ -1,5 +1,5 @@
-#ifndef CPU_EXPR_HPP
-#define CPU_EXPR_HPP
+#ifndef FTRACE_HPP
+#define FTRACE_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,14 +11,14 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
+#include <cpu_exec/cpu_exec.hpp>
 
-void init_regex();
-word_t expr(const char *const e, bool *const success);
-void test_expr();
-void test_expr_auto();
+void load_elf(const char *elf_file);
+void ftrace_record(Decode *s);
+void print_ftrace();
 
 #endif

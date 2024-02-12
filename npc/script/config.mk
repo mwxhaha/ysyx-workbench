@@ -4,7 +4,7 @@ ROOT_DIR = $(NPC_HOME)
 VSRC_DIR = $(ROOT_DIR)/vsrc
 VSRC = $(shell find $(VSRC_DIR) -name "*.v")
 CSRC_DIR = $(ROOT_DIR)/csrc
-CSRC = $(shell find $(CSRC_DIR) -name "main.cpp" -or -name "$(TOP_NAME)*.cpp") $(shell find $(CSRC_DIR)/util -name "*.cpp" )
+CSRC = $(shell find $(CSRC_DIR) -name "*.cpp")
 NXDC_DIR = $(ROOT_DIR)/nxdc
 NXDC = $(shell find $(NXDC_DIR) -name "*.nxdc")
 INCLUDE_DIR = $(ROOT_DIR)/include
@@ -15,8 +15,9 @@ MAKE_FILE = $(ROOT_DIR)/Makefile $(SCRIPT)
 BUILD_DIR = $(ROOT_DIR)/build
 $(shell mkdir -p $(BUILD_DIR))
 OBJ_DIR = $(BUILD_DIR)/obj_dir
+STUDENT_ID = ysyx_23060075
 
-TOP_NAME = ysyx_23060075_cpu
+TOP_NAME = cpu
 ISA = RV32E
 NVBOARD = 0
 HAVE_CLK = 1

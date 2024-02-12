@@ -11,11 +11,11 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu/cpu_mem.hpp>
+#include <cpu_exec/mem.hpp>
 
 extern "C" void absort_dpic(int pc)
 {

@@ -10,7 +10,7 @@
 void nvboard_bind_all_pins(Vtop *top);
 #endif
 #ifdef SIM_ALL
-#include <monitor/cpu_monitor.hpp>
+#include <monitor/monitor.hpp>
 #endif
 
 VerilatedContext *contextp;

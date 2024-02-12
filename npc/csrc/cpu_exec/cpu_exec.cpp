@@ -1,4 +1,4 @@
-#include <cpu/cpu_cpu_exec.hpp>
+#include <cpu_exec/cpu_exec.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,19 +11,19 @@
 #include <assert.h>
 #include <locale.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 #include <util/timer.hpp>
 #include <util/disasm.hpp>
-#include <cpu/cpu_dut.hpp>
-#include <cpu/cpu_ftrace.hpp>
-#include <cpu/cpu_iringbuf.hpp>
-#include <cpu/cpu_log.hpp>
-#include <cpu/cpu_mem.hpp>
-#include <cpu/cpu_reg.hpp>
-#include <monitor/cpu_watchpoint.hpp>
+#include <cpu_exec/dut.hpp>
+#include <cpu_exec/ftrace.hpp>
+#include <cpu_exec/iringbuf.hpp>
+#include <cpu_exec/log.hpp>
+#include <cpu_exec/mem.hpp>
+#include <cpu_exec/reg.hpp>
+#include <monitor/watchpoint.hpp>
 
 #define MAX_INST_TO_PRINT 20
 uint64_t g_nr_guest_inst = 0;
@@ -91,7 +91,7 @@ static void execute(uint64_t n)
     Decode s;
     for (; n > 0; n--)
     {
-        exec_once(&s, top->rootp->cpu__DOT__core_1__DOT__pc);
+        exec_once(&s, TOP_PC);
         g_nr_guest_inst++;
         trace_and_difftest(&s, s.dnpc);
         if (npc_state.state != NPC_RUNNING)

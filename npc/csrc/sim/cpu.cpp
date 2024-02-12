@@ -1,5 +1,5 @@
-#ifndef CPU_WATCHPOINT_HPP
-#define CPU_WATCHPOINT_HPP
+#ifdef cpu
+#include <sim/cpu.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,15 +11,21 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <sim/cpu_sim.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
+#include <cpu_exec/mem.hpp>
+#include <monitor/sdb.hpp>
 
-void init_wp_pool();
-void new_wp(int hit_cnt, const char *const e);
-void free_wp(const int n);
-bool check_watchpoint();
-void printf_watchpoint();
+npc_state_t npc_state = {1, NPC_STOP, MEM_BASE_ADDR};
 
+void sim()
+{
+#ifdef NV_SIM
+    panic("do not support nvboard");
+#else
+    reset(3, CYCLE);
+    sdb_mainloop();
+#endif
+}
 #endif

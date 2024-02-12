@@ -1,5 +1,5 @@
-#ifndef CPU_FTRACE_HPP
-#define CPU_FTRACE_HPP
+#ifndef WATCHPOINT_HPP
+#define WATCHPOINT_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,14 +11,15 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu/cpu_cpu_exec.hpp>
 
-void load_elf(const char *elf_file);
-void ftrace_record(Decode *s);
-void print_ftrace();
+void init_wp_pool();
+void new_wp(int hit_cnt, const char *const e);
+void free_wp(const int n);
+bool check_watchpoint();
+void printf_watchpoint();
 
 #endif

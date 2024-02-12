@@ -1,3 +1,4 @@
+#ifdef test
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -27,20 +28,22 @@ void sim()
     while (contextp->time() < sim_time && !contextp->gotFinish())
     {
         set_pin([&]
-                { top->pc_in = 0x10000001; top->pc_en = 1; });
-        assert(top->pc_out == 0x10000001);
+                { top->in = 1; });
+        assert(top->q == 1);
         set_pin([&]
-                { top->pc_in = 0x00000000; top->pc_en = 1; });
-        assert(top->pc_out == 0x00000000);
+                { top->in = 0; });
+        assert(top->q == 0);
         set_pin([&]
-                { top->pc_in = 0x10000001; top->pc_en = 0; });
-        assert(top->pc_out == 0x00000000);
+                { top->in = 1; });
+        assert(top->q == 1);
+        cycle(3);
+        assert(top->q == 1);
         set_pin([&]
-                { top->pc_in = 0x11111111; top->pc_en = 1; });
-        assert(top->pc_out == 0x11111111);
-        set_pin([&]
-                { top->pc_in = 0x00000000; top->pc_en = 0; });
-        assert(top->pc_out == 0x11111111);
+                { top->in = 0; });
+        assert(top->q == 0);
+        cycle(3);
+        assert(top->q == 0);
     }
 #endif
 }
+#endif

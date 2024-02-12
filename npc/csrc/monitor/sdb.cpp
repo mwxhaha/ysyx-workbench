@@ -1,4 +1,4 @@
-#include <monitor/cpu_sdb.hpp>
+#include <monitor/sdb.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -12,17 +12,17 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu/cpu_cpu_exec.hpp>
-#include <cpu/cpu_ftrace.hpp>
-#include <cpu/cpu_iringbuf.hpp>
-#include <cpu/cpu_mem.hpp>
-#include <cpu/cpu_reg.hpp>
-#include <monitor/cpu_expr.hpp>
-#include <monitor/cpu_watchpoint.hpp>
+#include <cpu_exec/cpu_exec.hpp>
+#include <cpu_exec/ftrace.hpp>
+#include <cpu_exec/iringbuf.hpp>
+#include <cpu_exec/mem.hpp>
+#include <cpu_exec/reg.hpp>
+#include <monitor/expr.hpp>
+#include <monitor/watchpoint.hpp>
 
 static int is_batch_mode = false;
 

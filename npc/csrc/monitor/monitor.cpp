@@ -1,4 +1,4 @@
-#include <monitor/cpu_monitor.hpp>
+#include <monitor/monitor.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,16 +11,16 @@
 #include <assert.h>
 #include <getopt.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 #include <util/disasm.hpp>
-#include <cpu/cpu_dut.hpp>
-#include <cpu/cpu_ftrace.hpp>
-#include <cpu/cpu_log.hpp>
-#include <cpu/cpu_mem.hpp>
-#include <monitor/cpu_sdb.hpp>
+#include <cpu_exec/dut.hpp>
+#include <cpu_exec/ftrace.hpp>
+#include <cpu_exec/log.hpp>
+#include <cpu_exec/mem.hpp>
+#include <monitor/sdb.hpp>
 #include <verilated.h>
 
 static char *log_file = NULL;

@@ -1,4 +1,4 @@
-#include <monitor/cpu_expr.hpp>
+#include <monitor/expr.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,13 +11,13 @@
 #include <assert.h>
 #include <regex.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu/cpu_log.hpp>
-#include <cpu/cpu_mem.hpp>
-#include <cpu/cpu_reg.hpp>
+#include <cpu_exec/log.hpp>
+#include <cpu_exec/mem.hpp>
+#include <cpu_exec/reg.hpp>
 
 enum
 {

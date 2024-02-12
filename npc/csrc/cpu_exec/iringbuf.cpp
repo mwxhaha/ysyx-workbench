@@ -1,4 +1,4 @@
-#include <cpu/cpu_iringbuf.hpp>
+#include <cpu_exec/iringbuf.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>

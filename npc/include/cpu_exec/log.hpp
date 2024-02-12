@@ -1,5 +1,5 @@
-#ifndef CPU_LOG_HPP
-#define CPU_LOG_HPP
+#ifndef LOG_HPP
+#define LOG_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>

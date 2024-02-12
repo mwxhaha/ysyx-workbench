@@ -1,4 +1,4 @@
-#include <cpu/cpu_dut.hpp>
+#include <cpu_exec/dut.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,13 +11,13 @@
 #include <assert.h>
 #include <dlfcn.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu/cpu_reg.hpp>
-#include <cpu/cpu_log.hpp>
-#include <cpu/cpu_mem.hpp>
+#include <cpu_exec/reg.hpp>
+#include <cpu_exec/log.hpp>
+#include <cpu_exec/mem.hpp>
 
 enum
 {
@@ -69,11 +69,11 @@ void init_difftest(char *ref_so_file, long img_size)
     ref_difftest_init();
     ref_difftest_memcpy(MEM_BASE_ADDR, pmem, img_size, DIFFTEST_TO_REF);
 
-    CPU_state cpu;
-    cpu.pc = MEM_BASE_ADDR;
+    CPU_state cpu_init;
+    cpu_init.pc = MEM_BASE_ADDR;
     for (int i = 0; i < GPR_NUM; i++)
-        cpu.gpr[i] = 0;
-    ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);
+        cpu_init.gpr[i] = 0;
+    ref_difftest_regcpy(&cpu_init, DIFFTEST_TO_REF);
     ref_difftest_exec(1);
 }
 

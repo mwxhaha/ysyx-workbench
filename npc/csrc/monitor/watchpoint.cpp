@@ -1,4 +1,4 @@
-#include <monitor/cpu_watchpoint.hpp>
+#include <monitor/watchpoint.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -10,11 +10,11 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <monitor/cpu_expr.hpp>
+#include <monitor/expr.hpp>
 
 #define NR_WP 32
 #define WP_EXPR_MAX 100

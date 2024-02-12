@@ -1,4 +1,4 @@
-#include <cpu/cpu_ftrace.hpp>
+#include <cpu_exec/ftrace.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,13 +11,13 @@
 #include <assert.h>
 #include <elf.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 #include <util/io.hpp>
-#include <cpu/cpu_cpu_exec.hpp>
-#include <cpu/cpu_log.hpp>
+#include <cpu_exec/cpu_exec.hpp>
+#include <cpu_exec/log.hpp>
 
 #if (ISA_WIDTH == 64)
 typedef Elf64_Ehdr Elf_Ehdr;

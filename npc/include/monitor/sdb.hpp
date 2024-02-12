@@ -1,5 +1,5 @@
-#ifndef CPU_REG_HPP
-#define CPU_REG_HPP
+#ifndef SDB_HPP
+#define SDB_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,14 +11,13 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <sim/cpu_sim.hpp>
+#include <sim/cpu.hpp>
 #include <util/debug.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 
-
-void isa_reg_display();
-word_t isa_reg_str2val(const char *s, bool *success);
-bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc);
+void sdb_set_batch_mode();
+void sdb_mainloop();
+void init_sdb();
 
 #endif
