@@ -1,4 +1,4 @@
-#include <cpu_exec/log.hpp>
+#include <util/log.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -10,12 +10,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <sim/cpu.hpp>
-#include <util/debug.hpp>
-#include <util/macro.hpp>
-#include <util/sim_tool.hpp>
+#include <cpu_exec/cpu_exec.hpp>
 
-extern uint64_t g_nr_guest_inst;
 FILE *log_fp = NULL;
 static bool log_close = false;
 

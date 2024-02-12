@@ -12,10 +12,9 @@
 #include <regex.h>
 
 #include <sim/cpu.hpp>
-#include <util/debug.hpp>
+#include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu_exec/log.hpp>
 #include <cpu_exec/mem.hpp>
 #include <cpu_exec/reg.hpp>
 

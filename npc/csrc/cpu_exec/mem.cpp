@@ -11,10 +11,9 @@
 #include <assert.h>
 
 #include <sim/cpu.hpp>
-#include <util/debug.hpp>
+#include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu_exec/log.hpp>
 
 uint8_t pmem[CONFIG_MSIZE] = {0x97, 0x14, 0x00, 0x00,  // auipc 9 4096
                               0xb3, 0x86, 0xb4, 0x00,  // add 13 9 11

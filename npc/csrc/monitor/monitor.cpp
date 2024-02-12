@@ -12,14 +12,13 @@
 #include <getopt.h>
 
 #include <sim/cpu.hpp>
-#include <util/debug.hpp>
+#include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 #include <util/disasm.hpp>
 #include <util/rand.hpp>
 #include <cpu_exec/dut.hpp>
 #include <cpu_exec/ftrace.hpp>
-#include <cpu_exec/log.hpp>
 #include <cpu_exec/mem.hpp>
 #include <monitor/sdb.hpp>
 #include <verilated.h>

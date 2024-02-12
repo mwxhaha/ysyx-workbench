@@ -11,7 +11,7 @@
 #include <assert.h>
 
 #include <sim/cpu.hpp>
-#include <util/debug.hpp>
+#include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 

@@ -12,7 +12,7 @@
 #include <locale.h>
 
 #include <sim/cpu.hpp>
-#include <util/debug.hpp>
+#include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 #include <util/timer.hpp>
@@ -20,7 +20,6 @@
 #include <cpu_exec/dut.hpp>
 #include <cpu_exec/ftrace.hpp>
 #include <cpu_exec/iringbuf.hpp>
-#include <cpu_exec/log.hpp>
 #include <cpu_exec/mem.hpp>
 #include <cpu_exec/reg.hpp>
 #include <monitor/watchpoint.hpp>
