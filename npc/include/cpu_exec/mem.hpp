@@ -23,8 +23,15 @@
 #define PMEM_RIGHT ((paddr_t)CONFIG_MBASE + CONFIG_MSIZE - 1)
 #define RESET_VECTOR (PMEM_LEFT + CONFIG_PC_RESET_OFFSET)
 
+#define PAGE_SHIFT 12
+#define PAGE_SIZE (1ul << PAGE_SHIFT)
+#define PAGE_MASK (PAGE_SIZE - 1)
+
 extern uint8_t pmem[CONFIG_MSIZE];
 
+bool in_pmem(paddr_t addr);
+word_t host_read(void *addr, int len);
+void host_write(void *addr, int len, word_t data);
 void print_mtrace();
 void disable_mtrace_once();
 void init_mem();

@@ -37,10 +37,15 @@ EXPR_MATCH = 0
 ITRACE = 1
 MTRACE = 1
 FTRACE = 1
+DTRACE = 1
 endif
 WATCHPOINT = 1
 DIFFTEST = 1
 MEM_RANDOM = 1
+DEVICE = 1
+ifeq ($(DEVICE),1)
+
+endif
 VOPTIMIZE = -O3
 CWARNING = -Wall
 VWARNING = -Wall -Wno-fatal
@@ -56,4 +61,8 @@ EXPR_MATCH = 0
 ITRACE = 0
 MTRACE = 0
 FTRACE = 0
+DTRACE = 0
+endif
+ifeq ($(DEVICE),0)
+
 endif

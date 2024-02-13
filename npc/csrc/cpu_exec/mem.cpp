@@ -14,6 +14,7 @@
 #include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
+#include <device/mmio.hpp>
 
 uint8_t pmem[CONFIG_MSIZE];
 
@@ -31,10 +32,8 @@ static mtrace_t mtrace_array[MTRACE_ARRAY_MAX];
 static int mtrace_array_tail = 0;
 static bool mtrace_array_is_full = false;
 
-static bool in_pmem(paddr_t addr)
+bool in_pmem(paddr_t addr)
 {
-    // Assert(addr >= CONFIG_MBASE, "address = " FMT_PADDR " is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
-    // Assert(addr <= CONFIG_MBASE + CONFIG_MSIZE - 1, "address = " FMT_PADDR "is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
     return addr - CONFIG_MBASE < CONFIG_MSIZE;
 }
 
@@ -43,7 +42,7 @@ static uint8_t *guest_to_host(paddr_t paddr)
     return pmem + paddr - CONFIG_MBASE;
 }
 
-static word_t host_read(void *addr, int len)
+word_t host_read(void *addr, int len)
 {
     switch (len)
     {
@@ -62,7 +61,7 @@ static word_t host_read(void *addr, int len)
     }
 }
 
-static void host_write(void *addr, int len, word_t data)
+void host_write(void *addr, int len, word_t data)
 {
     switch (len)
     {
@@ -210,7 +209,7 @@ word_t paddr_read(paddr_t addr, int len)
 {
     if (likely(in_pmem(addr)))
         return pmem_read_1(addr, len);
-    // IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
+    IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
     out_of_bound(addr);
     return 0;
 }
@@ -222,6 +221,6 @@ void paddr_write(paddr_t addr, int len, word_t data)
         pmem_write_1(addr, len, data);
         return;
     }
-    // IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
+    IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
     out_of_bound(addr);
 }

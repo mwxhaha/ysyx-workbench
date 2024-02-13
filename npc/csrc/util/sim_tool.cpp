@@ -63,6 +63,10 @@ void sim_exit()
 #ifdef NV_SIM
     nvboard_quit();
 #endif
+
+#ifdef SIM_ALL
+    monitor_quit();
+#endif
 }
 
 void update(int time)

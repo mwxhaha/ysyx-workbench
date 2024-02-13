@@ -20,6 +20,7 @@
 #include <cpu_exec/dut.hpp>
 #include <cpu_exec/ftrace.hpp>
 #include <cpu_exec/mem.hpp>
+#include <device/device.hpp>
 #include <monitor/sdb.hpp>
 #include <verilated.h>
 
@@ -153,6 +154,9 @@ void init_monitor(int argc, char *argv[])
     /* Initialize memory. */
     init_mem();
 
+    /* Initialize devices. */
+    IFDEF(CONFIG_DEVICE, init_device());
+
     /* Perform ISA dependent initialization. */
     init_isa();
 
@@ -190,5 +194,5 @@ void init_monitor(int argc, char *argv[])
 void monitor_quit()
 {
     mem_quit();
-    // IFDEF(CONFIG_DEVICE, device_quit());
+    IFDEF(CONFIG_DEVICE, device_quit());
 }
