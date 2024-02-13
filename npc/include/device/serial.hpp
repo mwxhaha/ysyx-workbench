@@ -1,5 +1,5 @@
-#ifndef DUT_HPP
-#define DUT_HPP
+#ifndef SERIAL_HPP
+#define SERIAL_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -16,9 +16,6 @@
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 
-void difftest_skip_ref();
-void difftest_skip_dut(int nr_ref, int nr_dut);
-void init_difftest(char *ref_so_file, long img_size);
-void difftest_step(vaddr_t pc, vaddr_t npc);
+void init_serial();
 
 #endif

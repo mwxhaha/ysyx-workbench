@@ -16,6 +16,7 @@
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 #include <cpu_exec/mem.hpp>
+#include <cpu_exec/dut.hpp>
 
 #define IO_SPACE_MAX (2 * 1024 * 1024)
 
@@ -34,7 +35,7 @@ int find_mapid_by_addr(IOMap *maps, int size, paddr_t addr)
     {
         if (map_inside(maps + i, addr))
         {
-            // difftest_skip_ref();
+            difftest_skip_ref();
             return i;
         }
     }

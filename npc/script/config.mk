@@ -44,7 +44,7 @@ DIFFTEST = 1
 MEM_RANDOM = 1
 DEVICE = 1
 ifeq ($(DEVICE),1)
-
+HAS_SERIAL = 1
 endif
 VOPTIMIZE = -O3
 CWARNING = -Wall
@@ -64,5 +64,5 @@ FTRACE = 0
 DTRACE = 0
 endif
 ifeq ($(DEVICE),0)
-
+HAS_SERIAL = 0
 endif
