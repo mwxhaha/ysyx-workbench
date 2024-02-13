@@ -1,6 +1,5 @@
 #include <Vtop__Dpi.h>
 
-#ifdef SIM_ALL
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -17,26 +16,26 @@
 #include <util/sim_tool.hpp>
 #include <cpu_exec/mem.hpp>
 
-extern "C" void absort_dpic(int pc)
+extern "C" void absort(int pc)
 {
     npc_state.halt_ret = 1;
     npc_state.state = NPC_ABORT;
     npc_state.halt_pc = pc;
 }
 
-extern "C" void ebreak_dpic(int ret, int pc)
+extern "C" void ebreak(int ret, int pc)
 {
     npc_state.halt_ret = ret;
     npc_state.state = NPC_END;
     npc_state.halt_pc = pc;
 }
 
-extern "C" void disable_mtrace_once_dpic()
+extern "C" void disable_mtrace_once_1()
 {
     disable_mtrace_once();
 }
 
-extern "C" void pmem_read_dpic(int addr, int *data)
+extern "C" void pmem_read(int addr, int *data)
 {
 #if ISA_WIDTH == 64
     panic("memory read do not support ISA64");
@@ -44,7 +43,7 @@ extern "C" void pmem_read_dpic(int addr, int *data)
     *data = paddr_read(addr, 4);
 }
 
-extern "C" void pmem_write_dpic(int addr, char mask, int data)
+extern "C" void pmem_write(int addr, char mask, int data)
 {
 #if ISA_WIDTH == 64
     panic("memory write do not support ISA64");
@@ -97,12 +96,3 @@ extern "C" void pmem_write_dpic(int addr, char mask, int data)
     }
 }
 
-#else
-
-extern "C" void absort_dpic(int pc) {}
-extern "C" void ebreak_dpic(int ret, int pc) {}
-extern "C" void disable_mtrace_once_dpic() {}
-extern "C" void pmem_read_dpic(int addr, int *data) {}
-extern "C" void pmem_write_dpic(int addr, char wask, int data) {}
-
-#endif

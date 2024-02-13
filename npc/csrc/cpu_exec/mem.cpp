@@ -155,7 +155,7 @@ void disable_mtrace_once()
     enable_mtrace = false;
 }
 
-static word_t pmem_read(paddr_t addr, int len)
+static word_t pmem_read_1(paddr_t addr, int len)
 {
     word_t ret = host_read(guest_to_host(addr), len);
 #ifdef CONFIG_MTRACE
@@ -164,7 +164,7 @@ static word_t pmem_read(paddr_t addr, int len)
     return ret;
 }
 
-static void pmem_write(paddr_t addr, int len, word_t data)
+static void pmem_write_1(paddr_t addr, int len, word_t data)
 {
 #ifdef CONFIG_MTRACE
     mtrace_record(false, addr, len, host_read(guest_to_host(addr), len), data);
@@ -209,7 +209,7 @@ void init_isa()
 word_t paddr_read(paddr_t addr, int len)
 {
     if (likely(in_pmem(addr)))
-        return pmem_read(addr, len);
+        return pmem_read_1(addr, len);
     // IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
     out_of_bound(addr);
     return 0;
@@ -219,7 +219,7 @@ void paddr_write(paddr_t addr, int len, word_t data)
 {
     if (likely(in_pmem(addr)))
     {
-        pmem_write(addr, len, data);
+        pmem_write_1(addr, len, data);
         return;
     }
     // IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
