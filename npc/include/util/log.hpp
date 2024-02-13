@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include <cpu_exec/cpu_exec.hpp>
+
 #define ANSI_FG_BLACK "\33[1;30m"
 #define ANSI_FG_RED "\33[1;31m"
 #define ANSI_FG_GREEN "\33[1;32m"
@@ -31,6 +33,8 @@
 
 #define ANSI_FMT(str, fmt) fmt str ANSI_NONE
 
+extern FILE *log_fp;
+
 #ifdef SIM_ALL
 
 #define Assert(cond, format, ...)                                               \
@@ -40,9 +44,7 @@
         {                                                                       \
             fflush(stdout);                                                     \
             fprintf(stderr, ANSI_FMT(format, ANSI_FG_RED) "\n", ##__VA_ARGS__); \
-            extern FILE *log_fp;                                                \
             fflush(log_fp);                                                     \
-            extern void assert_fail_msg();                                      \
             assert_fail_msg();                                                  \
             assert(cond);                                                       \
         }                                                                       \
@@ -65,8 +67,6 @@
 #define panic(format, ...) Assert(0, format, ##__VA_ARGS__)
 
 #define TODO() panic("please implement me")
-
-extern FILE *log_fp;
 
 void init_log(const char *log_file);
 bool log_enable();

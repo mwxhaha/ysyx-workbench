@@ -11,9 +11,6 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <util/log.hpp>
-#include <util/macro.hpp>
-#include <util/sim_tool.hpp>
 #include <Vtop.h>
 #include <Vtop___024root.h>
 

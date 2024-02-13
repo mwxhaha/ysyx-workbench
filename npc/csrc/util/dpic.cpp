@@ -44,8 +44,6 @@ extern "C" void pmem_read_dpic(int addr, int *data)
     *data = paddr_read(addr, 4);
 }
 
-extern void assert_fail_msg();
-
 extern "C" void pmem_write_dpic(int addr, char mask, int data)
 {
 #if ISA_WIDTH == 64
