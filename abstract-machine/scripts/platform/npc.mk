@@ -21,7 +21,7 @@ image: $(IMAGE).elf
 	@$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
 
 run: image
-	$(MAKE) -C $(NPC_HOME) NPC_FLAGS="$(NPC_FLAGS)" IMG=$(IMAGE).bin sim
+	$(MAKE) -C $(NPC_HOME) run ARGS="$(NPC_FLAGS)" IMG=$(IMAGE).bin
 
 gdb: image
-	$(MAKE) -C $(NPC_HOME) NPC_FLAGS="$(NPC_FLAGS)" IMG=$(IMAGE).bin gdb
+	$(MAKE) -C $(NPC_HOME) gdb ARGS="$(NPC_FLAGS)" IMG=$(IMAGE).bin

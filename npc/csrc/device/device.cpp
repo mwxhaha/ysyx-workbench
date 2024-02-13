@@ -16,6 +16,7 @@
 #include <util/sim_tool.hpp>
 #include <device/map.hpp>
 #include <device/serial.hpp>
+#include <device/d_timer.hpp>
 #include <SDL2/SDL.h>
 
 void device_update()
@@ -71,7 +72,7 @@ void init_device()
     init_map();
 
     IFDEF(CONFIG_HAS_SERIAL, init_serial());
-    // IFDEF(CONFIG_HAS_TIMER, init_timer());
+    IFDEF(CONFIG_HAS_TIMER, init_timer());
     // IFDEF(CONFIG_HAS_VGA, init_vga());
     // IFDEF(CONFIG_HAS_KEYBOARD, init_i8042());
     // IFDEF(CONFIG_HAS_AUDIO, init_audio());

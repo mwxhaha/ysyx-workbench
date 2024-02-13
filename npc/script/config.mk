@@ -45,6 +45,7 @@ MEM_RANDOM = 1
 DEVICE = 1
 ifeq ($(DEVICE),1)
 HAS_SERIAL = 1
+HAS_TIMER = 1
 endif
 VOPTIMIZE = -O3
 CWARNING = -Wall
@@ -65,4 +66,5 @@ DTRACE = 0
 endif
 ifeq ($(DEVICE),0)
 HAS_SERIAL = 0
+HAS_TIMER = 0
 endif

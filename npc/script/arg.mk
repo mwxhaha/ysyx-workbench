@@ -84,11 +84,15 @@ endif
 ifeq ($(HAS_SERIAL),1)
 VERILATOR_CFLAGS += -DCONFIG_HAS_SERIAL=1
 endif
+ifeq ($(HAS_TIMER),1)
+VERILATOR_CFLAGS += -DCONFIG_HAS_TIMER=1
+endif
 
 VERILATOR_MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 MAKE_FLAGS = -C $(OBJ_DIR) -f $(VERILATOR_MAKE_FILE) -j $(shell nproc)
 
-override NPC_FLAGS ?= --log=$(BUILD_DIR)/npc-log.txt
-override NPC_FLAGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
+override ARGS ?= --log=$(BUILD_DIR)/npc-log.txt
+override ARGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
 IMG ?= 
+NPC_EXEC := $(BIN) $(ARGS) $(IMG)
 WAVE = $(BUILD_DIR)/wave.vcd

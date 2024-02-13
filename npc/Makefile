@@ -26,7 +26,7 @@ include ../Makefile
 run: sim
 sim: $(BIN)
 	@echo "-----simulate------"
-	$(BIN) $(NPC_FLAGS) $(IMG)
+	$(NPC_EXEC)
 ifeq ($(DISPLAY_WAVE),1)
 	$(WAVE_READER) $(WAVE)
 endif
