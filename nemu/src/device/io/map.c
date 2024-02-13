@@ -66,6 +66,7 @@ void map_quit()
 {
     free(io_space);
 }
+
 typedef struct
 {
     bool is_read;

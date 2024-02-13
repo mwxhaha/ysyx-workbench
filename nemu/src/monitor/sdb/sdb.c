@@ -22,7 +22,7 @@
 #include <math.h>
 #include <memory/vaddr.h>
 #include <memory/paddr.h>
-#include <device/mmio.h>
+#include <device/map.h>
 #include <monitor.h>
 #include <readline/history.h>
 #include <readline/readline.h>

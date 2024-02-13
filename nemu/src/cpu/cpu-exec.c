@@ -21,7 +21,7 @@
 #include <stdbool.h>
 #include <utils.h>
 #include <memory/paddr.h>
-#include <device/mmio.h>
+#include <device/map.h>
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
