@@ -1,21 +1,19 @@
-AM_SRCS := riscv/npc/start.S \
-           riscv/npc/trm.c \
-           riscv/npc/ioe.c \
-           riscv/npc/timer.c \
-           riscv/npc/input.c \
-           riscv/npc/cte.c \
-           riscv/npc/trap.S \
+AM_SRCS := platform/npc/trm.c \
+           platform/npc/ioe/ioe.c \
+           platform/npc/ioe/timer.c \
+           platform/npc/ioe/input.c \
            platform/dummy/vme.c \
            platform/dummy/mpe.c
 
 CFLAGS    += -fdata-sections -ffunction-sections
 LDFLAGS   += -T $(AM_HOME)/scripts/linker.ld \
-						 --defsym=_pmem_start=0x80000000 --defsym=_entry_offset=0x0
+             --defsym=_pmem_start=0x80000000 --defsym=_entry_offset=0x0
 LDFLAGS   += --gc-sections -e _start
-CFLAGS += -DMAINARGS=\"$(mainargs)\"
-.PHONY: $(AM_HOME)/am/src/riscv/npc/trm.c
-
 NPC_FLAGS += -l $(shell dirname $(IMAGE).elf)/npc-log.txt -e $(IMAGE).elf
+
+CFLAGS += -DMAINARGS=\"$(mainargs)\"
+CFLAGS += -I$(AM_HOME)/am/src/platform/npc/include
+.PHONY: $(AM_HOME)/am/src/platform/npc/trm.c
 
 image: $(IMAGE).elf
 	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
@@ -25,3 +23,5 @@ image: $(IMAGE).elf
 run: image
 	$(MAKE) -C $(NPC_HOME) NPC_FLAGS="$(NPC_FLAGS)" IMG=$(IMAGE).bin sim
 
+gdb: image
+	$(MAKE) -C $(NPC_HOME) NPC_FLAGS="$(NPC_FLAGS)" IMG=$(IMAGE).bin gdb

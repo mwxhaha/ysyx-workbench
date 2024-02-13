@@ -14,6 +14,7 @@ $(VERILATE): $(VERILATOR_SRC) $(INCLUDE) $(MAKE_FILE)
 	touch $(VERILATE)
 	@echo "-----verilate done------"
 
+all: build
 build: $(BIN)
 $(BIN): $(VERILATE)
 	@echo "-----build------"
@@ -22,6 +23,7 @@ $(BIN): $(VERILATE)
 
 include ../Makefile
 
+run: sim
 sim: $(BIN)
 	@echo "-----simulate------"
 	$(BIN) $(NPC_FLAGS) $(IMG)
@@ -31,8 +33,8 @@ endif
 	$(call git_commit, "sim RTL") 
 	@echo "-----simulate done------"
 
-run: sim
-all: build
+gdb: build
+	@echo "do not support make gdb"
 clean: 
 	rm -rf $(BUILD_DIR)
 .PHONY : verilate build sim run all clean
