@@ -31,10 +31,11 @@ static mtrace_t mtrace_array[MTRACE_ARRAY_MAX];
 static int mtrace_array_tail = 0;
 static bool mtrace_array_is_full = false;
 
-static void in_pmem(paddr_t addr)
+static bool in_pmem(paddr_t addr)
 {
-    Assert(addr >= CONFIG_MBASE, "address = " FMT_PADDR " is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
-    Assert(addr <= CONFIG_MBASE + CONFIG_MSIZE - 1, "address = " FMT_PADDR "is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
+    // Assert(addr >= CONFIG_MBASE, "address = " FMT_PADDR " is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
+    // Assert(addr <= CONFIG_MBASE + CONFIG_MSIZE - 1, "address = " FMT_PADDR "is out of bound of pmem at pc = " FMT_WORD, addr, TOP_PC);
+    return addr - CONFIG_MBASE < CONFIG_MSIZE;
 }
 
 static uint8_t *guest_to_host(paddr_t paddr)
@@ -154,9 +155,8 @@ void disable_mtrace_once()
     enable_mtrace = false;
 }
 
-word_t pmem_read(paddr_t addr, int len)
+static word_t pmem_read(paddr_t addr, int len)
 {
-    in_pmem(addr);
     word_t ret = host_read(guest_to_host(addr), len);
 #ifdef CONFIG_MTRACE
     mtrace_record(true, addr, len, ret, 0);
@@ -164,13 +164,17 @@ word_t pmem_read(paddr_t addr, int len)
     return ret;
 }
 
-void pmem_write(paddr_t addr, int len, word_t data)
+static void pmem_write(paddr_t addr, int len, word_t data)
 {
-    in_pmem(addr);
 #ifdef CONFIG_MTRACE
     mtrace_record(false, addr, len, host_read(guest_to_host(addr), len), data);
 #endif
     host_write(guest_to_host(addr), len, data);
+}
+
+static void out_of_bound(paddr_t addr)
+{
+    panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD, addr, PMEM_LEFT, PMEM_RIGHT, TOP_PC);
 }
 
 void init_mem()
@@ -186,6 +190,10 @@ void init_mem()
     Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
 }
 
+void mem_quit()
+{
+}
+
 static const uint32_t img[] = {0x00001497,  // auipc 9 4096
                                0x00b486b3,  // add 13 9 11
                                0xfe96ae23,  // sw 9 -4(13)
@@ -196,4 +204,24 @@ static const uint32_t img[] = {0x00001497,  // auipc 9 4096
 void init_isa()
 {
     memcpy(guest_to_host(RESET_VECTOR), img, sizeof(img));
+}
+
+word_t paddr_read(paddr_t addr, int len)
+{
+    if (likely(in_pmem(addr)))
+        return pmem_read(addr, len);
+    // IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
+    out_of_bound(addr);
+    return 0;
+}
+
+void paddr_write(paddr_t addr, int len, word_t data)
+{
+    if (likely(in_pmem(addr)))
+    {
+        pmem_write(addr, len, data);
+        return;
+    }
+    // IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
+    out_of_bound(addr);
 }

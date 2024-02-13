@@ -27,9 +27,10 @@ extern uint8_t pmem[CONFIG_MSIZE];
 
 void print_mtrace();
 void disable_mtrace_once();
-word_t pmem_read(paddr_t addr, int len);
-void pmem_write(paddr_t addr, int len, word_t data);
 void init_mem();
 void init_isa();
+void mem_quit();
+word_t paddr_read(paddr_t addr, int len);
+void paddr_write(paddr_t addr, int len, word_t data);
 
 #endif

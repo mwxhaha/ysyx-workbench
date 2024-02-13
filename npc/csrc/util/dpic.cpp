@@ -41,7 +41,7 @@ extern "C" void pmem_read_dpic(int addr, int *data)
 #if ISA_WIDTH == 64
     panic("memory read do not support ISA64");
 #endif
-    *data = pmem_read(addr, 4);
+    *data = paddr_read(addr, 4);
 }
 
 extern void assert_fail_msg();
@@ -86,13 +86,13 @@ extern "C" void pmem_write_dpic(int addr, char mask, int data)
     switch (mask_shift)
     {
     case 1:
-        pmem_write(addr_shift, 1, data_shift);
+        paddr_write(addr_shift, 1, data_shift);
         break;
     case 3:
-        pmem_write(addr_shift, 2, data_shift);
+        paddr_write(addr_shift, 2, data_shift);
         break;
     case 15:
-        pmem_write(addr_shift, 4, data_shift);
+        paddr_write(addr_shift, 4, data_shift);
         break;
     default:
         panic("memory write mask 0x%x change error at addr = " FMT_PADDR " at pc = " FMT_WORD, mask, addr, TOP_PC);

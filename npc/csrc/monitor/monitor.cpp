@@ -186,3 +186,9 @@ void init_monitor(int argc, char *argv[])
     /* Display welcome message. */
     welcome();
 }
+
+void monitor_quit()
+{
+    mem_quit();
+    // IFDEF(CONFIG_DEVICE, device_quit());
+}

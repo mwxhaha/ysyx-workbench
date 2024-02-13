@@ -17,5 +17,6 @@
 #include <util/sim_tool.hpp>
 
 void init_monitor(int argc, char *argv[]);
+void monitor_quit();
 
 #endif
