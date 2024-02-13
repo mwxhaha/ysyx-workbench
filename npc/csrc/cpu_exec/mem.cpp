@@ -15,13 +15,7 @@
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 
-uint8_t pmem[CONFIG_MSIZE] = {0x97, 0x14, 0x00, 0x00,  // auipc 9 4096
-                              0xb3, 0x86, 0xb4, 0x00,  // add 13 9 11
-                              0xa3, 0xaf, 0x96, 0xfe,  // sw 9 -1(13)
-                              0x83, 0xa5, 0xf4, 0xff,  // lw 11 -1(9)
-                              0x63, 0x84, 0xb6, 0x00,  // beq 11 13 4
-                              0xef, 0x04, 0x40, 0x00,  // jal 9 4
-                              0x73, 0x00, 0x10, 0x00}; // ebreak
+uint8_t pmem[CONFIG_MSIZE];
 
 static bool enable_mtrace = true;
 typedef struct
@@ -190,4 +184,16 @@ void init_mem()
     }
 #endif
     Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
+}
+
+static const uint32_t img[] = {0x00001497,  // auipc 9 4096
+                               0x00b486b3,  // add 13 9 11
+                               0xfe96ae23,  // sw 9 -4(13)
+                               0xffc4a583,  // lw 11 -4(9)
+                               0x00b68463,  // beq 11 13 4
+                               0x004004ef,  // jal 9 4
+                               0x00100073}; // ebreak
+void init_isa()
+{
+    memcpy(guest_to_host(RESET_VECTOR), img, sizeof(img));
 }
