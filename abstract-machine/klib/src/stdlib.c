@@ -31,7 +31,7 @@ int atoi(const char *nptr)
     return x;
 }
 
-#define MEM_ALIGN_MASK (~(uintptr_t)7)
+#define MEM_ALIGN_MASK 0x111
 static int is_first = 1;
 static void *addr = NULL;
 
@@ -49,9 +49,9 @@ void *malloc(size_t size)
         is_first = 0;
         return heap.start;
     }
-    for (; ((uintptr_t)addr & MEM_ALIGN_MASK) == 0; addr++)
+    for (; ((uintptr_t)addr & MEM_ALIGN_MASK) != 0; addr++)
         ;
-    panic_on(addr >= heap.end,"memory heap overflow\n");
+    panic_on(addr >= heap.end, "memory heap overflow\n");
     void *ret = addr;
     addr += size;
     return ret;
