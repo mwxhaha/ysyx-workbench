@@ -7,7 +7,7 @@
 
 static char num_to_char(int num)
 {
-    assert(num <= 16);
+    panic_on(num > 16, "num_to_char base error\n");
     if (num <= 9)
         return '0' + num;
     else
@@ -18,7 +18,7 @@ static char num_to_char(int num)
 
 static int num_to_str(uint64_t num, char *num_str, int is_signed, int base)
 {
-    assert(base <= 16);
+    panic_on(base > 16, "num_to_str base error\n");
     if (num == 0)
     {
         num_str[0] = '0';
@@ -74,28 +74,28 @@ static int num_to_str(uint64_t num, char *num_str, int is_signed, int base)
             num = num / base;
         }
         i++;
-        assert(i <= NUM_STR_MAX);
+        panic_on(i > NUM_STR_MAX, "num_to_str str len error\n");
     }
     i--;
     for (; i >= 0; i--)
     {
         num_str[num_str_len] = num_str_inverse[i];
         num_str_len++;
-        assert(num_str_len <= NUM_STR_MAX);
+        panic_on(num_str_len > NUM_STR_MAX, "num_to_str str len error\n");
     }
     return num_str_len;
 }
 
 static uint64_t str_to_num(const char *num_str, int num_str_len)
 {
-    assert(num_str_len >= 0);
+    panic_on(num_str_len < 0, "str_to_num str len error\n");
     if (num_str_len == 0)
         return 0;
     uint64_t num = num_str[0] - '0';
     for (int i = 1; i < num_str_len; i++)
     {
         num = num * 10 + num_str[i] - '0';
-        assert(num <= 0x7fffffffffffffffLL * 2ULL + 1ULL);
+        panic_on(num > 0x7fffffffffffffffLL * 2ULL + 1ULL, "str_to_num num is too large\n");
     }
     return num;
 }
@@ -199,7 +199,7 @@ int vsprintf(char *out, const char *fmt, va_list ap)
             out[j] = fmt[i];
             i++;
             j++;
-            assert(j < PRINTF_LEN_MAX);
+            panic_on(j > PRINTF_LEN_MAX, "printf str is too long\n");
         }
     }
     out[j] = '\0';
@@ -214,9 +214,10 @@ int sprintf(char *out, const char *fmt, ...)
     va_end(ap);
 }
 
+static char out[PRINTF_LEN_MAX];
+
 int printf(const char *fmt, ...)
 {
-    char *out = malloc(PRINTF_LEN_MAX);
     va_list ap;
     va_start(ap, fmt);
     int ret = vsprintf(out, fmt, ap);

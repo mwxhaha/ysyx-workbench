@@ -76,9 +76,12 @@ void *memset(void *s, int c, size_t n)
     return s;
 }
 
+#define MOVE_TMP_LEN_MAX 10000
+static char move_tmp[MOVE_TMP_LEN_MAX];
+
 void *memmove(void *dst, const void *src, size_t n)
 {
-    char *move_tmp = malloc(n);
+    panic_on(n > MOVE_TMP_LEN_MAX, "memmove size is too large");
     for (int i = 0; i < n; i++)
         move_tmp[i] = ((char *)src)[i];
     for (int i = 0; i < n; i++)
