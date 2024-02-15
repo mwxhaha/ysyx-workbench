@@ -23,6 +23,7 @@
 #include <cpu_exec/mem.hpp>
 #include <cpu_exec/reg.hpp>
 #include <monitor/watchpoint.hpp>
+#include <device/device.hpp>
 
 #define MAX_INST_TO_PRINT 20
 uint64_t g_nr_guest_inst = 0;
@@ -93,6 +94,7 @@ static void execute(uint64_t n)
         exec_once(&s, TOP_PC);
         g_nr_guest_inst++;
         trace_and_difftest(&s, s.dnpc);
+        IFDEF(CONFIG_DEVICE, device_update());
         if (npc_state.state != NPC_RUNNING)
             break;
     }

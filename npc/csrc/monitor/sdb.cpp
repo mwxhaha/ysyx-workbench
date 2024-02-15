@@ -23,6 +23,7 @@
 #include <cpu_exec/reg.hpp>
 #include <monitor/expr.hpp>
 #include <monitor/watchpoint.hpp>
+#include <device/device.hpp>
 
 static int is_batch_mode = false;
 
@@ -362,6 +363,8 @@ void sdb_mainloop()
         {
             args = NULL;
         }
+
+        IFDEF(CONFIG_DEVICE, sdl_clear_event_queue());
 
         int i;
         for (i = 0; i < NR_CMD; i++)

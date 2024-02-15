@@ -1,5 +1,5 @@
-#ifndef DEVICE_HPP
-#define DEVICE_HPP
+#ifndef KEYBOARD_HPP
+#define KEYBOARD_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -16,11 +16,7 @@
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 
-#define TIMER_HZ 60
-
-void device_update();
-void sdl_clear_event_queue();
-void init_device();
-void device_quit();
+void send_key(uint8_t scancode, bool is_keydown);
+void init_i8042();
 
 #endif
