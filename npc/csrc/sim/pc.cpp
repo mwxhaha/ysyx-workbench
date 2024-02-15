@@ -1,4 +1,4 @@
-#ifdef pc
+#ifdef SIM_pc
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>

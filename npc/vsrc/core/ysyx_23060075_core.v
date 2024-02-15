@@ -55,6 +55,7 @@ module ysyx_23060075_core (
 
     ysyx_23060075_idu idu_1 (
         .clk      (clk),
+        .rst      (rst),
         .inst     (inst),
         .inst_type(inst_type),
         .imm      (imm),

@@ -1,5 +1,5 @@
-#ifndef SIM_HPP
-#define SIM_HPP
+#ifndef CPU_HPP
+#define CPU_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -62,9 +62,15 @@ typedef word_t paddr_t;
 #define FMT_PADDR FMT_WORD
 
 #define CYCLE 2
+#ifdef SIM_ALL
 #define TOP_INST top->rootp->ysyx_23060075_cpu__DOT__mem_1_r
 #define TOP_PC top->rootp->ysyx_23060075_cpu__DOT__core_1__DOT__pc
 #define TOP_GPR top->rootp->ysyx_23060075_cpu__DOT__core_1__DOT__idu_1__DOT__gpr_1__DOT__reg_file_gpr__DOT__rf
+#else
+#define TOP_INST 0
+#define TOP_PC 0
+#define TOP_GPR ((word_t *)0)
+#endif
 
 enum
 {

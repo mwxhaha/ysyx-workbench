@@ -1,4 +1,4 @@
-#ifdef cpu
+#ifdef SIM_cpu
 #include <sim/cpu.hpp>
 
 #include <stdio.h>

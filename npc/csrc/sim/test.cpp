@@ -1,4 +1,4 @@
-#ifdef test
+#ifdef SIM_test
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>

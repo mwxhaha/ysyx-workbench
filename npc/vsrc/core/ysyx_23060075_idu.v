@@ -2,6 +2,7 @@
 
 module ysyx_23060075_idu (
     input  wire                                      clk,
+    input  wire                                      rst,
     input  wire [      `ysyx_23060075_ISA_WIDTH-1:0] inst,
     output wire [`ysyx_23060075_INST_TYPE_WIDTH-1:0] inst_type,
     output wire [      `ysyx_23060075_IMM_WIDTH-1:0] imm,
@@ -79,6 +80,7 @@ module ysyx_23060075_idu (
 
     ysyx_23060075_gpr gpr_1 (
         .clk       (clk),
+        .rst       (rst),
         .gpr_w     (srd),
         .gpr_1_r   (src1),
         .gpr_2_r   (src2),
