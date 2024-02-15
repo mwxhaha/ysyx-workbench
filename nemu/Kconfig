@@ -152,31 +152,32 @@ config ITRACE_COND
   default "true"
 
 config EXPR_MATCH
-  depends on TRACE
+  depends on TRACE && TARGET_NATIVE_ELF
   bool "Enable expression matching rules log"
   default n
 
 config DECODE_RESULT
-  depends on TRACE
+  depends on TRACE && TARGET_NATIVE_ELF
   bool "Enable printing decode result"
   default n
 
 config MTRACE
-  depends on TRACE
+  depends on TRACE && TARGET_NATIVE_ELF
   bool "Enable memory trace"
   default y
 
 config FTRACE
-  depends on TRACE
+  depends on TRACE && TARGET_NATIVE_ELF
   bool "Enable function call and return trace"
   default y
 
 config DTRACE
-  depends on TRACE
+  depends on TRACE && TARGET_NATIVE_ELF
   bool "Enable device trace"
   default y
 
 config WATCHPOINT
+  depends on TARGET_NATIVE_ELF
   bool "Enable watchpoint"
   default y
 

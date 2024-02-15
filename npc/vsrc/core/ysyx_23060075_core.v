@@ -141,4 +141,40 @@ module ysyx_23060075_core (
         .is_auipc    (is_auipc)
     );
 
+    always @(posedge clk) begin
+        if (mem_w_en) begin
+            case (mem_mask)
+                `ysyx_23060075_MEM_MASK_WIDTH'b0011:
+                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b1) != `ysyx_23060075_ISA_WIDTH'b0) begin
+                    $display("address = %h len = 2 is unalign at pc = %h", alu_result, pc);
+                    absort(pc);
+                end
+                `ysyx_23060075_MEM_MASK_WIDTH'b1111:
+                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b11) != `ysyx_23060075_ISA_WIDTH'b0) begin
+                    $display("address = %h len = 4 is unalign at pc = %h", alu_result, pc);
+                    absort(pc);
+                end
+                default: ;
+            endcase
+        end
+    end
+
+    always @(posedge clk) begin
+        if (mem_r_en) begin
+            case (funct3[1:0])
+                2'b01:
+                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b1) != `ysyx_23060075_ISA_WIDTH'b0) begin
+                    $display("address = %h len = 2 is unalign at pc = %h", alu_result, pc);
+                    absort(pc);
+                end
+                2'b10:
+                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b11) != `ysyx_23060075_ISA_WIDTH'b0) begin
+                    $display("address = %h len = 4 is unalign at pc = %h", alu_result, pc);
+                    absort(pc);
+                end
+                default: ;
+            endcase
+        end
+    end
+
 endmodule

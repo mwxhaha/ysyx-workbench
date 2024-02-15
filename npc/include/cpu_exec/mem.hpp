@@ -37,6 +37,7 @@ void disable_mtrace_once();
 void init_mem();
 void init_isa();
 void mem_quit();
+void disable_mem_align_check_once();
 word_t paddr_read(paddr_t addr, int len);
 void paddr_write(paddr_t addr, int len, word_t data);
 

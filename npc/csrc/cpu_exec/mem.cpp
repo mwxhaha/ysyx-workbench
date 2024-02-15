@@ -205,8 +205,44 @@ void init_isa()
     memcpy(guest_to_host(RESET_VECTOR), img, sizeof(img));
 }
 
+static bool enable_mem_align_check = true;
+
+void disable_mem_align_check_once()
+{
+    enable_mem_align_check = false;
+}
+
+static void mem_align_check(paddr_t addr, int len)
+{
+    if (enable_mem_align_check)
+    {
+        bool is_mem_align = true;
+        switch (len)
+        {
+        case 2:
+            if ((addr & 0x1) != 0)
+                is_mem_align = false;
+            break;
+        case 4:
+            if ((addr & 0x3) != 0)
+                is_mem_align = false;
+            break;
+#if ISA_WIDTH == 64
+        case 8:
+            if ((addr & 0x7) != 0)
+                is_mem_align = false;
+            break;
+#endif
+        }
+        if (!is_mem_align)
+            panic("address = " FMT_PADDR " len = %d is unalign at pc = " FMT_WORD, addr, len, TOP_PC);
+    }
+    enable_mem_align_check = true;
+}
+
 word_t paddr_read(paddr_t addr, int len)
 {
+    mem_align_check(addr, len);
     if (likely(in_pmem(addr)))
         return pmem_read_1(addr, len);
     IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
@@ -216,6 +252,7 @@ word_t paddr_read(paddr_t addr, int len)
 
 void paddr_write(paddr_t addr, int len, word_t data)
 {
+    mem_align_check(addr, len);
     if (likely(in_pmem(addr)))
     {
         pmem_write_1(addr, len, data);
