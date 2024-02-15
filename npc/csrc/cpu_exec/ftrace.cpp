@@ -32,12 +32,12 @@ typedef Elf32_Sym Elf_Sym;
 static Elf_Shdr section_headers[SECTION_HEADERS_MAX];
 
 #define SYM_NAME_MAX 100
-#define SYM_TAB_MAX 1000
+#define SYM_TAB_MAX 10000
 static Elf_Sym sym_tab[SYM_TAB_MAX];
 static char shstr[SYM_NAME_MAX];
 
 #define FUNC_NAME_MAX 100
-#define FUNC_INFOS_MAX 100
+#define FUNC_INFOS_MAX 10000
 typedef struct
 {
     vaddr_t start_addr;
@@ -109,6 +109,7 @@ void load_elf(const char *elf_file)
                 fgetstr(func_infos[func_infos_max].func_name, SYM_NAME_MAX, fp);
             Assert(ret1, "func_name read failed");
             func_infos_max++;
+            Assert(func_infos_max < FUNC_INFOS_MAX, "too many function symbols");
         }
     }
 
