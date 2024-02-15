@@ -29,7 +29,7 @@ void isa_reg_display()
 {
     for (int i = 0; i < GPR_NUM; i++)
     {
-        printf("%s:" FMT_WORD " ", regs[i], cpu.gpr[i]);
+        printf("%s:" FMT_WORD " ", reg_name(i), gpr(i));
         if (i % COLUMN == COLUMN - 1)
             printf("\n");
     }
@@ -44,8 +44,8 @@ word_t isa_reg_str2val(const char *s, bool *success)
         return cpu.pc;
     for (int i = 0; i < GPR_NUM; i++)
     {
-        if (strcmp(s, regs[i]) == 0)
-            return cpu.gpr[i];
+        if (strcmp(s, reg_name(i)) == 0)
+            return gpr(i);
     }
     *success = false;
     return 0;

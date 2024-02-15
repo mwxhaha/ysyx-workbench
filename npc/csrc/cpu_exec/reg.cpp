@@ -15,17 +15,31 @@
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 
-const char *regs[] = {"$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
-                      "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
-                      "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
-                      "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
+static const char *regs[] = {"$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
+                             "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
+                             "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
+                             "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
+
+#define gpr(idx) (TOP_GPR[check_reg_idx(idx)])
+
+static int check_reg_idx(int idx)
+{
+    assert(idx >= 0 && idx < GPR_NUM);
+    return idx;
+}
+
+static const char *reg_name(int idx)
+{
+    return regs[check_reg_idx(idx)];
+}
+
 #define COLUMN 8
 
 void isa_reg_display()
 {
     for (int i = 0; i < GPR_NUM; i++)
     {
-        printf("%s:" FMT_WORD " ", regs[i], TOP_GPR[i]);
+        printf("%s:" FMT_WORD " ", reg_name(i), gpr(i));
         if (i % COLUMN == COLUMN - 1)
             printf("\n");
     }
@@ -40,8 +54,8 @@ word_t isa_reg_str2val(const char *s, bool *success)
         return TOP_PC;
     for (int i = 0; i < GPR_NUM; i++)
     {
-        if (strcmp(s, regs[i]) == 0)
-            return TOP_GPR[i];
+        if (strcmp(s, reg_name(i)) == 0)
+            return gpr(i);
     }
     *success = false;
     return 0;
@@ -56,9 +70,9 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc)
         ret = false;
     }
     for (int i = 0; i < GPR_NUM; i++)
-        if (TOP_GPR[i] != ref_r->gpr[i])
+        if (gpr(i) != ref_r->gpr[check_reg_idx(i)])
         {
-            printf("reg %s: " FMT_WORD " is different, it should be " FMT_WORD "\n", regs[i], TOP_GPR[i], ref_r->gpr[i]);
+            printf("reg %s: " FMT_WORD " is different, it should be " FMT_WORD "\n", reg_name(i), gpr(i), ref_r->gpr[i]);
             ret = false;
         }
     if (!ret)

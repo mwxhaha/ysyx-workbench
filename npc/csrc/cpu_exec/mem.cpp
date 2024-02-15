@@ -79,6 +79,7 @@ void host_write(void *addr, int len, word_t data)
         *(uint64_t *)addr = data;
         return;
 #endif
+    default:
         panic("memory write len error");
     }
 }
