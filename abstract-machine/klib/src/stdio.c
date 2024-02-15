@@ -149,7 +149,7 @@ static void sprintf_limit_len(char *out, int *j, int fmt_limit_len, int num_str_
     }
 }
 
-#define PRINTF_LEN_MAX 1000
+#define PRINTF_LEN_MAX 10000
 
 int vsprintf(char *out, const char *fmt, va_list ap)
 {

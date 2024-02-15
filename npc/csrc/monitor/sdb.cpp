@@ -23,6 +23,7 @@
 #include <cpu_exec/reg.hpp>
 #include <monitor/expr.hpp>
 #include <monitor/watchpoint.hpp>
+#include <device/map.hpp>
 #include <device/device.hpp>
 
 static int is_batch_mode = false;
@@ -119,6 +120,9 @@ static int cmd_info(const char *const args)
                 break;
             case 'f':
                 MUXDEF(CONFIG_FTRACE, print_ftrace(), printf("ftrace is close"));
+                break;
+            case 'd':
+                MUXDEF(CONFIG_DTRACE, print_dtrace(), printf("dtrace is close"));
                 break;
             case 'w':
                 MUXDEF(CONFIG_WATCHPOINT, printf_watchpoint(), printf("watchpoint is close\n"));

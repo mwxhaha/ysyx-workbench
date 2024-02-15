@@ -23,6 +23,7 @@
 #include <cpu_exec/mem.hpp>
 #include <cpu_exec/reg.hpp>
 #include <monitor/watchpoint.hpp>
+#include <device/map.hpp>
 #include <device/device.hpp>
 
 #define MAX_INST_TO_PRINT 20
@@ -118,6 +119,7 @@ void assert_fail_msg()
     IFDEF(CONFIG_ITRACE, print_iringbuf());
     IFDEF(CONFIG_MTRACE, print_mtrace());
     IFDEF(CONFIG_FTRACE, print_ftrace());
+    IFDEF(CONFIG_DTRACE, print_dtrace());
     statistic();
     sim_exit();
 }
@@ -165,6 +167,7 @@ void cpu_exec(uint64_t n)
             IFDEF(CONFIG_ITRACE, print_iringbuf());
             IFDEF(CONFIG_MTRACE, print_mtrace());
             IFDEF(CONFIG_FTRACE, print_ftrace());
+            IFDEF(CONFIG_DTRACE, print_dtrace());
         }
     case NPC_QUIT:
         statistic();
