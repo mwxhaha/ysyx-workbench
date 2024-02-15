@@ -39,5 +39,6 @@ void paddr_write(paddr_t addr, int len, word_t data);
 
 void print_mtrace();
 void disable_mtrace_once();
+void disable_mem_align_check_once();
 
 #endif
