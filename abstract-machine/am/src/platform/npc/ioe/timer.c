@@ -1,5 +1,6 @@
 #include <am.h>
 #include <npc.h>
+#include <klib.h>
 
 void __am_timer_init()
 {

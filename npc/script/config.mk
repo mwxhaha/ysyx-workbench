@@ -47,6 +47,10 @@ ifeq ($(DEVICE),1)
 HAS_SERIAL = 1
 HAS_TIMER = 1
 HAS_KEYBOARD = 1
+HAS_VGA = 1
+endif
+ifeq ($(HAS_VGA),1)
+VGA_SHOW_SCREEN = 1
 endif
 VOPTIMIZE = -O3
 CWARNING = -Wall
@@ -68,4 +72,7 @@ endif
 ifeq ($(DEVICE),0)
 HAS_SERIAL = 0
 HAS_TIMER = 0
+endif
+ifeq ($(HAS_VGA),0)
+VGA_SHOW_SCREEN = 0
 endif
