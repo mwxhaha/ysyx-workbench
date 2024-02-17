@@ -88,7 +88,7 @@ static bool dtrace_array_is_full = false;
 #ifdef CONFIG_DTRACE
 static void dtrace_record(bool is_read, paddr_t addr, int len, IOMap *map, word_t read_data, word_t write_data)
 {
-    if (enable_dtrace && addr >= 0x8fffffff && addr <= 0xffffffff)
+    if (addr >= 0x8fffffff && addr <= 0xffffffff)
     {
         dtrace_array[dtrace_array_tail].is_read = is_read;
         dtrace_array[dtrace_array_tail].addr = addr;
@@ -152,6 +152,7 @@ void print_dtrace()
 }
 
 bool enable_device_fresh = true;
+
 word_t map_read(paddr_t addr, int len, IOMap *map)
 {
     assert(len >= 1 && len <= 8);
@@ -161,7 +162,8 @@ word_t map_read(paddr_t addr, int len, IOMap *map)
         invoke_callback(map->callback, offset, len, false); // prepare data to read
     word_t ret = host_read(map->space + offset, len);
 #ifdef CONFIG_DTRACE
-    dtrace_record(true, addr, len, map, ret, 0);
+    if (enable_dtrace)
+        dtrace_record(true, addr, len, map, ret, 0);
 #endif
     return ret;
 }

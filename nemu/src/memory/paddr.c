@@ -46,7 +46,7 @@ static bool mtrace_array_is_full = false;
 #ifdef CONFIG_MTRACE
 static void mtrace_record(bool is_read, paddr_t addr, int len, word_t read_data, word_t write_data)
 {
-    if (enable_mtrace && addr >= 0x80000000 && addr <= 0x8fffffff)
+    if (addr >= 0x80000000 && addr <= 0x8fffffff)
     {
         mtrace_array[mtrace_array_tail].is_read = is_read;
         mtrace_array[mtrace_array_tail].addr = addr;
@@ -112,7 +112,8 @@ static word_t pmem_read(paddr_t addr, int len)
 {
     word_t ret = host_read(guest_to_host(addr), len);
 #ifdef CONFIG_MTRACE
-    mtrace_record(true, addr, len, ret, 0);
+    if (enable_mtrace)
+        mtrace_record(true, addr, len, ret, 0);
 #endif
     return ret;
 }
@@ -161,34 +162,32 @@ bool enable_mem_align_check = true;
 
 static void mem_align_check(paddr_t addr, int len)
 {
-    if (enable_mem_align_check)
+    bool is_mem_align = true;
+    switch (len)
     {
-        bool is_mem_align = true;
-        switch (len)
-        {
-        case 2:
-            if ((addr & 0x1) != 0)
-                is_mem_align = false;
-            break;
-        case 4:
-            if ((addr & 0x3) != 0)
-                is_mem_align = false;
-            break;
+    case 2:
+        if ((addr & 0x1) != 0)
+            is_mem_align = false;
+        break;
+    case 4:
+        if ((addr & 0x3) != 0)
+            is_mem_align = false;
+        break;
 #ifdef CONFIG_ISA64
-        case 8:
-            if ((addr & 0x7) != 0)
-                is_mem_align = false;
-            break;
+    case 8:
+        if ((addr & 0x7) != 0)
+            is_mem_align = false;
+        break;
 #endif
-        }
-        if (!is_mem_align)
-            panic("address = " FMT_PADDR " len = %d is unalign at pc = " FMT_WORD, addr, len, cpu.pc);
     }
+    if (!is_mem_align)
+        panic("address = " FMT_PADDR " len = %d is unalign at pc = " FMT_WORD, addr, len, cpu.pc);
 }
 
 word_t paddr_read(paddr_t addr, int len)
 {
-    mem_align_check(addr, len);
+    if (enable_mem_align_check)
+        mem_align_check(addr, len);
     if (likely(in_pmem(addr)))
         return pmem_read(addr, len);
     IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
@@ -198,7 +197,8 @@ word_t paddr_read(paddr_t addr, int len)
 
 void paddr_write(paddr_t addr, int len, word_t data)
 {
-    mem_align_check(addr, len);
+    if (enable_mem_align_check)
+        mem_align_check(addr, len);
     if (likely(in_pmem(addr)))
     {
         pmem_write(addr, len, data);
