@@ -48,6 +48,7 @@ HAS_SERIAL = 1
 HAS_TIMER = 1
 HAS_KEYBOARD = 1
 HAS_VGA = 1
+HAS_AUDIO = 1
 endif
 ifeq ($(HAS_VGA),1)
 VGA_SHOW_SCREEN = 1
@@ -72,6 +73,9 @@ endif
 ifeq ($(DEVICE),0)
 HAS_SERIAL = 0
 HAS_TIMER = 0
+HAS_KEYBOARD = 0
+HAS_VGA = 0
+HAS_AUDIO = 0
 endif
 ifeq ($(HAS_VGA),0)
 VGA_SHOW_SCREEN = 0
