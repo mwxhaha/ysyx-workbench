@@ -69,6 +69,8 @@ void sim_exit()
 #endif
 }
 
+static uint64_t last_record_time = 0;
+
 void update(int time)
 {
     while (time > 0)
@@ -78,10 +80,20 @@ void update(int time)
         nvboard_update();
 #endif
 #ifdef CONFIG_RECORD_WAVE
-        if (contextp->time() < MAX_RECORD_WAVE)
+        if (contextp->time() < last_record_time + MAX_RECORD_WAVE)
+        {
             tfp->dump(contextp->time());
-        else if (contextp->time() == MAX_RECORD_WAVE)
-            std::cout << "too large vcd file" << std::endl;
+        }
+        else if (contextp->time() == last_record_time + MAX_RECORD_WAVE)
+        {
+            last_record_time = contextp->time();
+            tfp->close();
+            delete tfp;
+            tfp = new VerilatedVcdC;
+            top->trace(tfp, HIERARCHY_DEEP);
+            tfp->open("build/wave.vcd");
+            tfp->dump(contextp->time());
+        }
 #endif
         contextp->timeInc(1);
         time--;
