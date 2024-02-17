@@ -17,6 +17,7 @@
 #include <memory/host.h>
 #include <memory/vaddr.h>
 #include <device/map.h>
+#include <stdbool.h>
 
 #define IO_SPACE_MAX (2 * 1024 * 1024)
 
@@ -32,6 +33,8 @@ uint8_t *new_space(int size)
     assert(p_space - io_space < IO_SPACE_MAX);
     return p;
 }
+
+bool enable_device_skip_diff = true;
 
 static void check_bound(IOMap *map, paddr_t addr)
 {
@@ -67,6 +70,7 @@ void map_quit()
     free(io_space);
 }
 
+bool enable_dtrace = true;
 typedef struct
 {
     bool is_read;
@@ -84,7 +88,7 @@ static bool dtrace_array_is_full = false;
 #ifdef CONFIG_DTRACE
 static void dtrace_record(bool is_read, paddr_t addr, int len, IOMap *map, word_t read_data, word_t write_data)
 {
-    if (addr >= 0x8fffffff && addr <= 0xffffffff)
+    if (enable_dtrace && addr >= 0x8fffffff && addr <= 0xffffffff)
     {
         dtrace_array[dtrace_array_tail].is_read = is_read;
         dtrace_array[dtrace_array_tail].addr = addr;
@@ -147,12 +151,14 @@ void print_dtrace()
     }
 }
 
+bool enable_device_fresh = true;
 word_t map_read(paddr_t addr, int len, IOMap *map)
 {
     assert(len >= 1 && len <= 8);
     check_bound(map, addr);
     paddr_t offset = addr - map->low;
-    invoke_callback(map->callback, offset, len, false); // prepare data to read
+    if (enable_device_fresh)
+        invoke_callback(map->callback, offset, len, false); // prepare data to read
     word_t ret = host_read(map->space + offset, len);
 #ifdef CONFIG_DTRACE
     dtrace_record(true, addr, len, map, ret, 0);

@@ -17,6 +17,7 @@
 #define __MEMORY_PADDR_H__
 
 #include <common.h>
+#include <stdbool.h>
 
 #define PMEM_LEFT ((paddr_t)CONFIG_MBASE)
 #define PMEM_RIGHT ((paddr_t)CONFIG_MBASE + CONFIG_MSIZE - 1)
@@ -37,8 +38,8 @@ void mem_quit();
 word_t paddr_read(paddr_t addr, int len);
 void paddr_write(paddr_t addr, int len, word_t data);
 
+extern bool enable_mtrace;
 void print_mtrace();
-void disable_mtrace_once();
-void disable_mem_align_check_once();
+extern bool enable_mem_align_check;
 
 #endif

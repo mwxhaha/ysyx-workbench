@@ -187,9 +187,7 @@ static int cmd_x(const char *const args)
                 return 0;
             for (int i = 0; i < scan_num; i++)
             {
-                IFDEF(CONFIG_MTRACE, disable_mtrace_once());
-                disable_mem_align_check_once();
-                word_t data = vaddr_read(addr + i * scan_len, scan_len);
+                word_t data = addr_montior_read(addr + i * scan_len, scan_len);
                 switch (scan_len)
                 {
                 case 1:

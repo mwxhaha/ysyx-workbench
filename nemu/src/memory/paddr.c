@@ -29,7 +29,7 @@ static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 uint8_t *guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
-static bool enable_mtrace = true;
+bool enable_mtrace = true;
 typedef struct
 {
     bool is_read;
@@ -60,7 +60,6 @@ static void mtrace_record(bool is_read, paddr_t addr, int len, word_t read_data,
             mtrace_array_is_full = true;
         }
     }
-    enable_mtrace = true;
 }
 #endif
 
@@ -107,11 +106,6 @@ void print_mtrace()
             i++;
         }
     }
-}
-
-void disable_mtrace_once()
-{
-    enable_mtrace = false;
 }
 
 static word_t pmem_read(paddr_t addr, int len)
@@ -163,12 +157,7 @@ void mem_quit()
 #endif
 }
 
-static bool enable_mem_align_check = true;
-
-void disable_mem_align_check_once()
-{
-    enable_mem_align_check = false;
-}
+bool enable_mem_align_check = true;
 
 static void mem_align_check(paddr_t addr, int len)
 {
@@ -195,7 +184,6 @@ static void mem_align_check(paddr_t addr, int len)
         if (!is_mem_align)
             panic("address = " FMT_PADDR " len = %d is unalign at pc = " FMT_WORD, addr, len, cpu.pc);
     }
-    enable_mem_align_check = true;
 }
 
 word_t paddr_read(paddr_t addr, int len)

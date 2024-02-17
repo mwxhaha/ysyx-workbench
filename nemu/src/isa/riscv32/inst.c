@@ -22,8 +22,8 @@
 #include "local-include/reg.h"
 
 #define R(i) gpr(i)
-#define Mr vaddr_read
-#define Mw vaddr_write
+#define Mr addr_read
+#define Mw addr_write
 
 enum
 {
