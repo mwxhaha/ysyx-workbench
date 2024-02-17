@@ -123,20 +123,7 @@ void addr_ifetch(vaddr_t addr, word_t *data)
 
 void addr_read(vaddr_t addr, word_t *data)
 {
-    enable_mtrace = false;
-    enable_dtrace = false;
-    enable_device_skip_diff = false;
     addr_read_bus_align(addr, data);
-    enable_mtrace = true;
-    enable_dtrace = true;
-    enable_device_skip_diff = true;
-}
-
-void addr_read_with_clk(vaddr_t addr, word_t *data)
-{
-    enable_device_fresh = false;
-    addr_read_bus_align(addr, data);
-    enable_device_fresh = true;
 }
 
 void addr_write(vaddr_t addr, uint8_t mask, word_t data)

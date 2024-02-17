@@ -46,14 +46,6 @@ void addr_read_dpic(int addr, int* data)
     addr_read(addr, (word_t *)data);
 }
 
-void addr_read_with_clk_dpic(int addr, int* data)
-{
-#if ISA_WIDTH == 64
-    panic("memory read do not support ISA64");
-#endif
-    addr_read_with_clk(addr, (word_t *)data);
-}
-
 void addr_write_dpic(int addr, char mask, int data)
 {
 #if ISA_WIDTH == 64

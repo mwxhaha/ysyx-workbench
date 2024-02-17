@@ -12,10 +12,6 @@ import "DPI-C" function void addr_read_dpic(
     input  int addr,
     output int data
 );
-import "DPI-C" function void addr_read_with_clk_dpic(
-    input  int addr,
-    output int data
-);
 import "DPI-C" function void addr_write_dpic(
     input int  addr,
     input byte mask,
@@ -68,20 +64,9 @@ module ysyx_23060075_cpu (
         end
     end
 
-    always @(*) begin
-        if (!rst && mem_2_r_en) begin
-            addr_read_dpic(mem_2_addr, mem_2_r);
-        end else begin
-            mem_2_r = `ysyx_23060075_ISA_WIDTH'b0;
-        end
-    end
-
-    // verilator lint_off UNUSEDSIGNAL
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] mem_2_r_with_clk;
-    // verilator lint_on UNUSEDSIGNAL
     always @(negedge clk) begin
         if (!rst && mem_2_r_en) begin
-            addr_read_with_clk_dpic(mem_2_addr, mem_2_r_with_clk);
+            addr_read_dpic(mem_2_addr, mem_2_r);
         end
     end
 
