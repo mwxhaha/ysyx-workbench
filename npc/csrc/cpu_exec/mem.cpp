@@ -18,20 +18,6 @@
 
 uint8_t pmem[CONFIG_MSIZE];
 
-static bool enable_mtrace = true;
-typedef struct
-{
-    bool is_read;
-    paddr_t addr;
-    int len;
-    word_t read_data;
-    word_t write_data;
-} mtrace_t;
-#define MTRACE_ARRAY_MAX 20
-static mtrace_t mtrace_array[MTRACE_ARRAY_MAX];
-static int mtrace_array_tail = 0;
-static bool mtrace_array_is_full = false;
-
 bool in_pmem(paddr_t addr)
 {
     return addr - CONFIG_MBASE < CONFIG_MSIZE;
@@ -84,6 +70,20 @@ void host_write(void *addr, int len, word_t data)
     }
 }
 
+bool enable_mtrace = true;
+typedef struct
+{
+    bool is_read;
+    paddr_t addr;
+    int len;
+    word_t read_data;
+    word_t write_data;
+} mtrace_t;
+#define MTRACE_ARRAY_MAX 20
+static mtrace_t mtrace_array[MTRACE_ARRAY_MAX];
+static int mtrace_array_tail = 0;
+static bool mtrace_array_is_full = false;
+
 #ifdef CONFIG_MTRACE
 static void mtrace_record(bool is_read, paddr_t addr, int len, word_t read_data, word_t write_data)
 {
@@ -101,7 +101,6 @@ static void mtrace_record(bool is_read, paddr_t addr, int len, word_t read_data,
             mtrace_array_is_full = true;
         }
     }
-    enable_mtrace = true;
 }
 #endif
 
@@ -150,12 +149,7 @@ void print_mtrace()
     }
 }
 
-void disable_mtrace_once()
-{
-    enable_mtrace = false;
-}
-
-static word_t pmem_read_1(paddr_t addr, int len)
+static word_t pmem_read(paddr_t addr, int len)
 {
     word_t ret = host_read(guest_to_host(addr), len);
 #ifdef CONFIG_MTRACE
@@ -164,7 +158,7 @@ static word_t pmem_read_1(paddr_t addr, int len)
     return ret;
 }
 
-static void pmem_write_1(paddr_t addr, int len, word_t data)
+static void pmem_write(paddr_t addr, int len, word_t data)
 {
 #ifdef CONFIG_MTRACE
     mtrace_record(false, addr, len, host_read(guest_to_host(addr), len), data);
@@ -206,46 +200,38 @@ void init_isa()
     memcpy(guest_to_host(RESET_VECTOR), img, sizeof(img));
 }
 
-static bool enable_mem_align_check = true;
-
-void disable_mem_align_check_once()
-{
-    enable_mem_align_check = false;
-}
+bool enable_mem_align_check = true;
 
 static void mem_align_check(paddr_t addr, int len)
 {
-    if (enable_mem_align_check)
+    bool is_mem_align = true;
+    switch (len)
     {
-        bool is_mem_align = true;
-        switch (len)
-        {
-        case 2:
-            if ((addr & 0x1) != 0)
-                is_mem_align = false;
-            break;
-        case 4:
-            if ((addr & 0x3) != 0)
-                is_mem_align = false;
-            break;
+    case 2:
+        if ((addr & 0x1) != 0)
+            is_mem_align = false;
+        break;
+    case 4:
+        if ((addr & 0x3) != 0)
+            is_mem_align = false;
+        break;
 #if ISA_WIDTH == 64
-        case 8:
-            if ((addr & 0x7) != 0)
-                is_mem_align = false;
-            break;
+    case 8:
+        if ((addr & 0x7) != 0)
+            is_mem_align = false;
+        break;
 #endif
-        }
-        if (!is_mem_align)
-            panic("address = " FMT_PADDR " len = %d is unalign at pc = " FMT_WORD, addr, len, TOP_PC);
     }
-    enable_mem_align_check = true;
+    if (!is_mem_align)
+        panic("address = " FMT_PADDR " len = %d is unalign at pc = " FMT_WORD, addr, len, TOP_PC);
 }
 
 word_t paddr_read(paddr_t addr, int len)
 {
-    mem_align_check(addr, len);
+    if (enable_mem_align_check)
+        mem_align_check(addr, len);
     if (likely(in_pmem(addr)))
-        return pmem_read_1(addr, len);
+        return pmem_read(addr, len);
     IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
     out_of_bound(addr);
     return 0;
@@ -253,10 +239,11 @@ word_t paddr_read(paddr_t addr, int len)
 
 void paddr_write(paddr_t addr, int len, word_t data)
 {
-    mem_align_check(addr, len);
+    if (enable_mem_align_check)
+        mem_align_check(addr, len);
     if (likely(in_pmem(addr)))
     {
-        pmem_write_1(addr, len, data);
+        pmem_write(addr, len, data);
         return;
     }
     IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);

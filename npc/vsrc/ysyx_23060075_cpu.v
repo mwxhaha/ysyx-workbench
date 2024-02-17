@@ -4,12 +4,19 @@ import "DPI-C" function void ebreak(
     input int ret,
     input int pc
 );
-import "DPI-C" function void disable_mtrace_once_1();
-import "DPI-C" function void pmem_read(
+import "DPI-C" function void addr_ifetch_dpic(
     input  int addr,
     output int data
 );
-import "DPI-C" function void pmem_write(
+import "DPI-C" function void addr_read_dpic(
+    input  int addr,
+    output int data
+);
+import "DPI-C" function void addr_read_with_clk_dpic(
+    input  int addr,
+    output int data
+);
+import "DPI-C" function void addr_write_dpic(
     input int  addr,
     input byte mask,
     input int  data
@@ -55,8 +62,7 @@ module ysyx_23060075_cpu (
 
     always @(*) begin
         if (!rst && mem_1_r_en) begin
-            disable_mtrace_once_1();
-            pmem_read(mem_1_addr, mem_1_r);
+            addr_ifetch_dpic(mem_1_addr, mem_1_r);
         end else begin
             mem_1_r = `ysyx_23060075_ISA_WIDTH'b0;
         end
@@ -64,25 +70,24 @@ module ysyx_23060075_cpu (
 
     always @(*) begin
         if (!rst && mem_2_r_en) begin
-            disable_mtrace_once_1();
-            pmem_read(mem_2_addr, mem_2_r);
+            addr_read_dpic(mem_2_addr, mem_2_r);
         end else begin
             mem_2_r = `ysyx_23060075_ISA_WIDTH'b0;
         end
     end
 
     // verilator lint_off UNUSEDSIGNAL
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] mtrace_mem_2_r;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] mem_2_r_with_clk;
     // verilator lint_on UNUSEDSIGNAL
     always @(negedge clk) begin
         if (!rst && mem_2_r_en) begin
-            pmem_read(mem_2_addr, mtrace_mem_2_r);
+            addr_read_with_clk_dpic(mem_2_addr, mem_2_r_with_clk);
         end
     end
 
     always @(posedge clk) begin
         if (!rst && mem_2_w_en) begin
-            pmem_write(mem_2_addr, {4'b0000, mem_2_mask}, mem_2_w);
+            addr_write_dpic(mem_2_addr, {4'b0000, mem_2_mask}, mem_2_w);
         end
     end
 

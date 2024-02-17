@@ -17,6 +17,7 @@
 #include <util/sim_tool.hpp>
 #include <cpu_exec/mem.hpp>
 #include <cpu_exec/dut.hpp>
+#include <cpu_exec/vaddr.hpp>
 
 #define IO_SPACE_MAX (2 * 1024 * 1024)
 
@@ -28,6 +29,8 @@ static bool map_inside(IOMap *map, paddr_t addr)
     return (addr >= map->low && addr <= map->high);
 }
 
+bool enable_device_skip_diff = true;
+
 int find_mapid_by_addr(IOMap *maps, int size, paddr_t addr)
 {
     int i;
@@ -35,7 +38,8 @@ int find_mapid_by_addr(IOMap *maps, int size, paddr_t addr)
     {
         if (map_inside(maps + i, addr))
         {
-            difftest_skip_ref();
+            if (enable_device_skip_diff)
+                difftest_skip_ref();
             return i;
         }
     }
@@ -84,6 +88,7 @@ void map_quit()
     free(io_space);
 }
 
+bool enable_dtrace = true;
 typedef struct
 {
     bool is_read;
@@ -164,15 +169,19 @@ void print_dtrace()
     }
 }
 
+bool enable_device_fresh = true;
+
 word_t map_read(paddr_t addr, int len, IOMap *map)
 {
     assert(len >= 1 && len <= 8);
     check_bound(map, addr);
     paddr_t offset = addr - map->low;
-    invoke_callback(map->callback, offset, len, false); // prepare data to read
+    if (enable_device_fresh)
+        invoke_callback(map->callback, offset, len, false); // prepare data to read
     word_t ret = host_read((uint8_t *)map->space + offset, len);
 #ifdef CONFIG_DTRACE
-    dtrace_record(true, addr, len, map, ret, 0);
+    if (enable_dtrace)
+        dtrace_record(true, addr, len, map, ret, 0);
 #endif
     return ret;
 }

@@ -28,7 +28,7 @@ static word_t vaddr_read(vaddr_t addr, int len)
     return paddr_read(addr, len);
 }
 
-void vaddr_write(vaddr_t addr, int len, word_t data)
+static void vaddr_write(vaddr_t addr, int len, word_t data)
 {
     paddr_write(addr, len, data);
 }
@@ -39,13 +39,13 @@ word_t addr_montior_read(vaddr_t addr, int len)
     enable_mtrace = false;
     enable_dtrace = false;
     enable_device_fresh = false;
-    enable_device_skip_diff=false;
-    word_t ret= vaddr_read(addr, len);
+    enable_device_skip_diff = false;
+    word_t ret = vaddr_read(addr, len);
     enable_mem_align_check = true;
     enable_mtrace = true;
     enable_dtrace = true;
     enable_device_fresh = true;
-    enable_device_skip_diff=true;
+    enable_device_skip_diff = true;
     return ret;
 }
 
@@ -54,12 +54,12 @@ word_t addr_ifetch(vaddr_t addr, int len)
     enable_mtrace = false;
     enable_dtrace = false;
     enable_device_fresh = false;
-    enable_device_skip_diff=false;
-    word_t ret= vaddr_ifetch(addr, len);
+    enable_device_skip_diff = false;
+    word_t ret = vaddr_ifetch(addr, len);
     enable_mtrace = true;
     enable_dtrace = true;
     enable_device_fresh = true;
-    enable_device_skip_diff=true;
+    enable_device_skip_diff = true;
     return ret;
 }
 

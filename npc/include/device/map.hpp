@@ -27,6 +27,10 @@ typedef struct
     io_callback_t callback;
 } IOMap;
 
+extern bool enable_device_skip_diff;
+extern bool enable_device_fresh;
+extern bool enable_dtrace;
+
 int find_mapid_by_addr(IOMap *maps, int size, paddr_t addr);
 uint8_t *new_space(int size);
 void init_map();
