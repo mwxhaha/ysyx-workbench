@@ -1,4 +1,4 @@
-#include <device/serial.hpp>
+#include <device/vga.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -74,7 +74,6 @@ static void screen_quit()
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    SDL_Quit();
 }
 #endif
 

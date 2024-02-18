@@ -17,5 +17,6 @@
 #include <util/sim_tool.hpp>
 
 void init_audio();
+void audio_quit();
 
 #endif

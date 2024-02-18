@@ -80,6 +80,8 @@ void init_device()
 
 void device_quit()
 {
-    map_quit();
     IFDEF(CONFIG_HAS_VGA, vga_quit());
+    IFDEF(CONFIG_HAS_AUDIO, audio_quit());
+    SDL_Quit();
+    map_quit();
 }

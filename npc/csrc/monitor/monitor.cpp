@@ -193,6 +193,6 @@ void init_monitor(int argc, char *argv[])
 
 void monitor_quit()
 {
-    mem_quit();
     IFDEF(CONFIG_DEVICE, device_quit());
+    mem_quit();
 }
