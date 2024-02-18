@@ -1,4 +1,3 @@
-
 #include <device/map.hpp>
 
 #include <stdio.h>

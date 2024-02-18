@@ -105,7 +105,7 @@ void init_difftest(char *ref_so_file, long img_size)
         ref_so_file);
 
     ref_difftest_init();
-    ref_difftest_memcpy(CONFIG_MBASE, pmem, img_size, DIFFTEST_TO_REF);
+    ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
 
     CPU_state cpu_init;
     cpu_init.pc = RESET_VECTOR;

@@ -33,7 +33,7 @@ typedef struct
 } func_info_t;
 static func_info_t func_infos[FUNC_INFOS_MAX];
 static int func_infos_max = 0;
-static bool ftrace_close=false;
+static bool ftrace_close = false;
 
 void load_elf(const char *elf_file)
 {
@@ -185,7 +185,7 @@ void print_ftrace()
         printf("No elf is given. ftrace will not work\n");
         return;
     }
-    if (!ftrace_full && ftraces_ptr==0)
+    if (!ftrace_full && ftraces_ptr == 0)
     {
         printf("ftrace is empty now\n");
         return;

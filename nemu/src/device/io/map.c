@@ -23,6 +23,7 @@
 
 static uint8_t *io_space = NULL;
 static uint8_t *p_space = NULL;
+bool enable_device_skip_diff = true;
 
 uint8_t *new_space(int size)
 {
@@ -33,8 +34,6 @@ uint8_t *new_space(int size)
     assert(p_space - io_space < IO_SPACE_MAX);
     return p;
 }
-
-bool enable_device_skip_diff = true;
 
 static void check_bound(IOMap *map, paddr_t addr)
 {

@@ -16,14 +16,14 @@
 #include <util/sim_tool.hpp>
 #include <device/mmio.hpp>
 
-uint8_t pmem[CONFIG_MSIZE];
+static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 
 bool in_pmem(paddr_t addr)
 {
     return addr - CONFIG_MBASE < CONFIG_MSIZE;
 }
 
-static uint8_t *guest_to_host(paddr_t paddr)
+uint8_t *guest_to_host(paddr_t paddr)
 {
     return pmem + paddr - CONFIG_MBASE;
 }
@@ -87,7 +87,7 @@ static bool mtrace_array_is_full = false;
 #ifdef CONFIG_MTRACE
 static void mtrace_record(bool is_read, paddr_t addr, int len, word_t read_data, word_t write_data)
 {
-    if (enable_mtrace && addr >= 0x80000000 && addr <= 0x8fffffff)
+    if (addr >= 0x80000000 && addr <= 0x8fffffff)
     {
         mtrace_array[mtrace_array_tail].is_read = is_read;
         mtrace_array[mtrace_array_tail].addr = addr;
@@ -153,7 +153,8 @@ static word_t pmem_read(paddr_t addr, int len)
 {
     word_t ret = host_read(guest_to_host(addr), len);
 #ifdef CONFIG_MTRACE
-    mtrace_record(true, addr, len, ret, 0);
+    if (enable_mtrace)
+        mtrace_record(true, addr, len, ret, 0);
 #endif
     return ret;
 }
@@ -188,6 +189,7 @@ void mem_quit()
 {
 }
 
+#if (CONFIG_ISA == CONFIG_RV32I || CONFIG_ISA == CONFIG_RV32E || CONFIG_ISA == CONFIG_RV64I)
 static const uint32_t img[] = {0x00001497,  // auipc 9 4096
                                0x00b486b3,  // add 13 9 11
                                0xfe96ae23,  // sw 9 -4(13)
@@ -195,6 +197,10 @@ static const uint32_t img[] = {0x00001497,  // auipc 9 4096
                                0x00b68463,  // beq 11 13 4
                                0x004004ef,  // jal 9 4
                                0x00100073}; // ebreak
+#else
+#error("use other init default img");
+#endif
+
 void init_isa()
 {
     memcpy(guest_to_host(RESET_VECTOR), img, sizeof(img));

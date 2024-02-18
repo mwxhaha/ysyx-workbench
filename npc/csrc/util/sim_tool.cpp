@@ -9,9 +9,8 @@
 #include <nvboard.h>
 void nvboard_bind_all_pins(Vtop *top);
 #endif
-#ifdef SIM_ALL
+#include <cpu_exec/cpu_exec.hpp>
 #include <monitor/monitor.hpp>
-#endif
 
 VerilatedContext *contextp;
 Vtop *top;
@@ -80,18 +79,8 @@ void update(int time)
         nvboard_update();
 #endif
 #ifdef CONFIG_RECORD_WAVE
-        if (contextp->time() < last_record_time + MAX_RECORD_WAVE)
+        if (g_nr_guest_inst >= 0 && g_nr_guest_inst <= 10000)
         {
-            tfp->dump(contextp->time());
-        }
-        else if (contextp->time() == last_record_time + MAX_RECORD_WAVE)
-        {
-            last_record_time = contextp->time();
-            tfp->close();
-            delete tfp;
-            tfp = new VerilatedVcdC;
-            top->trace(tfp, HIERARCHY_DEEP);
-            tfp->open("build/wave.vcd");
             tfp->dump(contextp->time());
         }
 #endif

@@ -23,11 +23,11 @@
 #define PMEM_RIGHT ((paddr_t)CONFIG_MBASE + CONFIG_MSIZE - 1)
 #define RESET_VECTOR (PMEM_LEFT + CONFIG_PC_RESET_OFFSET)
 
-extern uint8_t pmem[CONFIG_MSIZE];
 extern bool enable_mtrace;
 extern bool enable_mem_align_check;
 
 bool in_pmem(paddr_t addr);
+uint8_t *guest_to_host(paddr_t paddr);
 word_t host_read(void *addr, int len);
 void host_write(void *addr, int len, word_t data);
 void print_mtrace();

@@ -24,12 +24,6 @@
 #include <monitor/sdb.hpp>
 #include <verilated.h>
 
-static char *log_file = NULL;
-static char *diff_so_file = NULL;
-static char *img_file = NULL;
-static char *elf_file = NULL;
-static char *verilator_argv = NULL;
-
 static void welcome()
 {
     Log("Trace: %s", MUXDEF(CONFIG_TRACE, ANSI_FMT("ON", ANSI_FG_GREEN),
@@ -44,6 +38,12 @@ static void welcome()
     // Log("Exercise: Please remove me in the source code and compile NEMU
     // again."); assert(0);
 }
+
+static char *log_file = NULL;
+static char *diff_so_file = NULL;
+static char *img_file = NULL;
+static char *elf_file = NULL;
+static char *verilator_argv = NULL;
 
 static long load_img()
 {
@@ -62,7 +62,7 @@ static long load_img()
     Log("The image is %s, size = %ld", img_file, size);
 
     fseek(fp, 0, SEEK_SET);
-    int ret = fread(pmem, size, 1, fp);
+    int ret = fread(guest_to_host(RESET_VECTOR), size, 1, fp);
     assert(ret == 1);
 
     fclose(fp);
