@@ -1,0 +1,40 @@
+#ifndef MEM_HPP
+#define MEM_HPP
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#include <sim/cpu.hpp>
+#include <util/log.hpp>
+#include <util/macro.hpp>
+#include <util/sim_tool.hpp>
+
+#define CONFIG_MBASE 0x80000000
+#define CONFIG_MSIZE 0x8000000
+#define CONFIG_PC_RESET_OFFSET 0x0
+#define PMEM_LEFT ((paddr_t)CONFIG_MBASE)
+#define PMEM_RIGHT ((paddr_t)CONFIG_MBASE + CONFIG_MSIZE - 1)
+#define RESET_VECTOR (PMEM_LEFT + CONFIG_PC_RESET_OFFSET)
+
+extern bool enable_mtrace;
+extern bool enable_mem_align_check;
+
+bool in_pmem(paddr_t addr);
+uint8_t *guest_to_host(paddr_t paddr);
+word_t host_read(void *addr, int len);
+void host_write(void *addr, int len, word_t data);
+void print_mtrace();
+void init_mem();
+void init_isa();
+void mem_quit();
+word_t paddr_read(paddr_t addr, int len);
+void paddr_write(paddr_t addr, int len, word_t data);
+
+#endif

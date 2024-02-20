@@ -21,6 +21,8 @@
 #include <isa.h>
 #include <math.h>
 #include <memory/vaddr.h>
+#include <memory/paddr.h>
+#include <device/map.h>
 #include <monitor.h>
 #include <readline/history.h>
 #include <readline/readline.h>
@@ -117,64 +119,106 @@ static int cmd_info(const char *const args)
             case 'r':
                 isa_reg_display();
                 break;
+            case 'i':
+                MUXDEF(CONFIG_ITRACE, print_iringbuf(), printf("itrace is close"));
+                break;
+            case 'm':
+                MUXDEF(CONFIG_MTRACE, print_mtrace(), printf("mtrace is close"));
+                break;
+            case 'f':
+                MUXDEF(CONFIG_FTRACE, print_ftrace(), printf("ftrace is close"));
+                break;
+            case 'd':
+                MUXDEF(CONFIG_DTRACE, print_dtrace(), printf("dtrace is close"));
+                break;
             case 'w':
-                printf_watchpoint();
+                MUXDEF(CONFIG_WATCHPOINT, printf_watchpoint(), printf("watchpoint is close\n"));
                 break;
             default:
-                printf("info format error, using like this: info r/w\n");
+                printf("info format error, using like this: info r/i/m/f/d/w\n");
                 break;
             }
         }
         else
         {
-            printf("info format error, using like this: info r/w\n");
+            printf("info format error, using like this: info r/i/m/f/d/w\n");
         }
     }
     else
     {
-        printf("info format error, using like this: info r/w\n");
+        printf("info format error, using like this: info r/i/m/f/d/w\n");
     }
     return 0;
 }
 
-#define COLUMN 8
+#define COLUMN 32
 
 static int cmd_x(const char *const args)
 {
     if (args)
     {
-        int scan_len;
-        int result = sscanf(args, "%d", &scan_len);
-        if (result == 1)
+        int scan_len, scan_num;
+        int result = sscanf(args, "%d %d", &scan_len, &scan_num);
+        if (result == 2)
         {
-            if (scan_len <= 0)
+#ifdef CONFIG_ISA64
+            if (scan_len != 1 && scan_len != 2 && scan_len != 4 && scan_len != 8)
             {
-                printf("scan length must be larger than 0\n");
+                printf("scan length must be 1/2/4/8\n");
                 return 0;
             }
-            const char *const e = args + (int)log10(scan_len) + 2;
+#else
+            if (scan_len != 1 && scan_len != 2 && scan_len != 4)
+            {
+                printf("scan length must be 1/2/4\n");
+                return 0;
+            }
+#endif
+            if (scan_num <= 0)
+            {
+                printf("scan number must be larger than 0\n");
+                return 0;
+            }
+
+            const char *const e = args + 2 + (int)log10(scan_num) + 2;
             bool success = true;
             vaddr_t addr = expr(e, &success);
             if (!success)
                 return 0;
-            int len = sizeof(word_t);
-            for (int i = 0; i < scan_len; i++)
+            for (int i = 0; i < scan_num; i++)
             {
-                printf(FMT_WORD " ", vaddr_ifetch(addr + i * len, len));
-                if (i % COLUMN == COLUMN - 1)
+                word_t data = addr_montior_read(addr + i * scan_len, scan_len);
+                switch (scan_len)
+                {
+                case 1:
+                    printf("0x%02x ", data);
+                    break;
+                case 2:
+                    printf("0x%04x ", data);
+                    break;
+                case 4:
+                    printf("0x%08x ", data);
+                    break;
+#ifdef CONFIG_ISA64
+                case 8:
+                    printf("0x%016lx ", data);
+                    break;
+#endif
+                }
+                if ((i + 1) * scan_len % COLUMN == 0)
                     printf("\n");
             }
-            if (scan_len % COLUMN != 0)
+            if (scan_num * scan_len % COLUMN != 0)
                 printf("\n");
         }
         else
         {
-            printf("x format error, using like this: x N EXPR\n");
+            printf("x format error, using like this: x len n EXPR\n");
         }
     }
     else
     {
-        printf("x format error, using like this: x N EXPR\n");
+        printf("x format error, using like this: x len n EXPR\n");
     }
     return 0;
 }
@@ -198,19 +242,33 @@ static int cmd_p(const char *const args)
 
 static int cmd_w(const char *const args)
 {
+#ifdef CONFIG_WATCHPOINT
     if (args != NULL)
     {
-        new_wp(args);
+        int hit_cnt;
+        int result = sscanf(args, "%d", &hit_cnt);
+        if (result == 1)
+        {
+            new_wp(hit_cnt, args + (int)log10(hit_cnt) + 2);
+        }
+        else
+        {
+            printf("w format error, using like this: w n EXPR\n");
+        }
     }
     else
     {
-        printf("w format error, using like this: w EXPR\n");
+        printf("w format error, using like this: w n EXPR\n");
     }
+#else
+    printf("watchpoint is close\n");
+#endif
     return 0;
 }
 
 static int cmd_d(const char *const args)
 {
+#ifdef CONFIG_WATCHPOINT
     if (args != NULL)
     {
         int n;
@@ -221,13 +279,16 @@ static int cmd_d(const char *const args)
         }
         else
         {
-            printf("w format error, using like this: d N\n");
+            printf("d format error, using like this: d N\n");
         }
     }
     else
     {
-        printf("w format error, using like this: d N\n");
+        printf("d format error, using like this: d N\n");
     }
+#else
+    printf("watchpoint is close\n");
+#endif
     return 0;
 }
 
@@ -243,8 +304,7 @@ static struct
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
     {"si", "Step in N instruction", cmd_si},
-    {"info", "Display the state of register and information of watching point",
-     cmd_info},
+    {"info", "Display the state of register and information of itrace, mtrace, ftrace, dtrcae, watching point", cmd_info},
     {"x", "scan the memory", cmd_x},
     {"p", "print the value of expression", cmd_p},
     {"w", "set the watchpoint", cmd_w},

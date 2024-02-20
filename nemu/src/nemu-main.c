@@ -14,11 +14,11 @@
  ***************************************************************************************/
 
 #include <common.h>
-
-void init_monitor(int, char *[]);
-void am_init_monitor();
+#include <monitor.h>
 void engine_start();
 int is_exit_status_bad();
+
+// #define TEST_EXPR
 
 int main(int argc, char *argv[])
 {
@@ -30,7 +30,22 @@ int main(int argc, char *argv[])
 #endif
 
     /* Start engine. */
+#ifndef TEST_EXPR
     engine_start();
+#else
+    test_expr();
+    // test_expr_auto();
+#endif
 
+#ifdef CONFIG_TARGET_AM
+    am_monitor_quit();
+#else
+    monitor_quit();
+#endif
+
+#ifndef TEST_EXPR
     return is_exit_status_bad();
+#else
+    return 0;
+#endif
 }

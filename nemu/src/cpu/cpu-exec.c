@@ -20,13 +20,15 @@
 #include <monitor.h>
 #include <stdbool.h>
 #include <utils.h>
+#include <memory/paddr.h>
+#include <device/map.h>
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INST_TO_PRINT 10
+#define MAX_INST_TO_PRINT 20
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
@@ -37,27 +39,18 @@ void device_update();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 {
-#ifdef CONFIG_ITRACE_COND
-    if (CONFIG_ITRACE_COND)
-    {
-        log_write("%s\n", _this->logbuf);
-    }
+#ifdef CONFIG_ITRACE
+    log_write("%s\n", _this->logbuf);
+    if (g_print_step)
+        puts(_this->logbuf);
     add_iringbuf(_this->logbuf);
 #endif
-    if (g_print_step)
-    {
-        IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
-    }
     IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
     if (check_watchpoint())
     {
         printf("watchpoint trigger at: ");
-#ifdef CONFIG_ITRACE_COND
-        puts(_this->logbuf);
-#else
-        printf(FMT_WORD ", inst: " FMT_INST "\n", _this->pc, _this->isa.inst.val);
-#endif
+        MUXDEF(CONFIG_ITRACE, puts(_this->logbuf), printf(FMT_WORD ", inst: " FMT_INST "\n", _this->pc, _this->isa.inst.val));
         if (nemu_state.state == NEMU_RUNNING)
             nemu_state.state = NEMU_STOP;
     }
@@ -80,7 +73,7 @@ static void exec_once(Decode *s, vaddr_t pc)
     {
         p += snprintf(p, 4, " %02x", inst[i]);
     }
-    int ilen_max = MUXDEF(CONFIG_ISA_x86, 8, 4);
+    int ilen_max = INST_LEN / 8;
     int space_len = ilen_max - ilen;
     if (space_len < 0)
         space_len = 0;
@@ -107,9 +100,9 @@ static void execute(uint64_t n)
         exec_once(&s, cpu.pc);
         g_nr_guest_inst++;
         trace_and_difftest(&s, cpu.pc);
+        IFDEF(CONFIG_DEVICE, device_update());
         if (nemu_state.state != NEMU_RUNNING)
             break;
-        IFDEF(CONFIG_DEVICE, device_update());
     }
 }
 
@@ -120,25 +113,25 @@ static void statistic()
     Log("host time spent = " NUMBERIC_FMT " us", g_timer);
     Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
     if (g_timer > 0)
-        Log("simulation frequency = " NUMBERIC_FMT " inst/s",
-            g_nr_guest_inst * 1000000 / g_timer);
+        Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
     else
-        Log("Finish running in less than 1 us and can not calculate the simulation "
-            "frequency");
+        Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
 
 void assert_fail_msg()
 {
     isa_reg_display();
-    print_iringbuf();
-    print_ftrace();
+    IFDEF(CONFIG_ITRACE, print_iringbuf());
+    IFDEF(CONFIG_MTRACE, print_mtrace());
+    IFDEF(CONFIG_FTRACE, print_ftrace());
+    IFDEF(CONFIG_DTRACE, print_dtrace());
     statistic();
 }
 
 /* Simulate how the CPU works. */
 void cpu_exec(uint64_t n)
 {
-    g_print_step = (n < MAX_INST_TO_PRINT);
+    g_print_step = (n <= MAX_INST_TO_PRINT);
     switch (nemu_state.state)
     {
     case NEMU_END:
@@ -176,10 +169,11 @@ void cpu_exec(uint64_t n)
         if (nemu_state.state != NEMU_END || nemu_state.halt_ret != 0)
         {
             isa_reg_display();
-            print_iringbuf();
-            print_ftrace();
+            IFDEF(CONFIG_ITRACE, print_iringbuf());
+            IFDEF(CONFIG_MTRACE, print_mtrace());
+            IFDEF(CONFIG_FTRACE, print_ftrace());
+            IFDEF(CONFIG_DTRACE, print_dtrace());
         }
-        // fall through
     case NEMU_QUIT:
         statistic();
     }
