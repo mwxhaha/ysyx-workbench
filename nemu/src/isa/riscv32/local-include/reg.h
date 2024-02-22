@@ -32,6 +32,19 @@ static inline const char *reg_name(int idx)
   return regs[check_reg_idx(idx)];
 }
 
+static inline int check_csr_idx(int idx)
+{
+  assert(idx >= 0 && idx < 4096);
+  return idx;
+}
+
+#define csr(idx) (cpu.csr[check_csr_idx(idx)])
+
+#define mepc csr(0x341)
+#define mcause csr(0x342)
+#define mtvec csr(0x305)
+#define mstatus csr(0x300)
+
 extern const char *regs[];
 
 #endif
