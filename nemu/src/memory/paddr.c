@@ -29,9 +29,9 @@ static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 uint8_t *guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
-bool enable_mtrace = true;
 typedef struct
 {
+    vaddr_t pc;
     bool is_read;
     paddr_t addr;
     int len;
@@ -40,23 +40,25 @@ typedef struct
 } mtrace_t;
 #define MTRACE_ARRAY_MAX 20
 static mtrace_t mtrace_array[MTRACE_ARRAY_MAX];
-static int mtrace_array_tail = 0;
+static int mtrace_array_end = 0;
 static bool mtrace_array_is_full = false;
+bool mtrace_enable = true;
 
 #ifdef CONFIG_MTRACE
 static void mtrace_record(bool is_read, paddr_t addr, int len, word_t read_data, word_t write_data)
 {
     if (addr >= 0x80000000 && addr <= 0x8fffffff)
     {
-        mtrace_array[mtrace_array_tail].is_read = is_read;
-        mtrace_array[mtrace_array_tail].addr = addr;
-        mtrace_array[mtrace_array_tail].len = len;
-        mtrace_array[mtrace_array_tail].read_data = read_data;
-        mtrace_array[mtrace_array_tail].write_data = write_data;
-        mtrace_array_tail++;
-        if (mtrace_array_tail >= MTRACE_ARRAY_MAX)
+        mtrace_array[mtrace_array_end].pc = cpu.pc;
+        mtrace_array[mtrace_array_end].is_read = is_read;
+        mtrace_array[mtrace_array_end].addr = addr;
+        mtrace_array[mtrace_array_end].len = len;
+        mtrace_array[mtrace_array_end].read_data = read_data;
+        mtrace_array[mtrace_array_end].write_data = write_data;
+        mtrace_array_end++;
+        if (mtrace_array_end >= MTRACE_ARRAY_MAX)
         {
-            mtrace_array_tail = 0;
+            mtrace_array_end = 0;
             mtrace_array_is_full = true;
         }
     }
@@ -67,29 +69,29 @@ static void printf_mtrace_once(int i)
 {
     if (mtrace_array[i].is_read)
     {
-        printf("memory read in addr " FMT_WORD " with len %d: " FMT_WORD "\n", mtrace_array[i].addr, mtrace_array[i].len, mtrace_array[i].read_data);
+        printf(FMT_WORD ": memory read  addr = " FMT_WORD " len = %d: " FMT_WORD "\n", mtrace_array[i].pc, mtrace_array[i].addr, mtrace_array[i].len, mtrace_array[i].read_data);
     }
     else
     {
-        printf("memory write in addr " FMT_WORD " with len %d: " FMT_WORD "->" FMT_WORD "\n", mtrace_array[i].addr, mtrace_array[i].len, mtrace_array[i].read_data, mtrace_array[i].write_data);
+        printf(FMT_WORD ": memory write addr = " FMT_WORD " len = %d: " FMT_WORD " -> " FMT_WORD "\n", mtrace_array[i].pc, mtrace_array[i].addr, mtrace_array[i].len, mtrace_array[i].read_data, mtrace_array[i].write_data);
     }
 }
 
 void print_mtrace()
 {
-    if (!mtrace_array_is_full && mtrace_array_tail == 0)
+    if (!mtrace_array_is_full && mtrace_array_end == 0)
     {
         printf("mtrace is empty now\n");
         return;
     }
     if (mtrace_array_is_full)
     {
-        int i = mtrace_array_tail;
+        int i = mtrace_array_end;
         printf_mtrace_once(i);
         i++;
         if (i == MTRACE_ARRAY_MAX)
             i = 0;
-        while (i != mtrace_array_tail)
+        while (i != mtrace_array_end)
         {
             printf_mtrace_once(i);
             i++;
@@ -100,7 +102,7 @@ void print_mtrace()
     else
     {
         int i = 0;
-        while (i != mtrace_array_tail)
+        while (i != mtrace_array_end)
         {
             printf_mtrace_once(i);
             i++;
@@ -112,7 +114,7 @@ static word_t pmem_read(paddr_t addr, int len)
 {
     word_t ret = host_read(guest_to_host(addr), len);
 #ifdef CONFIG_MTRACE
-    if (enable_mtrace)
+    if (mtrace_enable)
         mtrace_record(true, addr, len, ret, 0);
 #endif
     return ret;

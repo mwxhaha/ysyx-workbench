@@ -120,7 +120,7 @@ static int cmd_info(const char *const args)
                 isa_reg_display();
                 break;
             case 'i':
-                MUXDEF(CONFIG_ITRACE, print_iringbuf(), printf("itrace is close"));
+                MUXDEF(CONFIG_ITRACE, print_itrace(), printf("itrace is close"));
                 break;
             case 'm':
                 MUXDEF(CONFIG_MTRACE, print_mtrace(), printf("mtrace is close"));
