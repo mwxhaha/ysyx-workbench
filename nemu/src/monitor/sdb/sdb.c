@@ -131,22 +131,25 @@ static int cmd_info(const char *const args)
             case 'd':
                 MUXDEF(CONFIG_DTRACE, print_dtrace(), printf("dtrace is close"));
                 break;
+            case 'e':
+                MUXDEF(CONFIG_ETRACE, print_etrace(), printf("etrace is close"));
+                break;
             case 'w':
                 MUXDEF(CONFIG_WATCHPOINT, printf_watchpoint(), printf("watchpoint is close\n"));
                 break;
             default:
-                printf("info format error, using like this: info r/i/m/f/d/w\n");
+                printf("info format error, using like this: info r/i/m/f/d/e/w\n");
                 break;
             }
         }
         else
         {
-            printf("info format error, using like this: info r/i/m/f/d/w\n");
+            printf("info format error, using like this: info r/i/m/f/d/e/w\n");
         }
     }
     else
     {
-        printf("info format error, using like this: info r/i/m/f/d/w\n");
+        printf("info format error, using like this: info r/i/m/f/d/e/w\n");
     }
     return 0;
 }

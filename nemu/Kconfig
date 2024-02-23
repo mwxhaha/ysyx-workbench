@@ -176,6 +176,11 @@ config DTRACE
   bool "Enable device trace"
   default y
 
+config ETRACE
+  depends on TRACE && TARGET_NATIVE_ELF
+  bool "Enable exception trace"
+  default y
+
 config WATCHPOINT
   depends on TARGET_NATIVE_ELF
   bool "Enable watchpoint"

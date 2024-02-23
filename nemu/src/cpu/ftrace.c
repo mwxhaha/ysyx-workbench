@@ -164,14 +164,13 @@ static void print_ftrace_one(int i, int *func_stack)
         printf("| ");
     if (ftrace_array[i].is_ret == 0)
     {
-        printf("call %s -> %s", func_infos[ftrace_array[i].func_num].func_name, func_infos[ftrace_array[i].nfunc_num].func_name);
+        printf("call %s -> %s\n", func_infos[ftrace_array[i].func_num].func_name, func_infos[ftrace_array[i].nfunc_num].func_name);
         (*func_stack)++;
     }
     else
     {
-        printf("ret  %s -> %s", func_infos[ftrace_array[i].func_num].func_name, func_infos[ftrace_array[i].nfunc_num].func_name);
+        printf("ret  %s -> %s\n", func_infos[ftrace_array[i].func_num].func_name, func_infos[ftrace_array[i].nfunc_num].func_name);
     }
-    printf("\n");
 }
 
 void print_ftrace()
