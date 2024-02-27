@@ -44,6 +44,7 @@ static inline int check_csr_idx(int idx)
 #define mcause csr(0x342)
 #define mtvec csr(0x305)
 #define mstatus csr(0x300)
+#define INTR_CODE_MECALL 11
 
 extern const char *regs[];
 

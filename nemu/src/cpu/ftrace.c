@@ -19,7 +19,7 @@ typedef Elf32_Sym Elf_Sym;
 static Elf_Shdr section_headers[SECTION_HEADERS_MAX];
 
 #define SYM_NAME_MAX 100
-#define SYM_TAB_MAX 10000
+#define SYM_TAB_MAX 20000
 static Elf_Sym sym_tab[SYM_TAB_MAX];
 static char shstr[SYM_NAME_MAX];
 

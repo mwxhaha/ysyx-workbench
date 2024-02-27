@@ -11,7 +11,7 @@ Context *__am_irq_handle(Context *c)
         Event ev = {0};
         switch (c->mcause)
         {
-        case 11:
+        case INTR_CODE_MECALL:
             ev.event = EVENT_YIELD;
             break;
         default:
@@ -43,8 +43,8 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
 {
     Context *c = kstack.end - sizeof(Context);
     c->gpr[9] = (uintptr_t)arg; // gpr a0
-    c->mcause = 11;
-    c->mstatus = 0x1800;
+    c->mcause = INTR_CODE_MECALL;
+    c->mstatus = MSTATUS_INIT;
     c->mepc = (uintptr_t)entry - 4;
     return c;
 }
