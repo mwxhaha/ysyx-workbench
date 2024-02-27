@@ -31,7 +31,7 @@ int atoi(const char *nptr)
     return x;
 }
 
-#define MEM_ALIGN_MASK 0x7
+#define MEM_ALIGN_MASK (sizeof(uintptr_t) - 1)
 static int is_first = 1;
 static void *addr = NULL;
 

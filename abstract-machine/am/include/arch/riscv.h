@@ -10,7 +10,7 @@ struct Context
 #else
     uintptr_t gpr[31];
 #endif
-    uintptr_t mcause, mstatus, mepc;
+    uintptr_t mcause, mstatus, mepc, tmp;
 };
 
 #ifdef __riscv_e
