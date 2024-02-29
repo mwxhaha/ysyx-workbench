@@ -103,6 +103,7 @@ endchoice
 
 config CC_OPT
   string
+  default "" if CC_DEBUG
   default "-O0" if CC_O0
   default "-O1" if CC_O1
   default "-O2" if CC_O2
@@ -116,7 +117,7 @@ config CC_LTO
 
 config CC_DEBUG
   bool "Enable debug information"
-  default y
+  default n
 
 config CC_ASAN
   depends on MODE_SYSTEM
