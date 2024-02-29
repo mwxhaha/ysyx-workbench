@@ -7,7 +7,6 @@ module ysyx_23060075_full_adder (
 );
 
     wire s_1, c_1, c_2;
-
     ysyx_23060075_half_adder half_adder_s_1 (
         .a(a),
         .b(b),

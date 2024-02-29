@@ -1,18 +1,16 @@
 `include "config.vh"
 
 module ysyx_23060075_wbu (
-    input  wire [   `ysyx_23060075_ISA_WIDTH-1:0] mem_r,
-    input  wire [   `ysyx_23060075_ISA_WIDTH-1:0] alu_result,
-    input  wire [`ysyx_23060075_FUNCT3_WIDTH-1:0] funct3,
-    input  wire [   `ysyx_23060075_IMM_WIDTH-1:0] imm,
-    input  wire [   `ysyx_23060075_ISA_WIDTH-1:0] snpc,
-    input  wire [   `ysyx_23060075_ISA_WIDTH-1:0] pc_imm,
-    output wire [   `ysyx_23060075_ISA_WIDTH-1:0] srd,
-    input  wire                                   rd_is_mem,
-    input  wire                                   is_lui,
-    input  wire                                   is_auipc,
-    input  wire                                   is_jal,
-    input  wire                                   is_jalr
+    input wire [   `ysyx_23060075_ISA_WIDTH-1:0] mem_r,
+    input wire [   `ysyx_23060075_ISA_WIDTH-1:0] alu_result,
+    input wire [`ysyx_23060075_FUNCT3_WIDTH-1:0] funct3,
+
+    input  wire [        `ysyx_23060075_IMM_WIDTH-1:0] imm,
+    input  wire [        `ysyx_23060075_ISA_WIDTH-1:0] pc_imm,
+    input  wire [        `ysyx_23060075_ISA_WIDTH-1:0] snpc,
+    input  wire [        `ysyx_23060075_ISA_WIDTH-1:0] csr_r,
+    output wire [        `ysyx_23060075_ISA_WIDTH-1:0] srd,
+    input  wire [`ysyx_23060075_SRD_MUX_SEL_WIDTH-1:0] srd_mux_sel
 );
 
     wire [`ysyx_23060075_ISA_WIDTH-1:0] mem_r_shift;
@@ -34,7 +32,6 @@ module ysyx_23060075_wbu (
             {24'b0, mem_r[`ysyx_23060075_ISA_WIDTH-1:24]}
         })
     );
-
     wire [`ysyx_23060075_ISA_WIDTH-1:0] mem_r_extend;
     ysyx_23060075_mux_def #(
         .NR_KEY  (5),
@@ -58,6 +55,28 @@ module ysyx_23060075_wbu (
         })
     );
 
-    assign srd = is_lui ? imm : (is_auipc ? pc_imm : (is_jal | is_jalr ? snpc : (rd_is_mem ? mem_r_extend : alu_result)));
+    ysyx_23060075_mux_def #(
+        .NR_KEY  (6),
+        .KEY_LEN (`ysyx_23060075_SRD_MUX_SEL_WIDTH),
+        .DATA_LEN(`ysyx_23060075_ISA_WIDTH)
+    ) mux_def_srd (
+        .out(srd),
+        .key(srd_mux_sel),
+        .default_out(`ysyx_23060075_ISA_WIDTH'b0),
+        .lut({
+            `ysyx_23060075_SRD_IS_IMM,
+            imm,
+            `ysyx_23060075_SRD_IS_PC_IMM,
+            pc_imm,
+            `ysyx_23060075_SRD_IS_SNPC,
+            snpc,
+            `ysyx_23060075_SRD_IS_MEM_R,
+            mem_r_extend,
+            `ysyx_23060075_SRD_IS_ALU_RESULT,
+            alu_result,
+            `ysyx_23060075_SRD_IS_CSR_R,
+            csr_r
+        })
+    );
 
 endmodule

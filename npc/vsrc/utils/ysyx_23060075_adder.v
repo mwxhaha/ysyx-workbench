@@ -9,6 +9,13 @@ module ysyx_23060075_adder #(
 );
 
     wire [data_len-2:0] c;
+    ysyx_23060075_full_adder full_adder_1 (
+        .a   (a[0]),
+        .b   (b[0]),
+        .cin (cin),
+        .s   (s[0]),
+        .cout(c[0])
+    );
 
     genvar i;
     generate
@@ -22,14 +29,6 @@ module ysyx_23060075_adder #(
             );
         end
     endgenerate
-
-    ysyx_23060075_full_adder full_adder_1 (
-        .a   (a[0]),
-        .b   (b[0]),
-        .cin (cin),
-        .s   (s[0]),
-        .cout(c[0])
-    );
 
     ysyx_23060075_full_adder full_adder_2 (
         .a   (a[data_len-1]),

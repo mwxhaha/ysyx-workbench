@@ -1,15 +1,16 @@
 `include "config.vh"
 
 module ysyx_23060075_csr (
-    input  wire                                     clk,
-    input  wire                                     rst,
+    input wire clk,
+    input wire rst,
+
     input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] csr_w,
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] csr_r,
     input  wire [`ysyx_23060075_CSR_ADDR_WIDTH-1:0] csr_addr,
     input  wire                                     csr_w_en
 );
 
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] mepc, mcause, mtvec, mstatus;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] mepc;
     ysyx_23060075_register #(
         .WIDTH    (`ysyx_23060075_ISA_WIDTH),
         .RESET_VAL(`ysyx_23060075_ISA_WIDTH'b0)
@@ -73,7 +74,5 @@ module ysyx_23060075_csr (
             mstatus
         })
     );
-
-
 
 endmodule

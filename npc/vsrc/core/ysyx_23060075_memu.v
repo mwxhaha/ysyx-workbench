@@ -1,9 +1,10 @@
 `include "config.vh"
 
 module ysyx_23060075_memu (
-    input  wire [  `ysyx_23060075_FUNCT3_WIDTH-1:0] funct3,
+    input wire [   `ysyx_23060075_ISA_WIDTH-1:0] src2,
+    input wire [`ysyx_23060075_FUNCT3_WIDTH-1:0] funct3,
+
     input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] alu_result,
-    input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] src2,
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_r,
     input  wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] mem_mask,
     input  wire                                     mem_r_en,
@@ -15,8 +16,6 @@ module ysyx_23060075_memu (
     output wire                                     mem_2_r_en,
     output wire                                     mem_2_w_en
 );
-
-    assign mem_r = mem_2_r;
 
     wire [`ysyx_23060075_ISA_WIDTH-1:0] mem_w_extend;
     ysyx_23060075_mux_def #(
@@ -36,6 +35,8 @@ module ysyx_23060075_memu (
             src2
         })
     );
+
+    assign mem_r = mem_2_r;
     ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
@@ -54,9 +55,7 @@ module ysyx_23060075_memu (
             {mem_w_extend[`ysyx_23060075_ISA_WIDTH-25:0], 24'b0}
         })
     );
-
     assign mem_2_addr = {alu_result[`ysyx_23060075_ISA_WIDTH-1:2], 2'b0};
-
     ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
@@ -75,7 +74,6 @@ module ysyx_23060075_memu (
             {mem_mask[0], 3'b0}
         })
     );
-
     assign mem_2_r_en = mem_r_en;
     assign mem_2_w_en = mem_w_en;
 
