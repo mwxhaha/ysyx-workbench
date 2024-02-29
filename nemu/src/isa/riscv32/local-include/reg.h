@@ -45,6 +45,13 @@ static inline int check_csr_idx(int idx)
 #define mtvec csr(0x305)
 #define mstatus csr(0x300)
 #define INTR_CODE_MECALL 11
+#ifdef CONFIG_ISA64
+#define MSTATUS_INIT 0xa00001800
+#else
+#define MSTATUS_INIT 0x1800
+#endif 
+
+
 
 extern const char *regs[];
 

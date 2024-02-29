@@ -36,7 +36,7 @@ static int func_infos_max = 0;
 
 void load_elf(const char *elf_file)
 {
-#if (ISA_WIDTH == 64)
+#ifdef CONFIG_ISA64
     panic("do not support isa 64");
 #endif
 
