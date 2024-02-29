@@ -52,6 +52,8 @@ module ysyx_23060075_core (
     wire [      `ysyx_23060075_ISA_WIDTH-1:0] src1;
     wire [      `ysyx_23060075_ISA_WIDTH-1:0] src2;
     wire                                      gpr_w_en;
+    wire                                      is_csri;
+    wire                                      csr_w_en;
 
     ysyx_23060075_idu idu_1 (
         .clk      (clk),
@@ -65,7 +67,9 @@ module ysyx_23060075_core (
         .srd      (srd),
         .src1     (src1),
         .src2     (src2),
-        .gpr_w_en (gpr_w_en)
+        .gpr_w_en (gpr_w_en),
+        .is_csri  (is_csri),
+        .csr_w_en (csr_w_en)
     );
 
     wire                                      alu_b_is_imm;
@@ -139,7 +143,9 @@ module ysyx_23060075_core (
         .mem_w_en    (mem_w_en),
         .rd_is_mem   (rd_is_mem),
         .is_lui      (is_lui),
-        .is_auipc    (is_auipc)
+        .is_auipc    (is_auipc),
+        .is_csri     (is_csri),
+        .csr_w_en    (csr_w_en)
     );
 
     always @(posedge clk) begin

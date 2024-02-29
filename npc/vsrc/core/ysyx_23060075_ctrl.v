@@ -20,7 +20,9 @@ module ysyx_23060075_ctrl (
     output wire [ `ysyx_23060075_MEM_MASK_WIDTH-1:0] mem_mask,
     output wire                                      rd_is_mem,
     output wire                                      is_lui,
-    output wire                                      is_auipc
+    output wire                                      is_auipc,
+    output wire                                      is_csri,
+    output wire                                      csr_w_en
 );
 
     assign pc_en = 1'b1;
@@ -97,5 +99,7 @@ module ysyx_23060075_ctrl (
     assign rd_is_mem = opcode == `ysyx_23060075_OPCODE_WIDTH'b0000011;
     assign is_lui = opcode == `ysyx_23060075_OPCODE_WIDTH'b0110111;
     assign is_auipc = opcode == `ysyx_23060075_OPCODE_WIDTH'b0010111;
+    assign is_csri = opcode == `ysyx_23060075_OPCODE_WIDTH'b1110011 & funct3[2]==1'b1;
+    assign csr_w_en = opcode == `ysyx_23060075_OPCODE_WIDTH'b1110011 & funct3[1:0]!=2'b00;
 
 endmodule

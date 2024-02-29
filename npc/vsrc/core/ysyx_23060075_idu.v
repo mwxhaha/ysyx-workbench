@@ -12,7 +12,9 @@ module ysyx_23060075_idu (
     input  wire [      `ysyx_23060075_ISA_WIDTH-1:0] srd,
     output wire [      `ysyx_23060075_ISA_WIDTH-1:0] src1,
     output wire [      `ysyx_23060075_ISA_WIDTH-1:0] src2,
-    input  wire                                      gpr_w_en
+    input  wire                                      gpr_w_en,
+    input  wire                                      is_csri,
+    input  wire                                      csr_w_en
 );
 
     ysyx_23060075_mux_def #(
@@ -77,17 +79,43 @@ module ysyx_23060075_idu (
     assign opcode = inst[`ysyx_23060075_OPCODE_WIDTH-1:0];
     assign funct3 = inst[12+`ysyx_23060075_FUNCT3_WIDTH-1:12];
     assign funct7 = inst[25+`ysyx_23060075_FUNCT7_WIDTH-1:25];
+    wire [`ysyx_23060075_CSR_ADDR_WIDTH-1:0] csr_addr = inst[20+`ysyx_23060075_CSR_ADDR_WIDTH-1:20];
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] zimm = {{27'b0}, inst[19:15]};
 
     ysyx_23060075_gpr gpr_1 (
         .clk       (clk),
         .rst       (rst),
-        .gpr_w     (srd),
+        .gpr_w     (csr_w_en ? csr_r : srd),
         .gpr_1_r   (src1),
         .gpr_2_r   (src2),
         .gpr_w_addr(rd),
         .gpr_1_addr(rs1),
         .gpr_2_addr(rs2),
         .gpr_w_en  (gpr_w_en)
+    );
+
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] csr_w;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] csr_r;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] zimm_or_src1 = is_csri ? zimm : src1;
+
+    ysyx_23060075_mux_def #(
+        .NR_KEY  (3),
+        .KEY_LEN (2),
+        .DATA_LEN(`ysyx_23060075_ISA_WIDTH)
+    ) mux_def_csr_w (
+        .out(csr_w),
+        .key(funct3[1:0]),
+        .default_out(`ysyx_23060075_ISA_WIDTH'b0),
+        .lut({2'b01, zimm_or_src1, 2'b10, csr_r | zimm_or_src1, 2'b11, csr_r & ~zimm_or_src1})
+    );
+
+    ysyx_23060075_csr csr_1 (
+        .clk     (clk),
+        .rst     (rst),
+        .csr_w   (csr_w),
+        .csr_r   (csr_r),
+        .csr_addr(csr_addr),
+        .csr_w_en(csr_w_en)
     );
 
 endmodule
