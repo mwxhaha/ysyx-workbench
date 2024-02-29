@@ -6,13 +6,13 @@ module ysyx_23060075_gpr (
     input wire rst,
     // verilator lint_on UNUSEDSIGNAL
 
-    input  wire [      `ysyx_23060075_ISA_WIDTH-1:0] gpr_w,
-    output wire [      `ysyx_23060075_ISA_WIDTH-1:0] gpr_1_r,
-    output wire [      `ysyx_23060075_ISA_WIDTH-1:0] gpr_2_r,
-    input  wire [`ysyx_23060075_REG_ADDR_WIDTH -1:0] gpr_w_addr,
-    input  wire [`ysyx_23060075_REG_ADDR_WIDTH -1:0] gpr_1_addr,
-    input  wire [`ysyx_23060075_REG_ADDR_WIDTH -1:0] gpr_2_addr,
-    input  wire                                      gpr_w_en
+    input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] gpr_w,
+    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] gpr_1_r,
+    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] gpr_2_r,
+    input  wire [`ysyx_23060075_REG_ADDR_WIDTH-1:0] gpr_w_addr,
+    input  wire [`ysyx_23060075_REG_ADDR_WIDTH-1:0] gpr_1_addr,
+    input  wire [`ysyx_23060075_REG_ADDR_WIDTH-1:0] gpr_2_addr,
+    input  wire                                     gpr_w_en
 );
 
     wire gpr_w_addr_is_not_zero = |(gpr_w_addr ^ `ysyx_23060075_REG_ADDR_WIDTH'b0);

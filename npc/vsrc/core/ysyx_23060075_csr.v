@@ -46,7 +46,7 @@ module ysyx_23060075_csr (
     wire [`ysyx_23060075_ISA_WIDTH-1:0] mstatus;
     ysyx_23060075_register #(
         .WIDTH    (`ysyx_23060075_ISA_WIDTH),
-        .RESET_VAL(`ysyx_23060075_ISA_WIDTH'b0)
+        .RESET_VAL(`ysyx_23060075_MSTATUS_INIT)
     ) register_mstatus (
         .clk (clk),
         .rst (rst),

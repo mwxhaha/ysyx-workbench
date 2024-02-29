@@ -85,11 +85,11 @@ module ysyx_23060075_core (
     wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] mem_mask;
     wire                                     mem_r_en;
     wire                                     mem_w_en;
-    ysyx_23060075_memu memu_1 (
-        .funct3    (funct3),
-        .alu_result(alu_result),
+    ysyx_23060075_lsu lsu_1 (
         .src2      (src2),
+        .alu_result(alu_result),
         .mem_r     (mem_r),
+        .funct3    (funct3),
         .mem_mask  (mem_mask),
         .mem_r_en  (mem_r_en),
         .mem_w_en  (mem_w_en),
@@ -104,12 +104,11 @@ module ysyx_23060075_core (
 
     wire [`ysyx_23060075_SRD_MUX_SEL_WIDTH-1:0] srd_mux_sel;
     ysyx_23060075_wbu wbu_1 (
+        .imm        (imm),
+        .pc_imm     (pc_imm),
+        .snpc       (snpc),
         .mem_r      (mem_r),
         .alu_result (alu_result),
-        .funct3     (funct3),
-        .imm        (imm),
-        .snpc       (snpc),
-        .pc_imm     (pc_imm),
         .csr_r      (csr_r),
         .srd        (srd),
         .srd_mux_sel(srd_mux_sel)
@@ -133,41 +132,5 @@ module ysyx_23060075_core (
         .mem_w_en    (mem_w_en),
         .srd_mux_sel (srd_mux_sel)
     );
-
-    always @(posedge clk) begin
-        if (mem_w_en) begin
-            case (mem_mask)
-                `ysyx_23060075_MEM_MASK_WIDTH'b0011:
-                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b1) != `ysyx_23060075_ISA_WIDTH'b0) begin
-                    $display("address = %h len = 2 is unalign at pc = %h", alu_result, pc);
-                    absort(pc);
-                end
-                `ysyx_23060075_MEM_MASK_WIDTH'b1111:
-                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b11) != `ysyx_23060075_ISA_WIDTH'b0) begin
-                    $display("address = %h len = 4 is unalign at pc = %h", alu_result, pc);
-                    absort(pc);
-                end
-                default: ;
-            endcase
-        end
-    end
-
-    always @(posedge clk) begin
-        if (mem_r_en) begin
-            case (funct3[1:0])
-                2'b01:
-                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b1) != `ysyx_23060075_ISA_WIDTH'b0) begin
-                    $display("address = %h len = 2 is unalign at pc = %h", alu_result, pc);
-                    absort(pc);
-                end
-                2'b10:
-                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b11) != `ysyx_23060075_ISA_WIDTH'b0) begin
-                    $display("address = %h len = 4 is unalign at pc = %h", alu_result, pc);
-                    absort(pc);
-                end
-                default: ;
-            endcase
-        end
-    end
 
 endmodule
