@@ -68,7 +68,7 @@ module ysyx_23060075_cpu (
         end
     end
     always @(posedge clk) begin
-        if (!rst && core_1.idu_1.csr_1.csr_w_en && (core_1.idu_1.csr_1.csr_addr != `ysyx_23060075_CSR_ADDR_MEPC | core_1.idu_1.csr_1.csr_addr != `ysyx_23060075_CSR_ADDR_MCAUSE | core_1.idu_1.csr_1.csr_addr != `ysyx_23060075_CSR_ADDR_MTVEC | core_1.idu_1.csr_1.csr_addr != `ysyx_23060075_CSR_ADDR_MSTATUS)) begin
+        if (!rst && core_1.idu_1.csr_1.csr_w_en && !(core_1.idu_1.csr_1.csr_addr == `ysyx_23060075_CSR_ADDR_MEPC | core_1.idu_1.csr_1.csr_addr == `ysyx_23060075_CSR_ADDR_MCAUSE | core_1.idu_1.csr_1.csr_addr == `ysyx_23060075_CSR_ADDR_MTVEC | core_1.idu_1.csr_1.csr_addr == `ysyx_23060075_CSR_ADDR_MSTATUS)) begin
             $display("invalid csr = %h at pc = %h", core_1.idu_1.csr_1.csr_addr, core_1.pc);
             absort(core_1.pc);
         end
