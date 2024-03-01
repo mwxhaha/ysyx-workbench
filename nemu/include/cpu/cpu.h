@@ -27,9 +27,10 @@ void invalid_inst(vaddr_t thispc);
 #define NEMUTRAP(thispc, code) set_nemu_state(NEMU_END, thispc, code)
 #define INV(thispc) invalid_inst(thispc)
 
-void add_iringbuf(const char *inst);
-void print_iringbuf();
+void itrace_record(Decode *s);
+void print_itrace();
 
+extern bool ftrace_enable;
 void load_elf(const char *elf_file);
 void ftrace_record(Decode *s);
 void print_ftrace();

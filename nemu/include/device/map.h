@@ -57,7 +57,7 @@ extern bool enable_device_fresh;
 word_t map_read(paddr_t addr, int len, IOMap *map);
 void map_write(paddr_t addr, int len, word_t data, IOMap *map);
 
-extern bool enable_dtrace;
+extern bool dtrace_enable;
 void print_dtrace();
 void device_quit();
 

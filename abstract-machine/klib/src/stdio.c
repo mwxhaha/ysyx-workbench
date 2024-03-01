@@ -127,6 +127,15 @@ static char decode_fmt(const char *fmt, int *i, int *is_filling_zero, int *fmt_l
             (*i)++;
             return fmt[*i - 1];
         }
+        if (fmt[*i] == 'l')
+        {
+            if (fmt[*i + 1] == 'd')
+            {
+                *fmt_limit_len = str_to_num(fmt + init_i, *i - init_i);
+                (*i) += 2;
+                return fmt[*i - 1] - 'a' + 'A';
+            }
+        }
         panic("not support fmt code");
     }
 }
@@ -188,6 +197,11 @@ int vsprintf(char *out, const char *fmt, va_list ap)
             case 's':
                 char *s = va_arg(ap, char *);
                 sprintf_limit_len(out, &j, fmt_limit_len, strlen(s), 0, s);
+                break;
+            case 'D':
+                long int num3 = va_arg(ap, long int);
+                num_str_len = num_to_str(num3, num_str, 1, 10);
+                sprintf_limit_len(out, &j, fmt_limit_len, num_str_len, is_filling_zero, num_str);
                 break;
             default:
                 panic("not support fmt code");

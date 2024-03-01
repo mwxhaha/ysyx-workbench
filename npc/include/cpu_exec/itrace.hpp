@@ -1,5 +1,5 @@
-#ifndef FTRACE_HPP
-#define FTRACE_HPP
+#ifndef ITRACE_HPP
+#define ITRACE_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -17,9 +17,7 @@
 #include <util/sim_tool.hpp>
 #include <cpu_exec/cpu_exec.hpp>
 
-extern bool ftrace_enable;
-void load_elf(const char *elf_file);
-void ftrace_record(Decode *s);
-void print_ftrace();
+void itrace_record(Decode *s);
+void print_itrace();
 
 #endif

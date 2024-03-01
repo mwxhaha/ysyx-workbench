@@ -1,5 +1,5 @@
-#ifndef IRINGBUF_HPP
-#define IRINGBUF_HPP
+#ifndef INTR_HPP
+#define INTR_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -16,7 +16,7 @@
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 
-void add_iringbuf(const char *inst);
-void print_iringbuf();
+void etrace_record(vaddr_t pc, word_t cause);
+void print_etrace();
 
 #endif

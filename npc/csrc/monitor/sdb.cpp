@@ -18,7 +18,8 @@
 #include <util/sim_tool.hpp>
 #include <cpu_exec/cpu_exec.hpp>
 #include <cpu_exec/ftrace.hpp>
-#include <cpu_exec/iringbuf.hpp>
+#include <cpu_exec/intr.hpp>
+#include <cpu_exec/itrace.hpp>
 #include <cpu_exec/mem.hpp>
 #include <cpu_exec/vaddr.hpp>
 #include <cpu_exec/reg.hpp>
@@ -114,7 +115,7 @@ static int cmd_info(const char *const args)
                 isa_reg_display();
                 break;
             case 'i':
-                MUXDEF(CONFIG_ITRACE, print_iringbuf(), printf("itrace is close"));
+                MUXDEF(CONFIG_ITRACE, print_itrace(), printf("itrace is close"));
                 break;
             case 'm':
                 MUXDEF(CONFIG_MTRACE, print_mtrace(), printf("mtrace is close"));
@@ -125,17 +126,20 @@ static int cmd_info(const char *const args)
             case 'd':
                 MUXDEF(CONFIG_DTRACE, print_dtrace(), printf("dtrace is close"));
                 break;
+            case 'e':
+                MUXDEF(CONFIG_ETRACE, print_etrace(), printf("etrace is close"));
+                break;
             case 'w':
                 MUXDEF(CONFIG_WATCHPOINT, printf_watchpoint(), printf("watchpoint is close\n"));
                 break;
             default:
-                printf("info format error, using like this: info r/i/m/f/d/w\n");
+                printf("info format error, using like this: info r/i/m/f/d/e/w\n");
                 break;
             }
         }
         else
         {
-            printf("info format error, using like this: info r/i/m/f/d/w\n");
+            printf("info format error, using like this: info r/i/m/f/d/e/w\n");
         }
     }
     else
@@ -193,7 +197,7 @@ static int cmd_x(const char *const args)
                 case 4:
                     printf("0x%08x ", data);
                     break;
-#ifdef CONFIG_ISA64
+#if (ISA_WIDTH == 64)
                 case 8:
                     printf("0x%016lx ", data);
                     break;

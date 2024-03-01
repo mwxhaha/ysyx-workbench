@@ -11,6 +11,13 @@ static inline void outb(uintptr_t addr, uint8_t  data) { *(volatile uint8_t  *)a
 static inline void outw(uintptr_t addr, uint16_t data) { *(volatile uint16_t *)addr = data; }
 static inline void outl(uintptr_t addr, uint32_t data) { *(volatile uint32_t *)addr = data; }
 
+#define INTR_CODE_MECALL 11
+#if __riscv_xlen == 64
+#define MSTATUS_INIT 0xa00001800
+#else
+#define MSTATUS_INIT 0x1800
+#endif
+
 #define PTE_V 0x01
 #define PTE_R 0x02
 #define PTE_W 0x04

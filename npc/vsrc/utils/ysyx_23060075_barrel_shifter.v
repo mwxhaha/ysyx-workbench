@@ -9,12 +9,7 @@ module ysyx_23060075_barrel_shifter #(
 );
 
     wire sign = is_algorism & din[data_len-1];
-
     wire [data_len-1:0] d_1;
-    wire [data_len-1:0] d_2;
-    wire [data_len-1:0] d_3;
-    wire [data_len-1:0] d_4;
-
     ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
@@ -33,7 +28,7 @@ module ysyx_23060075_barrel_shifter #(
             {sign, din[data_len-1:1]}
         })
     );
-
+    wire [data_len-1:0] d_2;
     ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
@@ -52,7 +47,7 @@ module ysyx_23060075_barrel_shifter #(
             {{2{sign}}, d_1[data_len-1:2]}
         })
     );
-
+    wire [data_len-1:0] d_3;
     ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
@@ -71,7 +66,7 @@ module ysyx_23060075_barrel_shifter #(
             {{4{sign}}, d_2[data_len-1:4]}
         })
     );
-
+    wire [data_len-1:0] d_4;
     ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),
@@ -90,7 +85,6 @@ module ysyx_23060075_barrel_shifter #(
             {{8{sign}}, d_3[data_len-1:8]}
         })
     );
-
     ysyx_23060075_mux #(
         .NR_KEY  (4),
         .KEY_LEN (2),

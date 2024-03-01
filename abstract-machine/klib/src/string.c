@@ -64,35 +64,42 @@ int strcmp(const char *s1, const char *s2)
 
 int strncmp(const char *s1, const char *s2, size_t n)
 {
-    panic("Not implemented");
+    for (int i = 0; i < n; i++)
+    {
+        if (s1[i] < s2[i])
+            return -1;
+        if (s1[i] > s2[i])
+            return 1;
+    }
+    return 0;
 }
 
 void *memset(void *s, int c, size_t n)
 {
     for (int i = 0; i < n; i++)
     {
-        ((char *)s)[i] = (char)c;
+        ((unsigned char *)s)[i] = (unsigned char)c;
     }
     return s;
 }
 
 #define MOVE_TMP_LEN_MAX 10000
-static char move_tmp[MOVE_TMP_LEN_MAX];
+static unsigned char move_tmp[MOVE_TMP_LEN_MAX];
 
 void *memmove(void *dst, const void *src, size_t n)
 {
     panic_on(n > MOVE_TMP_LEN_MAX, "memmove size is too large");
     for (int i = 0; i < n; i++)
-        move_tmp[i] = ((char *)src)[i];
+        move_tmp[i] = ((unsigned char *)src)[i];
     for (int i = 0; i < n; i++)
-        ((char *)dst)[i] = move_tmp[i];
+        ((unsigned char *)dst)[i] = move_tmp[i];
     return dst;
 }
 
 void *memcpy(void *dst, const void *src, size_t n)
 {
     for (int i = 0; i < n; i++)
-        ((char *)dst)[i] = ((char *)src)[i];
+        ((unsigned char *)dst)[i] = ((unsigned char *)src)[i];
     return dst;
 }
 
@@ -100,9 +107,9 @@ int memcmp(const void *s1, const void *s2, size_t n)
 {
     for (int i = 0; i < n; i++)
     {
-        if (((char *)s1)[i] < ((char *)s2)[i])
+        if (((unsigned char *)s1)[i] < ((unsigned char *)s2)[i])
             return -1;
-        if (((char *)s1)[i] > ((char *)s2)[i])
+        if (((unsigned char *)s1)[i] > ((unsigned char *)s2)[i])
             return 1;
     }
     return 0;

@@ -14,33 +14,32 @@ module ysyx_23060075_core (
     output wire                                     mem_2_w_en
 );
 
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] pc_imm;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] alu_result;
-    wire                                is_branch;
-    wire                                is_jal;
-    wire                                is_jalr;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] pc;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] snpc;
-    wire                                pc_en;
-    wire                                mem_if_en;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] inst;
-
+    wire [         `ysyx_23060075_ISA_WIDTH-1:0] pc_imm;
+    wire [         `ysyx_23060075_ISA_WIDTH-1:0] alu_result;
+    wire [         `ysyx_23060075_ISA_WIDTH-1:0] mtvec;
+    wire [         `ysyx_23060075_ISA_WIDTH-1:0] mepc;
+    wire [`ysyx_23060075_DNPC_MUX_SEL_WIDTH-1:0] dnpc_mux_sel;
+    wire [         `ysyx_23060075_ISA_WIDTH-1:0] pc;
+    wire [         `ysyx_23060075_ISA_WIDTH-1:0] snpc;
+    wire                                         pc_en;
+    wire [         `ysyx_23060075_ISA_WIDTH-1:0] inst;
+    wire                                         mem_if_en;
     ysyx_23060075_ifu ifu_1 (
-        .clk       (clk),
-        .rst       (rst),
-        .pc_imm    (pc_imm),
-        .alu_result(alu_result),
-        .is_branch (is_branch),
-        .is_jal    (is_jal),
-        .is_jalr   (is_jalr),
-        .pc        (pc),
-        .snpc      (snpc),
-        .pc_en     (pc_en),
-        .mem_1_r   (mem_1_r),
-        .mem_1_addr(mem_1_addr),
-        .mem_1_r_en(mem_1_r_en),
-        .mem_if_en (mem_if_en),
-        .inst      (inst)
+        .clk         (clk),
+        .rst         (rst),
+        .pc_imm      (pc_imm),
+        .alu_result  (alu_result),
+        .mtvec       (mtvec),
+        .mepc        (mepc),
+        .dnpc_mux_sel(dnpc_mux_sel),
+        .pc          (pc),
+        .snpc        (snpc),
+        .pc_en       (pc_en),
+        .inst        (inst),
+        .mem_if_en   (mem_if_en),
+        .mem_1_r     (mem_1_r),
+        .mem_1_addr  (mem_1_addr),
+        .mem_1_r_en  (mem_1_r_en)
     );
 
     wire [`ysyx_23060075_INST_TYPE_WIDTH-1:0] inst_type;
@@ -52,7 +51,11 @@ module ysyx_23060075_core (
     wire [      `ysyx_23060075_ISA_WIDTH-1:0] src1;
     wire [      `ysyx_23060075_ISA_WIDTH-1:0] src2;
     wire                                      gpr_w_en;
-
+    wire                                      is_csri;
+    wire [      `ysyx_23060075_ISA_WIDTH-1:0] csr_r;
+    wire [      `ysyx_23060075_ISA_WIDTH-1:0] intr_code;
+    wire                                      is_intr;
+    wire                                      csr_w_en;
     ysyx_23060075_idu idu_1 (
         .clk      (clk),
         .rst      (rst),
@@ -65,19 +68,26 @@ module ysyx_23060075_core (
         .srd      (srd),
         .src1     (src1),
         .src2     (src2),
-        .gpr_w_en (gpr_w_en)
+        .gpr_w_en (gpr_w_en),
+        .is_csri  (is_csri),
+        .pc       (pc),
+        .mtvec    (mtvec),
+        .mepc     (mepc),
+        .csr_r    (csr_r),
+        .intr_code(intr_code),
+        .is_intr  (is_intr),
+        .csr_w_en (csr_w_en)
     );
 
     wire                                      alu_b_is_imm;
     wire [`ysyx_23060075_ALU_FUNCT_WIDTH-1:0] alu_funct;
-
     ysyx_23060075_exu exu_1 (
         .imm         (imm),
         .src1        (src1),
         .src2        (src2),
+        .alu_result  (alu_result),
         .alu_b_is_imm(alu_b_is_imm),
         .alu_funct   (alu_funct),
-        .alu_result  (alu_result),
         .pc          (pc),
         .pc_imm      (pc_imm)
     );
@@ -86,11 +96,11 @@ module ysyx_23060075_core (
     wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] mem_mask;
     wire                                     mem_r_en;
     wire                                     mem_w_en;
-    ysyx_23060075_memu memu_1 (
-        .funct3    (funct3),
-        .alu_result(alu_result),
+    ysyx_23060075_lsu lsu_1 (
         .src2      (src2),
+        .alu_result(alu_result),
         .mem_r     (mem_r),
+        .funct3    (funct3),
         .mem_mask  (mem_mask),
         .mem_r_en  (mem_r_en),
         .mem_w_en  (mem_w_en),
@@ -102,80 +112,39 @@ module ysyx_23060075_core (
         .mem_2_w_en(mem_2_w_en)
     );
 
-    wire rd_is_mem;
-    wire is_lui;
-    wire is_auipc;
 
+    wire [`ysyx_23060075_SRD_MUX_SEL_WIDTH-1:0] srd_mux_sel;
     ysyx_23060075_wbu wbu_1 (
-        .mem_r     (mem_r),
-        .alu_result(alu_result),
-        .funct3    (funct3),
-        .imm       (imm),
-        .snpc      (snpc),
-        .pc_imm    (pc_imm),
-        .srd       (srd),
-        .rd_is_mem (rd_is_mem),
-        .is_lui    (is_lui),
-        .is_auipc  (is_auipc),
-        .is_jal    (is_jal),
-        .is_jalr   (is_jalr)
+        .imm        (imm),
+        .pc_imm     (pc_imm),
+        .snpc       (snpc),
+        .mem_r      (mem_r),
+        .alu_result (alu_result),
+        .csr_r      (csr_r),
+        .srd        (srd),
+        .srd_mux_sel(srd_mux_sel)
     );
 
     ysyx_23060075_ctrl ctrl_1 (
+        .inst        (inst),
+        .dnpc_mux_sel(dnpc_mux_sel),
+        .pc_en       (pc_en),
+        .mem_if_en   (mem_if_en),
         .inst_type   (inst_type),
         .opcode      (opcode),
         .funct3      (funct3),
         .funct7      (funct7),
-        .pc_en       (pc_en),
-        .is_branch   (is_branch),
-        .is_jal      (is_jal),
-        .is_jalr     (is_jalr),
-        .mem_if_en   (mem_if_en),
         .gpr_w_en    (gpr_w_en),
+        .is_csri     (is_csri),
+        .csr_w_en    (csr_w_en),
+        .intr_code   (intr_code),
+        .is_intr     (is_intr),
         .alu_b_is_imm(alu_b_is_imm),
         .alu_funct   (alu_funct),
-        .mem_r_en    (mem_r_en),
         .mem_mask    (mem_mask),
+        .mem_r_en    (mem_r_en),
         .mem_w_en    (mem_w_en),
-        .rd_is_mem   (rd_is_mem),
-        .is_lui      (is_lui),
-        .is_auipc    (is_auipc)
+        .srd_mux_sel (srd_mux_sel)
     );
-
-    always @(posedge clk) begin
-        if (mem_w_en) begin
-            case (mem_mask)
-                `ysyx_23060075_MEM_MASK_WIDTH'b0011:
-                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b1) != `ysyx_23060075_ISA_WIDTH'b0) begin
-                    $display("address = %h len = 2 is unalign at pc = %h", alu_result, pc);
-                    absort(pc);
-                end
-                `ysyx_23060075_MEM_MASK_WIDTH'b1111:
-                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b11) != `ysyx_23060075_ISA_WIDTH'b0) begin
-                    $display("address = %h len = 4 is unalign at pc = %h", alu_result, pc);
-                    absort(pc);
-                end
-                default: ;
-            endcase
-        end
-    end
-
-    always @(posedge clk) begin
-        if (mem_r_en) begin
-            case (funct3[1:0])
-                2'b01:
-                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b1) != `ysyx_23060075_ISA_WIDTH'b0) begin
-                    $display("address = %h len = 2 is unalign at pc = %h", alu_result, pc);
-                    absort(pc);
-                end
-                2'b10:
-                if ((alu_result & `ysyx_23060075_ISA_WIDTH'b11) != `ysyx_23060075_ISA_WIDTH'b0) begin
-                    $display("address = %h len = 4 is unalign at pc = %h", alu_result, pc);
-                    absort(pc);
-                end
-                default: ;
-            endcase
-        end
-    end
 
 endmodule

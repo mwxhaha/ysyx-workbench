@@ -95,14 +95,14 @@ static void addr_write_bus_align(vaddr_t addr, uint8_t mask, word_t data)
 word_t addr_montior_read(vaddr_t addr, int len)
 {
     enable_mem_align_check = false;
-    enable_mtrace = false;
-    enable_dtrace = false;
+    mtrace_enable = false;
+    dtrace_enable = false;
     enable_device_fresh = false;
     enable_device_skip_diff = false;
     word_t ret = vaddr_read(addr, len);
     enable_mem_align_check = true;
-    enable_mtrace = true;
-    enable_dtrace = true;
+    mtrace_enable = true;
+    dtrace_enable = true;
     enable_device_fresh = true;
     enable_device_skip_diff = true;
     return ret;
@@ -110,13 +110,13 @@ word_t addr_montior_read(vaddr_t addr, int len)
 
 void addr_ifetch(vaddr_t addr, word_t *data)
 {
-    enable_mtrace = false;
-    enable_dtrace = false;
+    mtrace_enable = false;
+    dtrace_enable = false;
     enable_device_fresh = false;
     enable_device_skip_diff = false;
     addr_ifetch_bus_align(addr, data);
-    enable_mtrace = true;
-    enable_dtrace = true;
+    mtrace_enable = true;
+    dtrace_enable = true;
     enable_device_fresh = true;
     enable_device_skip_diff = true;
 }
