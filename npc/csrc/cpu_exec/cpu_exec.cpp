@@ -19,6 +19,7 @@
 #include <util/disasm.hpp>
 #include <cpu_exec/dut.hpp>
 #include <cpu_exec/ftrace.hpp>
+#include <cpu_exec/intr.hpp>
 #include <cpu_exec/iringbuf.hpp>
 #include <cpu_exec/mem.hpp>
 #include <cpu_exec/reg.hpp>
@@ -61,6 +62,10 @@ static void exec_once(Decode *s, vaddr_t pc)
 #ifdef CONFIG_FTRACE
     if ((s->isa.inst.val & 0x7f) == 0x6f || (s->isa.inst.val & 0x707f) == 0x67)
         ftrace_record(s);
+#endif
+#ifdef CONFIG_ETRACE
+    if (s->isa.inst.val == 0x00000073)
+        etrace_record(s->pc, TOP_MCAUSE);
 #endif
 #ifdef CONFIG_ITRACE
     char *p = s->logbuf;
