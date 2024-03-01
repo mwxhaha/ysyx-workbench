@@ -26,8 +26,15 @@ static uint8_t *pmem = NULL;
 static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 #endif
 
-uint8_t *guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
-paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
+uint8_t *guest_to_host(paddr_t paddr)
+{
+    return pmem + paddr - CONFIG_MBASE;
+}
+
+paddr_t host_to_guest(uint8_t *haddr)
+{
+    return haddr - pmem + CONFIG_MBASE;
+}
 
 typedef struct
 {
@@ -130,8 +137,7 @@ static void pmem_write(paddr_t addr, int len, word_t data)
 
 static void out_of_bound(paddr_t addr)
 {
-    panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
-          addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+    panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD, addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
 }
 
 void init_mem()

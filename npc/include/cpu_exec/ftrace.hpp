@@ -17,6 +17,7 @@
 #include <util/sim_tool.hpp>
 #include <cpu_exec/cpu_exec.hpp>
 
+extern bool ftrace_enable;
 void load_elf(const char *elf_file);
 void ftrace_record(Decode *s);
 void print_ftrace();

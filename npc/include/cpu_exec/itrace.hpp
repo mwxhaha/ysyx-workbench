@@ -1,5 +1,5 @@
-#ifndef IRINGBUF_HPP
-#define IRINGBUF_HPP
+#ifndef ITRACE_HPP
+#define ITRACE_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -15,8 +15,9 @@
 #include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
+#include <cpu_exec/cpu_exec.hpp>
 
-void add_iringbuf(const char *inst);
-void print_iringbuf();
+void itrace_record(Decode *s);
+void print_itrace();
 
 #endif

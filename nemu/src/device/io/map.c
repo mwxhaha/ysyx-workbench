@@ -43,9 +43,7 @@ static void check_bound(IOMap *map, paddr_t addr)
     }
     else
     {
-        Assert(addr <= map->high && addr >= map->low,
-               "address (" FMT_PADDR ") is out of bound {%s} [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
-               addr, map->name, map->low, map->high, cpu.pc);
+        Assert(addr <= map->high && addr >= map->low, "address (" FMT_PADDR ") is out of bound {%s} [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD, addr, map->name, map->low, map->high, cpu.pc);
     }
 }
 

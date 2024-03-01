@@ -20,7 +20,7 @@
 #include <cpu_exec/dut.hpp>
 #include <cpu_exec/ftrace.hpp>
 #include <cpu_exec/intr.hpp>
-#include <cpu_exec/iringbuf.hpp>
+#include <cpu_exec/itrace.hpp>
 #include <cpu_exec/mem.hpp>
 #include <cpu_exec/reg.hpp>
 #include <monitor/watchpoint.hpp>
@@ -38,7 +38,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     log_write("%s\n", _this->logbuf);
     if (g_print_step)
         puts(_this->logbuf);
-    add_iringbuf(_this->logbuf);
 #endif
     IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
@@ -67,29 +66,7 @@ static void exec_once(Decode *s, vaddr_t pc)
     if (s->isa.inst.val == 0x00000073)
         etrace_record(s->pc, TOP_MCAUSE);
 #endif
-#ifdef CONFIG_ITRACE
-    char *p = s->logbuf;
-    p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
-    int ilen = s->snpc - s->pc;
-    int i;
-    uint8_t *inst = (uint8_t *)&s->isa.inst.val;
-    for (i = ilen - 1; i >= 0; i--)
-    {
-        p += snprintf(p, 4, " %02x", inst[i]);
-    }
-    int ilen_max = INST_LEN / 8;
-    int space_len = ilen_max - ilen;
-    if (space_len < 0)
-        space_len = 0;
-    space_len = space_len * 3 + 1;
-    memset(p, ' ', space_len);
-    p += space_len;
-#if (CONFIG_ISA == CONFIG_RV32I || CONFIG_ISA == CONFIG_RV32E || CONFIG_ISA == CONFIG_RV64I)
-    disassemble(p, s->logbuf + sizeof(s->logbuf) - p, s->pc, (uint8_t *)&s->isa.inst.val, ilen);
-#else
-    panic("disassemble do not support other isa");
-#endif
-#endif
+    IFDEF(CONFIG_ITRACE, itrace_record(s));
 }
 
 static void execute(uint64_t n)
@@ -121,7 +98,7 @@ static void statistic()
 void assert_fail_msg()
 {
     isa_reg_display();
-    IFDEF(CONFIG_ITRACE, print_iringbuf());
+    IFDEF(CONFIG_ITRACE, print_itrace());
     IFDEF(CONFIG_MTRACE, print_mtrace());
     IFDEF(CONFIG_FTRACE, print_ftrace());
     IFDEF(CONFIG_DTRACE, print_dtrace());
@@ -169,7 +146,7 @@ void cpu_exec(uint64_t n)
         if (npc_state.state != NPC_END || npc_state.halt_ret != 0)
         {
             isa_reg_display();
-            IFDEF(CONFIG_ITRACE, print_iringbuf());
+    IFDEF(CONFIG_ITRACE, print_itrace());
             IFDEF(CONFIG_MTRACE, print_mtrace());
             IFDEF(CONFIG_FTRACE, print_ftrace());
             IFDEF(CONFIG_DTRACE, print_dtrace());
