@@ -1,6 +1,7 @@
 `include "config.vh"
 
 module ysyx_23060075_ctrl (
+    input  wire [         `ysyx_23060075_ISA_WIDTH-1:0] inst,
     output wire [`ysyx_23060075_DNPC_MUX_SEL_WIDTH-1:0] dnpc_mux_sel,
     output wire                                         pc_en,
     output wire                                         mem_if_en,
@@ -14,6 +15,8 @@ module ysyx_23060075_ctrl (
     output wire                                      gpr_w_en,
     output wire                                      is_csri,
     output wire                                      csr_w_en,
+    output wire [      `ysyx_23060075_ISA_WIDTH-1:0] intr_code,
+    output wire                                      is_intr,
 
     output wire                                      alu_b_is_imm,
     output wire [`ysyx_23060075_ALU_FUNCT_WIDTH-1:0] alu_funct,
@@ -25,6 +28,8 @@ module ysyx_23060075_ctrl (
     output wire [`ysyx_23060075_SRD_MUX_SEL_WIDTH-1:0] srd_mux_sel
 );
 
+    wire is_ecall = inst == `ysyx_23060075_ISA_WIDTH'b0000000_00000_00000_000_00000_1110011;
+    wire [`ysyx_23060075_DNPC_MUX_SEL_WIDTH-1:0] dnpc_mux_sel_csr = is_ecall ? `ysyx_23060075_DNPC_IS_MTVEC : (inst == `ysyx_23060075_ISA_WIDTH'b0011000_00010_00000_000_00000_1110011 ? `ysyx_23060075_DNPC_IS_MEPC : `ysyx_23060075_DNPC_IS_SNPC);
     ysyx_23060075_mux_def #(
         .NR_KEY  (`ysyx_23060075_OPCODE_NUMBER_MAX),
         .KEY_LEN (`ysyx_23060075_OPCODE_WIDTH),
@@ -32,7 +37,7 @@ module ysyx_23060075_ctrl (
     ) mux_def_dnpc_mux_sel (
         .out(dnpc_mux_sel),
         .key(opcode),
-        .default_out(`ysyx_23060075_DNPC_IS_SNPC),
+        .default_out(`ysyx_23060075_DNPC_IS_NO_FUNCT),
         .lut({
             `ysyx_23060075_OPCODE_WIDTH'b0110111,
             `ysyx_23060075_DNPC_IS_SNPC,
@@ -53,7 +58,7 @@ module ysyx_23060075_ctrl (
             `ysyx_23060075_OPCODE_WIDTH'b0110011,
             `ysyx_23060075_DNPC_IS_SNPC,
             `ysyx_23060075_OPCODE_WIDTH'b1110011,
-            `ysyx_23060075_DNPC_IS_SNPC
+            dnpc_mux_sel_csr
         })
     );
     assign pc_en = 1'b1;
@@ -62,6 +67,8 @@ module ysyx_23060075_ctrl (
     assign gpr_w_en = inst_type == `ysyx_23060075_R | inst_type == `ysyx_23060075_I | inst_type == `ysyx_23060075_U | inst_type == `ysyx_23060075_J;
     assign is_csri = opcode == `ysyx_23060075_OPCODE_WIDTH'b1110011 & funct3[2] == 1'b1;
     assign csr_w_en = opcode == `ysyx_23060075_OPCODE_WIDTH'b1110011 & funct3[1:0] != 2'b00;
+    assign intr_code = is_ecall ? `ysyx_23060075_INTR_CODE_MECALL : `ysyx_23060075_ISA_WIDTH'b0;
+    assign is_intr = is_ecall;
 
     assign alu_b_is_imm = inst_type == `ysyx_23060075_I | inst_type == `ysyx_23060075_S;
     wire [`ysyx_23060075_ALU_FUNCT_WIDTH-1:0] alu_funct_beq;

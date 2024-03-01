@@ -9,16 +9,23 @@ module ysyx_23060075_idu (
 
     output wire [`ysyx_23060075_IMM_WIDTH-1:0] imm,
 
-    input  wire [   `ysyx_23060075_ISA_WIDTH-1:0] srd,
     output wire [`ysyx_23060075_OPCODE_WIDTH-1:0] opcode,
     output wire [`ysyx_23060075_FUNCT3_WIDTH-1:0] funct3,
     output wire [`ysyx_23060075_FUNCT7_WIDTH-1:0] funct7,
-    output wire [   `ysyx_23060075_ISA_WIDTH-1:0] src1,
-    output wire [   `ysyx_23060075_ISA_WIDTH-1:0] src2,
-    input  wire                                   gpr_w_en,
 
+    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] srd,
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] src1,
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] src2,
+    input  wire                                gpr_w_en,
+
+    input wire is_csri,
+
+    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] pc,
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] mepc,
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] mtvec,
     output wire [`ysyx_23060075_ISA_WIDTH-1:0] csr_r,
-    input  wire                                is_csri,
+    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] intr_code,
+    input  wire                                is_intr,
     input  wire                                csr_w_en
 );
 
@@ -84,6 +91,7 @@ module ysyx_23060075_idu (
     wire [`ysyx_23060075_REG_ADDR_WIDTH-1:0] rd = inst[7+`ysyx_23060075_REG_ADDR_WIDTH-1:7];
     wire [`ysyx_23060075_REG_ADDR_WIDTH-1:0] rs1 = inst[15+`ysyx_23060075_REG_ADDR_WIDTH-1:15];
     wire [`ysyx_23060075_REG_ADDR_WIDTH-1:0] rs2 = inst[20+`ysyx_23060075_REG_ADDR_WIDTH-1:20];
+
     ysyx_23060075_gpr gpr_1 (
         .clk       (clk),
         .rst       (rst),
@@ -110,13 +118,19 @@ module ysyx_23060075_idu (
         .default_out(`ysyx_23060075_ISA_WIDTH'b0),
         .lut({2'b01, zimm_or_src1, 2'b10, csr_r | zimm_or_src1, 2'b11, csr_r & ~zimm_or_src1})
     );
+
     ysyx_23060075_csr csr_1 (
-        .clk     (clk),
-        .rst     (rst),
-        .csr_w   (csr_w),
-        .csr_r   (csr_r),
-        .csr_addr(csr_addr),
-        .csr_w_en(csr_w_en)
+        .clk      (clk),
+        .rst      (rst),
+        .pc       (pc),
+        .mepc     (mepc),
+        .mtvec    (mtvec),
+        .intr_code(intr_code),
+        .is_intr  (is_intr),
+        .csr_w    (csr_w),
+        .csr_r    (csr_r),
+        .csr_addr (csr_addr),
+        .csr_w_en (csr_w_en)
     );
 
 endmodule

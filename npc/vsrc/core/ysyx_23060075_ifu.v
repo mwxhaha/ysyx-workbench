@@ -6,7 +6,10 @@ module ysyx_23060075_ifu (
 
     input  wire [         `ysyx_23060075_ISA_WIDTH-1:0] pc_imm,
     input  wire [         `ysyx_23060075_ISA_WIDTH-1:0] alu_result,
+    input  wire [         `ysyx_23060075_ISA_WIDTH-1:0] mtvec,
+    input  wire [         `ysyx_23060075_ISA_WIDTH-1:0] mepc,
     input  wire [`ysyx_23060075_DNPC_MUX_SEL_WIDTH-1:0] dnpc_mux_sel,
+    
     output wire [         `ysyx_23060075_ISA_WIDTH-1:0] pc,
     output wire [         `ysyx_23060075_ISA_WIDTH-1:0] snpc,
     input  wire                                         pc_en,
@@ -19,13 +22,14 @@ module ysyx_23060075_ifu (
 );
 
     wire [`ysyx_23060075_ISA_WIDTH-1:0] dnpc;
-    ysyx_23060075_mux #(
-        .NR_KEY  (4),
+    ysyx_23060075_mux_def #(
+        .NR_KEY  (6),
         .KEY_LEN (`ysyx_23060075_DNPC_MUX_SEL_WIDTH),
         .DATA_LEN(`ysyx_23060075_ISA_WIDTH)
-    ) mux_dnpc (
+    ) mux_def_dnpc (
         .out(dnpc),
         .key(dnpc_mux_sel),
+        .default_out(`ysyx_23060075_ISA_WIDTH'b0),
         .lut({
             `ysyx_23060075_DNPC_IS_SNPC,
             snpc,
@@ -34,7 +38,11 @@ module ysyx_23060075_ifu (
             `ysyx_23060075_DNPC_IS_ALU_RESULT,
             alu_result & ~`ysyx_23060075_ISA_WIDTH'b1,
             `ysyx_23060075_DNPC_IS_BRANCH,
-            alu_result[0] ? pc_imm : snpc
+            alu_result[0] ? pc_imm : snpc,
+            `ysyx_23060075_DNPC_IS_MTVEC,
+            mtvec,
+            `ysyx_23060075_DNPC_IS_MEPC,
+            mepc
         })
     );
 
