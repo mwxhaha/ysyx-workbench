@@ -33,7 +33,7 @@ endif
 	$(call git_commit, "sim RTL") 
 	@echo "-----simulate done-----"
 
-sta: build
+sta: verilate
 	@echo "-----sta-----"
 	$(MAKE) $(STA_FLAG) sta
 	@echo "-----sta done-----"

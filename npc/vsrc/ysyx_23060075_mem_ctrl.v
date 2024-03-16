@@ -8,6 +8,9 @@ module ysyx_23060075_mem_ctrl (
     input  wire [`ysyx_23060075_ISA_WIDTH-1:0] mem_1_addr,
     input  wire                                mem_1_r_en,
 
+`ifdef SYNTHESIS
+    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] pmem_2_addr,
+`endif
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_r,
     input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_w,
     input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_addr,
@@ -16,7 +19,21 @@ module ysyx_23060075_mem_ctrl (
     input  wire                                     mem_2_w_en
 );
 
-`ifndef SYNTHESIS
+`ifdef SYNTHESIS
+    ysyx_23060075_reg_file #(
+        .ADDR_WIDTH(7),
+        .DATA_WIDTH(`ysyx_23060075_ISA_WIDTH)
+    ) mem_1 (
+        .clk    (clk),
+        .wdata  (`ysyx_23060075_ISA_WIDTH'b0),
+        .waddr  (`ysyx_23060075_ISA_WIDTH'b0),
+        .rdata_1(mem_1_r),
+        .raddr_1(mem_1_addr),
+        .rdata_2(),
+        .raddr_2(`ysyx_23060075_ISA_WIDTH'b0),
+        .wen    (1'b0)
+    );
+`else
     always @(*) begin
         if (!rst && mem_1_r_en) begin
             addr_ifetch_dpic(mem_1_addr, mem_1_r);
@@ -28,9 +45,15 @@ module ysyx_23060075_mem_ctrl (
 
     reg [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_r;
     wire [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_w;
+`ifdef SYNTHESIS
+    assign pmem_2_addr = {
+        mem_2_addr[`ysyx_23060075_ISA_WIDTH-1:2], 2'b0
+    };
+`else
     wire [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_addr = {
         mem_2_addr[`ysyx_23060075_ISA_WIDTH-1:2], 2'b0
     };
+`endif
     wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] pmem_2_mask;
     wire pmem_2_r_en = mem_2_r_en;
     wire pmem_2_w_en = mem_2_w_en;
@@ -89,7 +112,21 @@ module ysyx_23060075_mem_ctrl (
         })
     );
 
-`ifndef SYNTHESIS
+`ifdef SYNTHESIS
+    ysyx_23060075_reg_file #(
+        .ADDR_WIDTH(7),
+        .DATA_WIDTH(`ysyx_23060075_ISA_WIDTH)
+    ) mem_2 (
+        .clk    (clk),
+        .wdata  (pmem_2_w),
+        .waddr  (pmem_2_addr),
+        .rdata_1(pmem_2_r),
+        .raddr_1(pmem_2_addr),
+        .rdata_2(),
+        .raddr_2(`ysyx_23060075_ISA_WIDTH'b0),
+        .wen    (pmem_2_w_en)
+    );
+`else
     always @(negedge clk) begin
         if (!rst && pmem_2_r_en) begin
             addr_read_dpic(pmem_2_addr, pmem_2_r);

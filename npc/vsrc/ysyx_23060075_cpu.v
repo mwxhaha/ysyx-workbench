@@ -21,8 +21,11 @@ import "DPI-C" function void addr_write_dpic(
 `endif
 
 module ysyx_23060075_cpu (
-    input wire clk,
-    input wire rst
+    input  wire                                clk,
+`ifdef SYNTHESIS
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_addr,
+`endif
+    input  wire                                rst
 );
 
     reg  [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_r;
@@ -55,6 +58,9 @@ module ysyx_23060075_cpu (
         .mem_1_r   (mem_1_r),
         .mem_1_addr(mem_1_addr),
         .mem_1_r_en(mem_1_r_en),
+`ifdef SYNTHESIS
+        .pmem_2_addr(pmem_2_addr),
+`endif
         .mem_2_r   (mem_2_r),
         .mem_2_w   (mem_2_w),
         .mem_2_addr(mem_2_addr),
