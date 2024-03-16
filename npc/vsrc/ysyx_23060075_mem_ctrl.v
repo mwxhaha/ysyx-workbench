@@ -16,6 +16,7 @@ module ysyx_23060075_mem_ctrl (
     input  wire                                     mem_2_w_en
 );
 
+`ifndef SYNTHESIS
     always @(*) begin
         if (!rst && mem_1_r_en) begin
             addr_ifetch_dpic(mem_1_addr, mem_1_r);
@@ -23,6 +24,7 @@ module ysyx_23060075_mem_ctrl (
             mem_1_r = `ysyx_23060075_ISA_WIDTH'b0;
         end
     end
+`endif
 
     reg [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_r;
     wire [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_w;
@@ -87,6 +89,7 @@ module ysyx_23060075_mem_ctrl (
         })
     );
 
+`ifndef SYNTHESIS
     always @(negedge clk) begin
         if (!rst && pmem_2_r_en) begin
             addr_read_dpic(pmem_2_addr, pmem_2_r);
@@ -97,5 +100,6 @@ module ysyx_23060075_mem_ctrl (
             addr_write_dpic(pmem_2_addr, {4'b0000, pmem_2_mask}, pmem_2_w);
         end
     end
+`endif
 
 endmodule

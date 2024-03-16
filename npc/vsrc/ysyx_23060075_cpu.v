@@ -1,4 +1,5 @@
 `include "config.vh"
+`ifndef SYNTHESIS
 import "DPI-C" function void absort(input int pc);
 import "DPI-C" function void ebreak(
     input int ret,
@@ -17,6 +18,7 @@ import "DPI-C" function void addr_write_dpic(
     input byte mask,
     input int  data
 );
+`endif
 
 module ysyx_23060075_cpu (
     input wire clk,
@@ -61,6 +63,7 @@ module ysyx_23060075_cpu (
         .mem_2_w_en(mem_2_w_en)
     );
 
+`ifndef SYNTHESIS
     always @(posedge clk) begin
         if (!rst && core_1.inst_type == `ysyx_23060075_N) begin
             $display("invalid inst = %h at pc = %h", core_1.inst, core_1.pc);
@@ -121,5 +124,6 @@ module ysyx_23060075_cpu (
             endcase
         end
     end
+`endif
 
 endmodule

@@ -112,3 +112,5 @@ override ARGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
 IMG ?= 
 NPC_EXEC := $(BIN) $(ARGS) $(IMG)
 WAVE = $(BUILD_DIR)/wave.vcd
+
+STA_FLAG = -C $(NPC_HOME)/../yosys-sta DESIGN=$(STUDENT_ID)_$(TOP_NAME) SDC_FILE="$(SDC)" RTL_FILES="$(VSRC)" INCLUDE_DIR="$(INCLUDE_DIR)" CLK_FREQ_MHZ=100
