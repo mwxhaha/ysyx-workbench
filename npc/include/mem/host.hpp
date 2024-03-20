@@ -1,5 +1,5 @@
-#ifdef SIM_cpu
-#include <sim/cpu.hpp>
+#ifndef HOST_HPP
+#define HOST_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,21 +11,12 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include <sim/cpu.hpp>
 #include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <mem/paddr.hpp>
-#include <monitor/sdb.hpp>
 
-npc_state_t npc_state = {NPC_STOP, RESET_VECTOR, 1};
+word_t host_read(void *addr, int len);
+void host_write(void *addr, int len, word_t data);
 
-void sim()
-{
-#ifdef NV_SIM
-    panic("do not support nvboard");
-#else
-    reset(3, CYCLE);
-    sdb_mainloop();
-#endif
-}
 #endif

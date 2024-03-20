@@ -1,4 +1,4 @@
-#include <cpu_exec/vaddr.hpp>
+#include <mem/vaddr.hpp>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -14,7 +14,7 @@
 #include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu_exec/mem.hpp>
+#include <mem/paddr.hpp>
 #include <device/map.hpp>
 
 static word_t vaddr_ifetch(vaddr_t addr, int len)

@@ -14,7 +14,7 @@
 #include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu_exec/mem.hpp>
+#include <mem/paddr.hpp>
 #include <device/map.hpp>
 
 #define NR_MAP 16

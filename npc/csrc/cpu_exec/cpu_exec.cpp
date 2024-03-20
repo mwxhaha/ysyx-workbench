@@ -21,7 +21,7 @@
 #include <cpu_exec/ftrace.hpp>
 #include <cpu_exec/intr.hpp>
 #include <cpu_exec/itrace.hpp>
-#include <cpu_exec/mem.hpp>
+#include <mem/paddr.hpp>
 #include <cpu_exec/reg.hpp>
 #include <monitor/watchpoint.hpp>
 #include <device/map.hpp>
@@ -146,7 +146,7 @@ void cpu_exec(uint64_t n)
         if (npc_state.state != NPC_END || npc_state.halt_ret != 0)
         {
             isa_reg_display();
-    IFDEF(CONFIG_ITRACE, print_itrace());
+            IFDEF(CONFIG_ITRACE, print_itrace());
             IFDEF(CONFIG_MTRACE, print_mtrace());
             IFDEF(CONFIG_FTRACE, print_ftrace());
             IFDEF(CONFIG_DTRACE, print_dtrace());

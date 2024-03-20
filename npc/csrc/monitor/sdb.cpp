@@ -20,8 +20,8 @@
 #include <cpu_exec/ftrace.hpp>
 #include <cpu_exec/intr.hpp>
 #include <cpu_exec/itrace.hpp>
-#include <cpu_exec/mem.hpp>
-#include <cpu_exec/vaddr.hpp>
+#include <mem/paddr.hpp>
+#include <mem/vaddr.hpp>
 #include <cpu_exec/reg.hpp>
 #include <monitor/expr.hpp>
 #include <monitor/watchpoint.hpp>

@@ -28,8 +28,6 @@ extern bool enable_mem_align_check;
 
 bool in_pmem(paddr_t addr);
 uint8_t *guest_to_host(paddr_t paddr);
-word_t host_read(void *addr, int len);
-void host_write(void *addr, int len, word_t data);
 void print_mtrace();
 void init_mem();
 void init_isa();

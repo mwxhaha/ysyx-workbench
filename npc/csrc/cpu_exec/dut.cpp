@@ -16,7 +16,7 @@
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
 #include <cpu_exec/reg.hpp>
-#include <cpu_exec/mem.hpp>
+#include <mem/paddr.hpp>
 
 enum
 {

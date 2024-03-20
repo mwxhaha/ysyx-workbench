@@ -14,7 +14,7 @@
 #include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu_exec/vaddr.hpp>
+#include <mem/vaddr.hpp>
 
 void absort(int pc)
 {
@@ -30,7 +30,7 @@ void ebreak(int ret, int pc)
     npc_state.halt_pc = pc;
 }
 
-void addr_ifetch_dpic(int addr, int* data)
+void addr_ifetch_dpic(int addr, int *data)
 {
 #if ISA_WIDTH == 64
     panic("memory read do not support ISA64");
@@ -38,7 +38,7 @@ void addr_ifetch_dpic(int addr, int* data)
     addr_ifetch(addr, (word_t *)data);
 }
 
-void addr_read_dpic(int addr, int* data)
+void addr_read_dpic(int addr, int *data)
 {
 #if ISA_WIDTH == 64
     panic("memory read do not support ISA64");
