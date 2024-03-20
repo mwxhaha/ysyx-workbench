@@ -1,5 +1,5 @@
-#ifndef ITRACE_HPP
-#define ITRACE_HPP
+#ifndef CPU_EXEC_ITRACE_HPP
+#define CPU_EXEC_ITRACE_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

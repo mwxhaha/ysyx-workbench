@@ -1,5 +1,5 @@
-#ifndef DISASM_HPP
-#define DISASM_HPP
+#ifndef UTIL_DISASM_HPP
+#define UTIL_DISASM_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

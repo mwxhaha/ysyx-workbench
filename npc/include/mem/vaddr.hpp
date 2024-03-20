@@ -1,5 +1,5 @@
-#ifndef VADDR_HPP
-#define VADDR_HPP
+#ifndef MEM_VADDR_HPP
+#define MEM_VADDR_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

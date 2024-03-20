@@ -1,5 +1,5 @@
-#ifndef RAND_HPP
-#define RAND_HPP
+#ifndef UTIL_RAND_HPP
+#define UTIL_RAND_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

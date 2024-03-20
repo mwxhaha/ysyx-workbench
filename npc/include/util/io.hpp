@@ -1,5 +1,5 @@
-#ifndef IO_HPP
-#define IO_HPP
+#ifndef UTIL_IO_HPP
+#define UTIL_IO_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

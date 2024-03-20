@@ -1,5 +1,5 @@
-#ifndef MMIO_HPP
-#define MMIO_HPP
+#ifndef DEVICE_MMIO_HPP
+#define DEVICE_MMIO_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

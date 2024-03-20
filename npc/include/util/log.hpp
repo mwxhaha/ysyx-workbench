@@ -1,5 +1,5 @@
-#ifndef LOG_HPP
-#define LOG_HPP
+#ifndef UTIL_LOG_HPP
+#define UTIL_LOG_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

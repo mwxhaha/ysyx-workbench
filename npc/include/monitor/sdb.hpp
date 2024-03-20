@@ -1,5 +1,5 @@
-#ifndef SDB_HPP
-#define SDB_HPP
+#ifndef MONITOR_SDB_HPP
+#define MONITOR_SDB_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

@@ -1,5 +1,5 @@
-#ifndef TIMER_HPP
-#define TIMER_HPP
+#ifndef UTIL_TIMER_HPP
+#define UTIL_TIMER_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

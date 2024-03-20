@@ -1,5 +1,5 @@
-#ifndef MEM_HPP
-#define MEM_HPP
+#ifndef MEM_PADDR_HPP
+#define MEM_PADDR_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

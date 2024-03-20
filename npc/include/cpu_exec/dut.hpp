@@ -1,5 +1,5 @@
-#ifndef DUT_HPP
-#define DUT_HPP
+#ifndef CPU_EXEC_DUT_HPP
+#define CPU_EXEC_DUT_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

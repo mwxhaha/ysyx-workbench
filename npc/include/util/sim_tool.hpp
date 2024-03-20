@@ -1,5 +1,5 @@
-#ifndef SIM_TOOL_HPP
-#define SIM_TOOL_HPP
+#ifndef UTIL_SIM_TOOL_HPP
+#define UTIL_SIM_TOOL_HPP
 
 #include <iostream>
 #include <bitset>

@@ -1,5 +1,5 @@
-#ifndef INTR_HPP
-#define INTR_HPP
+#ifndef CPU_EXEC_INTR_HPP
+#define CPU_EXEC_INTR_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

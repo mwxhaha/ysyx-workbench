@@ -1,5 +1,5 @@
-#ifndef D_TIMER_HPP
-#define D_TIMER_HPP
+#ifndef DEVICE_D_TIMER_HPP
+#define DEVICE_D_TIMER_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

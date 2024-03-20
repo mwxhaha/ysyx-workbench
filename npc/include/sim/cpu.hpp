@@ -1,5 +1,5 @@
-#ifndef CPU_HPP
-#define CPU_HPP
+#ifndef SIM_CPU_HPP
+#define SIM_CPU_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

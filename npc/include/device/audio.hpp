@@ -1,5 +1,5 @@
-#ifndef AUDIO_HPP
-#define AUDIO_HPP
+#ifndef DEVICE_AUDIO_HPP
+#define DEVICE_AUDIO_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

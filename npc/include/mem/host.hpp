@@ -1,5 +1,5 @@
-#ifndef HOST_HPP
-#define HOST_HPP
+#ifndef MEM_HOST_HPP
+#define MEM_HOST_HPP
 
 #include <stdio.h>
 #include <stdbool.h>
