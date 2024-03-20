@@ -25,6 +25,7 @@ module ysyx_23060075_mem_ctrl (
         .DATA_WIDTH(`ysyx_23060075_ISA_WIDTH)
     ) mem_1 (
         .clk    (clk),
+        .rst    (rst),
         .wdata  (`ysyx_23060075_ISA_WIDTH'b0),
         .waddr  (`ysyx_23060075_ISA_WIDTH'b0),
         .rdata_1(mem_1_r),
@@ -116,6 +117,7 @@ module ysyx_23060075_mem_ctrl (
         .DATA_WIDTH(`ysyx_23060075_ISA_WIDTH)
     ) mem_2 (
         .clk    (clk),
+        .rst    (rst),
         .wdata  (pmem_2_w),
         .waddr  (pmem_2_addr),
         .rdata_1(pmem_2_r),

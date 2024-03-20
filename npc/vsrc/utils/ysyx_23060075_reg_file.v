@@ -3,6 +3,9 @@ module ysyx_23060075_reg_file #(
     parameter DATA_WIDTH = 1
 ) (
     input  wire                  clk,
+    // verilator lint_off UNUSEDSIGNAL
+    input  wire                  rst,
+    // verilator lint_on UNUSEDSIGNAL
     input  wire [DATA_WIDTH-1:0] wdata,
     input  wire [ADDR_WIDTH-1:0] waddr,
     output wire [DATA_WIDTH-1:0] rdata_1,

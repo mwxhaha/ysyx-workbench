@@ -77,14 +77,14 @@ module ysyx_23060075_cpu (
         end
     end
     always @(posedge clk) begin
-        if (!rst && core_1.idu_1.csr_1.csr_w_en && !(core_1.idu_1.csr_1.csr_addr == `ysyx_23060075_CSR_ADDR_MEPC | core_1.idu_1.csr_1.csr_addr == `ysyx_23060075_CSR_ADDR_MCAUSE | core_1.idu_1.csr_1.csr_addr == `ysyx_23060075_CSR_ADDR_MTVEC | core_1.idu_1.csr_1.csr_addr == `ysyx_23060075_CSR_ADDR_MSTATUS)) begin
-            $display("invalid csr = %h at pc = %h", core_1.idu_1.csr_1.csr_addr, core_1.pc);
+        if (!rst && core_1.csr_w_en && !(core_1.idu_1.idu_core_1.csr_addr == `ysyx_23060075_CSR_ADDR_MEPC | core_1.idu_1.idu_core_1.csr_addr == `ysyx_23060075_CSR_ADDR_MCAUSE | core_1.idu_1.idu_core_1.csr_addr == `ysyx_23060075_CSR_ADDR_MTVEC | core_1.idu_1.idu_core_1.csr_addr == `ysyx_23060075_CSR_ADDR_MSTATUS)) begin
+            $display("invalid csr = %h at pc = %h", core_1.idu_1.idu_core_1.csr_addr, core_1.pc);
             absort(core_1.pc);
         end
     end
     always @(posedge clk) begin
         if (!rst && core_1.inst == `ysyx_23060075_ISA_WIDTH'b0000000_00001_00000_000_00000_1110011) begin
-            ebreak(core_1.idu_1.gpr_1.reg_file_gpr.rf[10], core_1.ifu_1.pc);
+            ebreak(core_1.idu_1.idu_core_1.gpr_1.reg_file_gpr.rf[10], core_1.pc);
         end
     end
 

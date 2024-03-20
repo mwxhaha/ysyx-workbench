@@ -1,6 +1,6 @@
 `include "ysyx_23060075_isa.vh"
 
-module ysyx_23060075_lsu (
+module ysyx_23060075_lsu_core (
     input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] src2,
     input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] alu_result,
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_r,
