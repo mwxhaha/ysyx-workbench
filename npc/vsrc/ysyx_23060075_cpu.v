@@ -1,4 +1,4 @@
-`include "config.vh"
+`include "ysyx_23060075_isa.vh"
 `ifndef SYNTHESIS
 import "DPI-C" function void absort(input int pc);
 import "DPI-C" function void ebreak(
@@ -53,20 +53,20 @@ module ysyx_23060075_cpu (
     );
 
     ysyx_23060075_mem_ctrl mem_ctrl_1 (
-        .clk       (clk),
-        .rst       (rst),
-        .mem_1_r   (mem_1_r),
-        .mem_1_addr(mem_1_addr),
-        .mem_1_r_en(mem_1_r_en),
+        .clk        (clk),
+        .rst        (rst),
+        .mem_1_r    (mem_1_r),
+        .mem_1_addr (mem_1_addr),
+        .mem_1_r_en (mem_1_r_en),
 `ifdef SYNTHESIS
         .pmem_2_addr(pmem_2_addr),
 `endif
-        .mem_2_r   (mem_2_r),
-        .mem_2_w   (mem_2_w),
-        .mem_2_addr(mem_2_addr),
-        .mem_2_mask(mem_2_mask),
-        .mem_2_r_en(mem_2_r_en),
-        .mem_2_w_en(mem_2_w_en)
+        .mem_2_r    (mem_2_r),
+        .mem_2_w    (mem_2_w),
+        .mem_2_addr (mem_2_addr),
+        .mem_2_mask (mem_2_mask),
+        .mem_2_r_en (mem_2_r_en),
+        .mem_2_w_en (mem_2_w_en)
     );
 
 `ifndef SYNTHESIS

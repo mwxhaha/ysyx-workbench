@@ -1,4 +1,4 @@
-`include "config.vh"
+`include "ysyx_23060075_isa.vh"
 
 module ysyx_23060075_exu (
     input  wire [      `ysyx_23060075_IMM_WIDTH-1:0] imm,

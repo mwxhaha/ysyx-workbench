@@ -1,18 +1,18 @@
-`include "config.vh"
+`include "ysyx_23060075_isa.vh"
 
 module ysyx_23060075_ifu (
     input wire clk,
     input wire rst,
 
-    input  wire [         `ysyx_23060075_ISA_WIDTH-1:0] pc_imm,
-    input  wire [         `ysyx_23060075_ISA_WIDTH-1:0] alu_result,
-    input  wire [         `ysyx_23060075_ISA_WIDTH-1:0] mtvec,
-    input  wire [         `ysyx_23060075_ISA_WIDTH-1:0] mepc,
-    input  wire [`ysyx_23060075_DNPC_MUX_SEL_WIDTH-1:0] dnpc_mux_sel,
-    
-    output wire [         `ysyx_23060075_ISA_WIDTH-1:0] pc,
-    output wire [         `ysyx_23060075_ISA_WIDTH-1:0] snpc,
-    input  wire                                         pc_en,
+    input wire [         `ysyx_23060075_ISA_WIDTH-1:0] pc_imm,
+    input wire [         `ysyx_23060075_ISA_WIDTH-1:0] alu_result,
+    input wire [         `ysyx_23060075_ISA_WIDTH-1:0] mtvec,
+    input wire [         `ysyx_23060075_ISA_WIDTH-1:0] mepc,
+    input wire [`ysyx_23060075_DNPC_MUX_SEL_WIDTH-1:0] dnpc_mux_sel,
+
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] pc,
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] snpc,
+    input  wire                                pc_en,
 
     output wire [`ysyx_23060075_ISA_WIDTH-1:0] inst,
     input  wire                                mem_if_en,

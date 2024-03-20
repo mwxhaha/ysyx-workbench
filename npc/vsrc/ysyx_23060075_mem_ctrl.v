@@ -1,4 +1,4 @@
-`include "config.vh"
+`include "ysyx_23060075_isa.vh"
 
 module ysyx_23060075_mem_ctrl (
     input wire clk,
@@ -43,12 +43,10 @@ module ysyx_23060075_mem_ctrl (
     end
 `endif
 
-    reg [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_r;
+    reg  [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_r;
     wire [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_w;
 `ifdef SYNTHESIS
-    assign pmem_2_addr = {
-        mem_2_addr[`ysyx_23060075_ISA_WIDTH-1:2], 2'b0
-    };
+    assign pmem_2_addr = {mem_2_addr[`ysyx_23060075_ISA_WIDTH-1:2], 2'b0};
 `else
     wire [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_addr = {
         mem_2_addr[`ysyx_23060075_ISA_WIDTH-1:2], 2'b0

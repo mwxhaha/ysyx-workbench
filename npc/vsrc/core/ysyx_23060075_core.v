@@ -1,4 +1,4 @@
-`include "config.vh"
+`include "ysyx_23060075_isa.vh"
 
 module ysyx_23060075_core (
     input  wire                                     clk,

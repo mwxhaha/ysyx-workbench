@@ -1,15 +1,15 @@
-`include "config.vh"
+`include "ysyx_23060075_isa.vh"
 
 module ysyx_23060075_csr (
     input wire clk,
     input wire rst,
 
-    input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] pc,
-    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mepc,
-    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mtvec,
-    input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] intr_code,
-    input  wire                                     is_intr,
-    
+    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] pc,
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] mepc,
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] mtvec,
+    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] intr_code,
+    input  wire                                is_intr,
+
     input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] csr_w,
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] csr_r,
     input  wire [`ysyx_23060075_CSR_ADDR_WIDTH-1:0] csr_addr,
