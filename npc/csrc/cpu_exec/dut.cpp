@@ -112,7 +112,6 @@ void init_difftest(char *ref_so_file, long img_size)
     for (int i = 0; i < GPR_NUM; i++)
         cpu_init.gpr[i] = 0;
     ref_difftest_regcpy(&cpu_init, DIFFTEST_TO_REF);
-    ref_difftest_exec(1);
 }
 
 static void checkregs(CPU_state *ref, vaddr_t pc)

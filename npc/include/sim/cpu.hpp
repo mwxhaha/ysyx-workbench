@@ -67,11 +67,13 @@ typedef word_t paddr_t;
 #define TOP_PC top->rootp->ysyx_23060075_cpu__DOT__core_1__DOT__pc
 #define TOP_GPR top->rootp->ysyx_23060075_cpu__DOT__core_1__DOT__idu_1__DOT__idu_core_1__DOT__gpr_1__DOT__reg_file_gpr__DOT__rf
 #define TOP_MCAUSE top->rootp->ysyx_23060075_cpu__DOT__core_1__DOT__idu_1__DOT__idu_core_1__DOT__csr_1__DOT__mcause
+#define TOP_WBU_START top->rootp->ysyx_23060075_cpu__DOT__core_1__DOT__wbu_start
 #else
 #define TOP_INST 0
 #define TOP_PC 0
 #define TOP_GPR ((word_t *)0)
 #define TOP_MCAUSE 0
+#define TOP_WBU_START 0
 #endif
 
 enum
