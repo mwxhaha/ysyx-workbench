@@ -35,12 +35,9 @@ module ysyx_23060075_mem_ctrl (
         .wen    (1'b0)
     );
 `else
-    always @(*) begin
-        if (!rst && mem_1_r_en) begin
-            addr_ifetch_dpic(mem_1_addr, mem_1_r);
-        end else begin
-            mem_1_r = `ysyx_23060075_ISA_WIDTH'b0;
-        end
+    always @(posedge clk) begin
+        if (rst) mem_1_r <= `ysyx_23060075_ISA_WIDTH'b0;
+        else if (mem_1_r_en) mem_1_r <= addr_ifetch_dpic(mem_1_addr);
     end
 `endif
 
@@ -127,15 +124,13 @@ module ysyx_23060075_mem_ctrl (
         .wen    (pmem_2_w_en)
     );
 `else
-    always @(negedge clk) begin
-        if (!rst && pmem_2_r_en) begin
-            addr_read_dpic(pmem_2_addr, pmem_2_r);
-        end
+    always @(posedge clk) begin
+        if (rst) pmem_2_r <= `ysyx_23060075_ISA_WIDTH'b0;
+        else if (pmem_2_r_en) pmem_2_r <= addr_read_dpic(pmem_2_addr);
     end
     always @(posedge clk) begin
-        if (!rst && pmem_2_w_en) begin
-            addr_write_dpic(pmem_2_addr, {4'b0000, pmem_2_mask}, pmem_2_w);
-        end
+        if (rst);
+        else if (pmem_2_w_en) addr_write_dpic(pmem_2_addr, {4'b0000, pmem_2_mask}, pmem_2_w);
     end
 `endif
 

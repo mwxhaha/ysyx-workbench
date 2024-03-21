@@ -32,14 +32,14 @@ static void vaddr_write(vaddr_t addr, int len, word_t data)
     paddr_write(addr, len, data);
 }
 
-static void addr_ifetch_bus_align(vaddr_t addr, word_t *data)
+static word_t addr_ifetch_bus_align(vaddr_t addr)
 {
-    *data = vaddr_ifetch(addr, 4);
+    return vaddr_ifetch(addr, 4);
 }
 
-static void addr_read_bus_align(vaddr_t addr, word_t *data)
+static word_t addr_read_bus_align(vaddr_t addr)
 {
-    *data = vaddr_read(addr, 4);
+    return vaddr_read(addr, 4);
 }
 
 static void addr_write_bus_align(vaddr_t addr, uint8_t mask, word_t data)
@@ -108,22 +108,23 @@ word_t addr_montior_read(vaddr_t addr, int len)
     return ret;
 }
 
-void addr_ifetch(vaddr_t addr, word_t *data)
+word_t addr_ifetch(vaddr_t addr)
 {
     mtrace_enable = false;
     dtrace_enable = false;
     enable_device_fresh = false;
     enable_device_skip_diff = false;
-    addr_ifetch_bus_align(addr, data);
+    word_t ret = addr_ifetch_bus_align(addr);
     mtrace_enable = true;
     dtrace_enable = true;
     enable_device_fresh = true;
     enable_device_skip_diff = true;
+    return ret;
 }
 
-void addr_read(vaddr_t addr, word_t *data)
+word_t addr_read(vaddr_t addr)
 {
-    addr_read_bus_align(addr, data);
+    return addr_read_bus_align(addr);
 }
 
 void addr_write(vaddr_t addr, uint8_t mask, word_t data)

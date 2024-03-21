@@ -5,14 +5,8 @@ import "DPI-C" function void ebreak(
     input int ret,
     input int pc
 );
-import "DPI-C" function void addr_ifetch_dpic(
-    input  int addr,
-    output int data
-);
-import "DPI-C" function void addr_read_dpic(
-    input  int addr,
-    output int data
-);
+import "DPI-C" function int addr_ifetch_dpic(input int addr);
+import "DPI-C" function int addr_read_dpic(input int addr);
 import "DPI-C" function void addr_write_dpic(
     input int  addr,
     input byte mask,
@@ -71,7 +65,7 @@ module ysyx_23060075_cpu (
 
 `ifndef SYNTHESIS
     always @(posedge clk) begin
-        if (!rst && core_1.inst_type == `ysyx_23060075_N) begin
+        if (!rst && core_1.idu_1.idu_start && core_1.inst_type == `ysyx_23060075_N) begin
             $display("invalid inst = %h at pc = %h", core_1.inst, core_1.pc);
             absort(core_1.pc);
         end
@@ -83,7 +77,7 @@ module ysyx_23060075_cpu (
         end
     end
     always @(posedge clk) begin
-        if (!rst && core_1.inst == `ysyx_23060075_ISA_WIDTH'b0000000_00001_00000_000_00000_1110011) begin
+        if (!rst && core_1.idu_1.idu_start && core_1.inst == `ysyx_23060075_ISA_WIDTH'b0000000_00001_00000_000_00000_1110011) begin
             ebreak(core_1.idu_1.idu_core_1.gpr_1.reg_file_gpr.rf[10], core_1.pc);
         end
     end

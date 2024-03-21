@@ -30,20 +30,20 @@ void ebreak(int ret, int pc)
     npc_state.halt_pc = pc;
 }
 
-void addr_ifetch_dpic(int addr, int *data)
+int addr_ifetch_dpic(int addr)
 {
 #if ISA_WIDTH == 64
     panic("memory read do not support ISA64");
 #endif
-    addr_ifetch(addr, (word_t *)data);
+    return addr_ifetch(addr);
 }
 
-void addr_read_dpic(int addr, int *data)
+int addr_read_dpic(int addr)
 {
 #if ISA_WIDTH == 64
     panic("memory read do not support ISA64");
 #endif
-    addr_read(addr, (word_t *)data);
+    return addr_read(addr);
 }
 
 void addr_write_dpic(int addr, char mask, int data)

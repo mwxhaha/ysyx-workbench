@@ -26,6 +26,7 @@ module ysyx_23060075_ifu (
     output wire                                mem_1_r_en
 );
 
+    wire ifu_start;
     always @(posedge clk) begin
         if (rst) ready_1 <= 1'b1;
         else if (ready_1 && valid_1) ready_1 <= 1'b0;
@@ -36,6 +37,12 @@ module ysyx_23060075_ifu (
         else if (ready_2 && valid_2) valid_2 <= 1'b0;
         else if (ready_1 && valid_1) valid_2 <= 1'b1;
     end
+    ysyx_23060075_pluse pluse_ifu_start (
+        .clk (clk),
+        .rst (rst),
+        .din (ready_1 && valid_1),
+        .dout(ifu_start)
+    );
 
     ysyx_23060075_ifu_core ifu_core_1 (
         .clk         (clk),
@@ -49,7 +56,7 @@ module ysyx_23060075_ifu (
         .snpc        (snpc),
         .pc_en       (pc_en),
         .inst        (inst),
-        .mem_if_en   (mem_if_en),
+        .mem_if_en   (mem_if_en & ifu_start),
         .mem_1_r     (mem_1_r),
         .mem_1_addr  (mem_1_addr),
         .mem_1_r_en  (mem_1_r_en)

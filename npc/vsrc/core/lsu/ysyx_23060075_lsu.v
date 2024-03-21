@@ -48,7 +48,7 @@ module ysyx_23060075_lsu (
         .mem_r     (mem_r),
         .funct3    (funct3),
         .mem_mask  (mem_mask),
-        .mem_r_en  (mem_r_en),
+        .mem_r_en  (mem_r_en & lsu_start),
         .mem_w_en  (mem_w_en & lsu_start),
         .mem_2_r   (mem_2_r),
         .mem_2_w   (mem_2_w),
