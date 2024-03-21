@@ -56,11 +56,11 @@ static void exec_once(Decode *s, vaddr_t pc)
     s->pc = pc;
     s->snpc = pc + INST_LEN / 8;
     s->isa.inst.val = TOP_INST;
-    while (TOP_WBU_START!=1)
+    cycle(1, CYCLE);
+    while (TOP_IDU_START != 1)
     {
         cycle(1, CYCLE);
     }
-    cycle(1, CYCLE);
     s->dnpc = TOP_PC;
 #ifdef CONFIG_FTRACE
     if ((s->isa.inst.val & 0x7f) == 0x6f || (s->isa.inst.val & 0x707f) == 0x67)
