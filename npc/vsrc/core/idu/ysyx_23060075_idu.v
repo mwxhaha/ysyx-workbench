@@ -71,7 +71,7 @@ module ysyx_23060075_idu (
         .mepc     (mepc),
         .csr_r    (csr_r),
         .intr_code(intr_code),
-        .is_intr  (is_intr),
+        .is_intr  (is_intr & idu_start),
         .csr_w_en (csr_w_en & idu_start)
     );
 
