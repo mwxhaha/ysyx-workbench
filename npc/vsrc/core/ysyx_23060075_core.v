@@ -18,6 +18,7 @@ module ysyx_23060075_core (
     wire                                         ready_wbu_ifu;
     wire                                         valid_ifu_idu;
     wire                                         ready_ifu_idu;
+    wire                                         wbu_start;
     wire [         `ysyx_23060075_ISA_WIDTH-1:0] pc_imm;
     wire [         `ysyx_23060075_ISA_WIDTH-1:0] alu_result;
     wire [         `ysyx_23060075_ISA_WIDTH-1:0] mtvec;
@@ -42,7 +43,7 @@ module ysyx_23060075_core (
         .dnpc_mux_sel(dnpc_mux_sel),
         .pc          (pc),
         .snpc        (snpc),
-        .pc_en       (pc_en),
+        .pc_en       (pc_en & wbu_start),
         .inst        (inst),
         .mem_if_en   (mem_if_en),
         .mem_1_r     (mem_1_r),
@@ -82,7 +83,7 @@ module ysyx_23060075_core (
         .srd      (srd),
         .src1     (src1),
         .src2     (src2),
-        .gpr_w_en (gpr_w_en),
+        .gpr_w_en (gpr_w_en & wbu_start),
         .is_csri  (is_csri),
         .pc       (pc),
         .mtvec    (mtvec),
@@ -142,7 +143,6 @@ module ysyx_23060075_core (
         .mem_2_w_en(mem_2_w_en)
     );
 
-
     wire [`ysyx_23060075_SRD_MUX_SEL_WIDTH-1:0] srd_mux_sel;
     ysyx_23060075_wbu wbu_1 (
         .clk        (clk),
@@ -151,6 +151,7 @@ module ysyx_23060075_core (
         .ready_1    (ready_lsu_wbu),
         .valid_2    (valid_wbu_ifu),
         .ready_2    (ready_wbu_ifu),
+        .wbu_start  (wbu_start),
         .imm        (imm),
         .pc_imm     (pc_imm),
         .snpc       (snpc),

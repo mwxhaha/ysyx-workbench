@@ -31,7 +31,6 @@ module ysyx_23060075_ifu (
         else if (ready_1 && valid_1) ready_1 <= 1'b0;
         else if (ready_2 && valid_2) ready_1 <= 1'b1;
     end
-
     always @(posedge clk) begin
         if (rst) valid_2 <= 1'b0;
         else if (ready_2 && valid_2) valid_2 <= 1'b0;
@@ -48,7 +47,7 @@ module ysyx_23060075_ifu (
         .dnpc_mux_sel(dnpc_mux_sel),
         .pc          (pc),
         .snpc        (snpc),
-        .pc_en       (pc_en & valid_1),
+        .pc_en       (pc_en),
         .inst        (inst),
         .mem_if_en   (mem_if_en),
         .mem_1_r     (mem_1_r),

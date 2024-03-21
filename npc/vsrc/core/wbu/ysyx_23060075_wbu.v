@@ -8,6 +8,7 @@ module ysyx_23060075_wbu (
     output reg  ready_1,
     output reg  valid_2,
     input  wire ready_2,
+    output wire wbu_start,
 
     input  wire [        `ysyx_23060075_IMM_WIDTH-1:0] imm,
     input  wire [        `ysyx_23060075_ISA_WIDTH-1:0] pc_imm,
@@ -24,12 +25,17 @@ module ysyx_23060075_wbu (
         else if (ready_1 && valid_1) ready_1 <= 1'b0;
         else if (ready_2 && valid_2) ready_1 <= 1'b1;
     end
-
     always @(posedge clk) begin
         if (rst) valid_2 <= 1'b1;
         else if (ready_2 && valid_2) valid_2 <= 1'b0;
         else if (ready_1 && valid_1) valid_2 <= 1'b1;
     end
+    ysyx_23060075_pluse pluse_wbu_start (
+        .clk (clk),
+        .rst (rst),
+        .din (ready_1 && valid_1),
+        .dout(wbu_start)
+    );
 
     ysyx_23060075_wbu_core wbu_core_1 (
         .imm        (imm),

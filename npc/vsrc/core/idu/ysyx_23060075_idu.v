@@ -34,17 +34,23 @@ module ysyx_23060075_idu (
     input  wire                                csr_w_en
 );
 
+    wire idu_start;
     always @(posedge clk) begin
         if (rst) ready_1 <= 1'b1;
         else if (ready_1 && valid_1) ready_1 <= 1'b0;
         else if (ready_2 && valid_2) ready_1 <= 1'b1;
     end
-
     always @(posedge clk) begin
         if (rst) valid_2 <= 1'b0;
         else if (ready_2 && valid_2) valid_2 <= 1'b0;
         else if (ready_1 && valid_1) valid_2 <= 1'b1;
     end
+    ysyx_23060075_pluse pluse_idu_start (
+        .clk (clk),
+        .rst (rst),
+        .din (ready_1 && valid_1),
+        .dout(idu_start)
+    );
 
     ysyx_23060075_idu_core idu_core_1 (
         .clk      (clk),
@@ -66,7 +72,7 @@ module ysyx_23060075_idu (
         .csr_r    (csr_r),
         .intr_code(intr_code),
         .is_intr  (is_intr),
-        .csr_w_en (csr_w_en)
+        .csr_w_en (csr_w_en & idu_start)
     );
 
 endmodule
