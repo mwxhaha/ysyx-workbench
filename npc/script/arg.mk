@@ -10,7 +10,8 @@ BIN = $(BUILD_DIR)/$(PREFIX_NAME)
 VERILATOR_CFLAGS = -std=c++20 $(CWARNING) -DSIM_$(TOP_NAME) -I$(INCLUDE_DIR) $(COPTIMIZE)
 VERILATOR_LDFLAGS =  
 VERILATOR_SRC = $(VSRC) $(CSRC)
-VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) -y $(INCLUDE_DIR) --prefix $(PREFIX_NAME) --top-module $(STUDENT_ID)_$(TOP_NAME) -o $(BIN) -j 0 $(VOPTIMIZE) $(VWARNING) $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+VERILATOR_OTHER_FLAGS = -y $(INCLUDE_DIR) -j 0 --x-assign unique --x-initial unique $(VOPTIMIZE) $(VWARNING) $(addprefix -CFLAGS , $(VERILATOR_CFLAGS))
+VERILATOR_FLAGS = --cc --exe --Mdir $(OBJ_DIR) --top $(STUDENT_ID)_$(TOP_NAME) --prefix $(PREFIX_NAME) -o $(BIN) $(VERILATOR_OTHER_FLAGS)
 VERILATOR_FLAGS_LIB = $(addprefix -LDFLAGS , $(VERILATOR_LDFLAGS))
 VERILATE = $(OBJ_DIR)/verilate.txt
 
@@ -108,7 +109,7 @@ VERILATOR_MAKE_FILE = $(OBJ_DIR)/$(PREFIX_NAME).mk
 MAKE_FLAGS = -C $(OBJ_DIR) -f $(VERILATOR_MAKE_FILE) -j $(shell nproc)
 
 override ARGS ?= --log=$(BUILD_DIR)/npc-log.txt
-override ARGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
+override ARGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so -v "verilator+rand+reset+2 +verilator+seed+$(shell rand)"
 IMG ?= 
 NPC_EXEC := $(BIN) $(ARGS) $(IMG)
 WAVE = $(BUILD_DIR)/wave.vcd

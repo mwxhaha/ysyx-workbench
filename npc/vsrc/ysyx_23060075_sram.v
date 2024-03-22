@@ -39,7 +39,7 @@ module ysyx_23060075_sram (
     end
     always @(posedge clk) begin
         if (rst) rdata <= `ysyx_23060075_ISA_WIDTH'b0;
-        else if (cnt == `ysyx_23060075_ISA_WIDTH'd1) rdata <= addr_ifetch_dpic(raddr);
+        else if (cnt == `ysyx_23060075_ISA_WIDTH'd1) rdata <= addr_read_dpic(raddr);
     end
 `endif
 
