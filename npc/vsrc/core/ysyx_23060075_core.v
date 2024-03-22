@@ -12,7 +12,8 @@ module ysyx_23060075_core (
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_addr,
     output wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] mem_2_mask,
     output wire                                     mem_2_r_en,
-    output wire                                     mem_2_w_en
+    output wire                                     mem_2_w_en,
+    input  wire                                     mem_2_finish
 );
 
     wire                                         valid_wbu_ifu;
@@ -124,25 +125,26 @@ module ysyx_23060075_core (
     wire                                     mem_r_en;
     wire                                     mem_w_en;
     ysyx_23060075_lsu lsu_1 (
-        .clk       (clk),
-        .rst       (rst),
-        .valid_1   (valid_exu_lsu),
-        .ready_1   (ready_exu_lsu),
-        .valid_2   (valid_lsu_wbu),
-        .ready_2   (ready_lsu_wbu),
-        .src2      (src2),
-        .alu_result(alu_result),
-        .mem_r     (mem_r),
-        .funct3    (funct3),
-        .mem_mask  (mem_mask),
-        .mem_r_en  (mem_r_en),
-        .mem_w_en  (mem_w_en),
-        .mem_2_r   (mem_2_r),
-        .mem_2_w   (mem_2_w),
-        .mem_2_addr(mem_2_addr),
-        .mem_2_mask(mem_2_mask),
-        .mem_2_r_en(mem_2_r_en),
-        .mem_2_w_en(mem_2_w_en)
+        .clk         (clk),
+        .rst         (rst),
+        .valid_1     (valid_exu_lsu),
+        .ready_1     (ready_exu_lsu),
+        .valid_2     (valid_lsu_wbu),
+        .ready_2     (ready_lsu_wbu),
+        .src2        (src2),
+        .alu_result  (alu_result),
+        .mem_r       (mem_r),
+        .funct3      (funct3),
+        .mem_mask    (mem_mask),
+        .mem_r_en    (mem_r_en),
+        .mem_w_en    (mem_w_en),
+        .mem_2_r     (mem_2_r),
+        .mem_2_w     (mem_2_w),
+        .mem_2_addr  (mem_2_addr),
+        .mem_2_mask  (mem_2_mask),
+        .mem_2_r_en  (mem_2_r_en),
+        .mem_2_w_en  (mem_2_w_en),
+        .mem_2_finish(mem_2_finish)
     );
 
     wire [`ysyx_23060075_SRD_MUX_SEL_WIDTH-1:0] srd_mux_sel;

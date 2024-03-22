@@ -21,7 +21,8 @@ module ysyx_23060075_lsu (
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_addr,
     output wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] mem_2_mask,
     output wire                                     mem_2_r_en,
-    output wire                                     mem_2_w_en
+    output wire                                     mem_2_w_en,
+    input  wire                                     mem_2_finish
 );
 
     wire lsu_start;
@@ -33,7 +34,11 @@ module ysyx_23060075_lsu (
     always @(posedge clk) begin
         if (rst) valid_2 <= 1'b0;
         else if (ready_2 && valid_2) valid_2 <= 1'b0;
-        else if (ready_1 && valid_1) valid_2 <= 1'b1;
+        else if (!(mem_r_en || mem_w_en)) begin
+            if (ready_1 && valid_1) valid_2 <= 1'b1;
+        end else begin
+            if (mem_2_finish) valid_2 <= 1'b1;
+        end
     end
     ysyx_23060075_pluse pluse_lsu_start (
         .clk (clk),

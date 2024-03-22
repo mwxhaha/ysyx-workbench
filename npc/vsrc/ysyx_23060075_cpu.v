@@ -16,13 +16,10 @@ import "DPI-C" function void addr_write_dpic(
 
 module ysyx_23060075_cpu (
     input  wire                                clk,
-`ifdef SYNTHESIS
-    output wire [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_addr,
-`endif
     input  wire                                rst
 );
 
-    wire  [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_r;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_r;
     wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_addr;
     wire                                     mem_1_r_en;
     wire                                     mem_1_finish;
@@ -32,6 +29,7 @@ module ysyx_23060075_cpu (
     wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] mem_2_mask;
     wire                                     mem_2_r_en;
     wire                                     mem_2_w_en;
+    wire                                     mem_2_finish;
 
     ysyx_23060075_core core_1 (
         .clk         (clk),
@@ -45,13 +43,23 @@ module ysyx_23060075_cpu (
         .mem_2_addr  (mem_2_addr),
         .mem_2_mask  (mem_2_mask),
         .mem_2_r_en  (mem_2_r_en),
-        .mem_2_w_en  (mem_2_w_en)
+        .mem_2_w_en  (mem_2_w_en),
+        .mem_2_finish(mem_2_finish)
     );
 
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] raddr_1;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] rdata_1;
-    wire                                rvalid_1;
-    wire                                rready_1;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] raddr_1;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] rdata_1;
+    wire                                     rvalid_1;
+    wire                                     rready_1;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] raddr_2;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] rdata_2;
+    wire                                     rvalid_2;
+    wire                                     rready_2;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] waddr_2;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] wdata_2;
+    wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] wmask_2;
+    wire                                     wvalid_2;
+    wire                                     wready_2;
     ysyx_23060075_mem_ctrl mem_ctrl_1 (
         .clk         (clk),
         .rst         (rst),
@@ -63,24 +71,52 @@ module ysyx_23060075_cpu (
         .rdata_1     (rdata_1),
         .rvalid_1    (rvalid_1),
         .rready_1    (rready_1),
-`ifdef SYNTHESIS
-        .pmem_2_addr (pmem_2_addr),
-`endif
         .mem_2_r     (mem_2_r),
         .mem_2_w     (mem_2_w),
         .mem_2_addr  (mem_2_addr),
         .mem_2_mask  (mem_2_mask),
         .mem_2_r_en  (mem_2_r_en),
-        .mem_2_w_en  (mem_2_w_en)
+        .mem_2_w_en  (mem_2_w_en),
+        .mem_2_finish(mem_2_finish),
+        .raddr_2     (raddr_2),
+        .rdata_2     (rdata_2),
+        .rvalid_2    (rvalid_2),
+        .rready_2    (rready_2),
+        .waddr_2     (waddr_2),
+        .wdata_2     (wdata_2),
+        .wmask_2     (wmask_2),
+        .wvalid_2    (wvalid_2),
+        .wready_2    (wready_2)
     );
 
     ysyx_23060075_sram sram_1 (
-        .clk(clk),
-        .rst(rst),
-        .raddr(raddr_1),
-        .rdata(rdata_1),
+        .clk   (clk),
+        .rst   (rst),
+        .raddr (raddr_1),
+        .rdata (rdata_1),
         .rvalid(rvalid_1),
-        .rready(rready_1)
+        .rready(rready_1),
+        .waddr (`ysyx_23060075_ISA_WIDTH'b0),
+        .wdata (`ysyx_23060075_ISA_WIDTH'b0),
+        .wmask (`ysyx_23060075_MEM_MASK_WIDTH'b0),
+        .wvalid(1'b0),
+        // verilator lint_off PINCONNECTEMPTY
+        .wready()
+        // verilator lint_on PINCONNECTEMPTY
+    );
+
+    ysyx_23060075_sram sram_2 (
+        .clk   (clk),
+        .rst   (rst),
+        .raddr (raddr_2),
+        .rdata (rdata_2),
+        .rvalid(rvalid_2),
+        .rready(rready_2),
+        .waddr (waddr_2),
+        .wdata (wdata_2),
+        .wmask (wmask_2),
+        .wvalid(wvalid_2),
+        .wready(wready_2)
     );
 
 `ifndef SYNTHESIS
