@@ -23,7 +23,8 @@ module ysyx_23060075_ifu (
     input  wire                                mem_if_en,
     input  wire [`ysyx_23060075_ISA_WIDTH-1:0] mem_1_r,
     output wire [`ysyx_23060075_ISA_WIDTH-1:0] mem_1_addr,
-    output wire                                mem_1_r_en
+    output wire                                mem_1_r_en,
+    input  wire                                mem_1_finish
 );
 
     wire ifu_start;
@@ -35,7 +36,7 @@ module ysyx_23060075_ifu (
     always @(posedge clk) begin
         if (rst) valid_2 <= 1'b0;
         else if (ready_2 && valid_2) valid_2 <= 1'b0;
-        else if (ready_1 && valid_1) valid_2 <= 1'b1;
+        else if (mem_1_finish) valid_2 <= 1'b1;
     end
     ysyx_23060075_pluse pluse_ifu_start (
         .clk (clk),

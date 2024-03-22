@@ -53,6 +53,14 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 
 static void exec_once(Decode *s, vaddr_t pc)
 {
+    if (pc == RESET_VECTOR)
+    {
+        while (TOP_IDU_START != 1)
+        {
+            cycle(1, CYCLE);
+        }
+        pc = TOP_PC;
+    }
     s->pc = pc;
     s->snpc = pc + INST_LEN / 8;
     s->isa.inst.val = TOP_INST;

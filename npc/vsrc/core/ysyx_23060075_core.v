@@ -6,6 +6,7 @@ module ysyx_23060075_core (
     input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_r,
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_addr,
     output wire                                     mem_1_r_en,
+    input  wire                                     mem_1_finish,
     input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_r,
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_w,
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_addr,
@@ -48,7 +49,8 @@ module ysyx_23060075_core (
         .mem_if_en   (mem_if_en),
         .mem_1_r     (mem_1_r),
         .mem_1_addr  (mem_1_addr),
-        .mem_1_r_en  (mem_1_r_en)
+        .mem_1_r_en  (mem_1_r_en),
+        .mem_1_finish(mem_1_finish)
     );
 
     wire                                      valid_idu_exu;

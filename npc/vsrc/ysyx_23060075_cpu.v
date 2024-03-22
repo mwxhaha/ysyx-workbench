@@ -22,9 +22,10 @@ module ysyx_23060075_cpu (
     input  wire                                rst
 );
 
-    reg  [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_r;
+    wire  [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_r;
     wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_1_addr;
     wire                                     mem_1_r_en;
+    wire                                     mem_1_finish;
     reg  [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_r;
     wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_w;
     wire [     `ysyx_23060075_ISA_WIDTH-1:0] mem_2_addr;
@@ -33,34 +34,53 @@ module ysyx_23060075_cpu (
     wire                                     mem_2_w_en;
 
     ysyx_23060075_core core_1 (
-        .clk       (clk),
-        .rst       (rst),
-        .mem_1_r   (mem_1_r),
-        .mem_1_addr(mem_1_addr),
-        .mem_1_r_en(mem_1_r_en),
-        .mem_2_r   (mem_2_r),
-        .mem_2_w   (mem_2_w),
-        .mem_2_addr(mem_2_addr),
-        .mem_2_mask(mem_2_mask),
-        .mem_2_r_en(mem_2_r_en),
-        .mem_2_w_en(mem_2_w_en)
+        .clk         (clk),
+        .rst         (rst),
+        .mem_1_r     (mem_1_r),
+        .mem_1_addr  (mem_1_addr),
+        .mem_1_r_en  (mem_1_r_en),
+        .mem_1_finish(mem_1_finish),
+        .mem_2_r     (mem_2_r),
+        .mem_2_w     (mem_2_w),
+        .mem_2_addr  (mem_2_addr),
+        .mem_2_mask  (mem_2_mask),
+        .mem_2_r_en  (mem_2_r_en),
+        .mem_2_w_en  (mem_2_w_en)
     );
 
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] raddr_1;
+    wire [`ysyx_23060075_ISA_WIDTH-1:0] rdata_1;
+    wire                                rvalid_1;
+    wire                                rready_1;
     ysyx_23060075_mem_ctrl mem_ctrl_1 (
-        .clk        (clk),
-        .rst        (rst),
-        .mem_1_r    (mem_1_r),
-        .mem_1_addr (mem_1_addr),
-        .mem_1_r_en (mem_1_r_en),
+        .clk         (clk),
+        .rst         (rst),
+        .mem_1_r     (mem_1_r),
+        .mem_1_addr  (mem_1_addr),
+        .mem_1_r_en  (mem_1_r_en),
+        .mem_1_finish(mem_1_finish),
+        .raddr_1     (raddr_1),
+        .rdata_1     (rdata_1),
+        .rvalid_1    (rvalid_1),
+        .rready_1    (rready_1),
 `ifdef SYNTHESIS
-        .pmem_2_addr(pmem_2_addr),
+        .pmem_2_addr (pmem_2_addr),
 `endif
-        .mem_2_r    (mem_2_r),
-        .mem_2_w    (mem_2_w),
-        .mem_2_addr (mem_2_addr),
-        .mem_2_mask (mem_2_mask),
-        .mem_2_r_en (mem_2_r_en),
-        .mem_2_w_en (mem_2_w_en)
+        .mem_2_r     (mem_2_r),
+        .mem_2_w     (mem_2_w),
+        .mem_2_addr  (mem_2_addr),
+        .mem_2_mask  (mem_2_mask),
+        .mem_2_r_en  (mem_2_r_en),
+        .mem_2_w_en  (mem_2_w_en)
+    );
+
+    ysyx_23060075_sram sram_1 (
+        .clk(clk),
+        .rst(rst),
+        .raddr(raddr_1),
+        .rdata(rdata_1),
+        .rvalid(rvalid_1),
+        .rready(rready_1)
     );
 
 `ifndef SYNTHESIS

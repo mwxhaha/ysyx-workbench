@@ -4,9 +4,15 @@ module ysyx_23060075_mem_ctrl (
     input wire clk,
     input wire rst,
 
-    output reg  [`ysyx_23060075_ISA_WIDTH-1:0] mem_1_r,
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] mem_1_r,
     input  wire [`ysyx_23060075_ISA_WIDTH-1:0] mem_1_addr,
     input  wire                                mem_1_r_en,
+    output wire                                mem_1_finish,
+
+    output wire [`ysyx_23060075_ISA_WIDTH-1:0] raddr_1,
+    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] rdata_1,
+    output wire                                rvalid_1,
+    input  wire                                rready_1,
 
 `ifdef SYNTHESIS
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] pmem_2_addr,
@@ -19,27 +25,10 @@ module ysyx_23060075_mem_ctrl (
     input  wire                                     mem_2_w_en
 );
 
-`ifdef SYNTHESIS
-    ysyx_23060075_reg_file #(
-        .ADDR_WIDTH(7),
-        .DATA_WIDTH(`ysyx_23060075_ISA_WIDTH)
-    ) mem_1 (
-        .clk    (clk),
-        .rst    (rst),
-        .wdata  (`ysyx_23060075_ISA_WIDTH'b0),
-        .waddr  (`ysyx_23060075_ISA_WIDTH'b0),
-        .rdata_1(mem_1_r),
-        .raddr_1(mem_1_addr),
-        .rdata_2(),
-        .raddr_2(`ysyx_23060075_ISA_WIDTH'b0),
-        .wen    (1'b0)
-    );
-`else
-    always @(posedge clk) begin
-        if (rst) mem_1_r <= `ysyx_23060075_ISA_WIDTH'b0;
-        else if (mem_1_r_en) mem_1_r <= addr_ifetch_dpic(mem_1_addr);
-    end
-`endif
+    assign raddr_1 = mem_1_addr;
+    assign mem_1_r = rdata_1;
+    assign rvalid_1 = mem_1_r_en;
+    assign mem_1_finish = rready_1;
 
     reg  [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_r;
     wire [`ysyx_23060075_ISA_WIDTH-1:0] pmem_2_w;
