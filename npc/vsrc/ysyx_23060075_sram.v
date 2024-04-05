@@ -44,7 +44,7 @@ module ysyx_23060075_sram (
     );
 `else
 
-    //read address channel
+    // read address channel
     reg [`ysyx_23060075_ISA_WIDTH-1:0] axi_araddr_reg;
     reg [`ysyx_23060075_ISA_WIDTH-1:0] rcnt;
     always @(posedge clk) begin
@@ -62,7 +62,7 @@ module ysyx_23060075_sram (
         else if (axi_rvalid && axi_rready) axi_arready <= 1'b1;
     end
 
-    //read data channel
+    // read data channel
     always @(posedge clk) begin
         if (rst) axi_rdata <= `ysyx_23060075_ISA_WIDTH'b0;
         else if (rcnt == `ysyx_23060075_ISA_WIDTH'd1) axi_rdata <= addr_read_dpic(axi_araddr_reg);
@@ -76,7 +76,7 @@ module ysyx_23060075_sram (
         else if (rcnt == `ysyx_23060075_ISA_WIDTH'd1) axi_rvalid <= 1'b1;
     end
 
-    //write address channel
+    // write address channel
     reg [`ysyx_23060075_ISA_WIDTH-1:0] axi_awaddr_reg;
     reg [`ysyx_23060075_ISA_WIDTH-1:0] wcnt;
     always @(posedge clk) begin
@@ -95,7 +95,7 @@ module ysyx_23060075_sram (
         else if (axi_bvalid && axi_bready) axi_awready <= 1'b1;
     end
 
-    //write data channel
+    // write data channel
     reg [`ysyx_23060075_ISA_WIDTH-1:0] axi_wdata_reg;
     // verilator lint_off UNUSEDSIGNAL
     reg [`ysyx_23060075_ISA_WIDTH-1:0] axi_wstrb_reg;
@@ -114,7 +114,7 @@ module ysyx_23060075_sram (
         else if (axi_bvalid && axi_bready) axi_wready <= 1'b1;
     end
 
-    //write response channel
+    // write response channel
     always @(posedge clk) begin
         if (wcnt == `ysyx_23060075_ISA_WIDTH'd1)
             addr_write_dpic(axi_awaddr_reg, axi_wstrb_reg[7:0], axi_wdata_reg);

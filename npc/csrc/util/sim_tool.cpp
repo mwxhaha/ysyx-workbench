@@ -15,7 +15,7 @@ void nvboard_bind_all_pins(Vtop *top);
 VerilatedContext *contextp;
 Vtop *top;
 VerilatedVcdC *tfp;
-#define MAX_RECORD_WAVE 10000
+#define MAX_RECORD_WAVE 1000
 #define HIERARCHY_DEEP 100
 
 void sim_init(int argc, char *argv[])
@@ -79,7 +79,7 @@ void update(int time)
         nvboard_update();
 #endif
 #ifdef CONFIG_RECORD_WAVE
-        if (g_nr_guest_inst >= 0 && g_nr_guest_inst <= 10000)
+        if (g_nr_guest_inst >= 0 && g_nr_guest_inst <= MAX_RECORD_WAVE)
         {
             tfp->dump(contextp->time());
         }
