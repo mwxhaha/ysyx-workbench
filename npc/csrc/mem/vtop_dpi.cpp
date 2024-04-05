@@ -43,7 +43,10 @@ int addr_read_dpic(int addr)
 #if ISA_WIDTH == 64
     panic("memory read do not support ISA64");
 #endif
-    return addr_read(addr);
+    if (TOP_IS_LS)
+        return addr_read(addr);
+    else
+        return addr_ifetch(addr);
 }
 
 void addr_write_dpic(int addr, char mask, int data)

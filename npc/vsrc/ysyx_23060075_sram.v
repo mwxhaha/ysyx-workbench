@@ -40,7 +40,7 @@ module ysyx_23060075_sram (
         .raddr_1(axi_araddr),
         .rdata_2(),
         .raddr_2(`ysyx_23060075_ISA_WIDTH'b0),
-        .wen    (axi_awvalid && axi_awready)
+        .wen    (axi_awvalid && axi_awready && axi_wvalid && axi_wready)
     );
 `else
 

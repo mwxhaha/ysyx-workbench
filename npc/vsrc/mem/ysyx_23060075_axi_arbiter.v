@@ -62,7 +62,7 @@ module ysyx_23060075_axi_arbiter (
     output reg                                 axi_bready
 );
 
-    reg sel;
+    reg arbiter_sel;
     reg [1:0] axi_1_state;
     reg [1:0] axi_2_state;
     always @(posedge clk) begin
@@ -80,26 +80,26 @@ module ysyx_23060075_axi_arbiter (
         else if (axi_2_rvalid && axi_2_rready || axi_2_bvalid && axi_2_bready) axi_2_state <= `FREE;
     end
     always @(posedge clk) begin
-        if (rst) sel <= 1'b0;
-        else if (axi_1_state == `WAIT || axi_2_state == `FREE) sel <= 1'b0;
-        else if (axi_2_state == `WAIT || axi_1_state == `FREE) sel <= 1'b1;
+        if (rst) arbiter_sel <= 1'b0;
+        else if (axi_1_state == `WAIT || axi_2_state == `FREE) arbiter_sel <= 1'b0;
+        else if (axi_2_state == `WAIT || axi_1_state == `FREE) arbiter_sel <= 1'b1;
     end
 
     // read address channel
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: axi_araddr = axi_1_araddr;
             1'b1: axi_araddr = axi_2_araddr;
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: axi_arvalid = axi_1_arvalid;
             1'b1: axi_arvalid = axi_2_arvalid;
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: begin
                 axi_1_arready = axi_arready;
                 axi_2_arready = 1'b0;
@@ -113,7 +113,7 @@ module ysyx_23060075_axi_arbiter (
 
     // read data channel
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: begin
                 axi_1_rdata = axi_rdata;
                 axi_2_rdata = `ysyx_23060075_ISA_WIDTH'b0;
@@ -125,7 +125,7 @@ module ysyx_23060075_axi_arbiter (
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: begin
                 axi_1_rresp = axi_rresp;
                 axi_2_rresp = `ysyx_23060075_ISA_WIDTH'b0;
@@ -137,7 +137,7 @@ module ysyx_23060075_axi_arbiter (
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: begin
                 axi_1_rvalid = axi_rvalid;
                 axi_2_rvalid = 1'b0;
@@ -149,7 +149,7 @@ module ysyx_23060075_axi_arbiter (
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: axi_rready = axi_1_rready;
             1'b1: axi_rready = axi_2_rready;
         endcase
@@ -157,19 +157,19 @@ module ysyx_23060075_axi_arbiter (
 
     // write address channel
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: axi_awaddr = axi_1_awaddr;
             1'b1: axi_awaddr = axi_2_awaddr;
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: axi_awvalid = axi_1_awvalid;
             1'b1: axi_awvalid = axi_2_awvalid;
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: begin
                 axi_1_awready = axi_awready;
                 axi_2_awready = 1'b0;
@@ -183,25 +183,25 @@ module ysyx_23060075_axi_arbiter (
 
     // write data channel
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: axi_wdata = axi_1_wdata;
             1'b1: axi_wdata = axi_2_wdata;
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: axi_wstrb = axi_1_wstrb;
             1'b1: axi_wstrb = axi_2_wstrb;
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: axi_wvalid = axi_1_wvalid;
             1'b1: axi_wvalid = axi_2_wvalid;
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: begin
                 axi_1_wready = axi_wready;
                 axi_2_wready = 1'b0;
@@ -215,7 +215,7 @@ module ysyx_23060075_axi_arbiter (
 
     // write response channel
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: begin
                 axi_1_bresp = axi_bresp;
                 axi_2_bresp = `ysyx_23060075_ISA_WIDTH'b0;
@@ -227,7 +227,7 @@ module ysyx_23060075_axi_arbiter (
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: begin
                 axi_1_bvalid = axi_bvalid;
                 axi_2_bvalid = 1'b0;
@@ -239,7 +239,7 @@ module ysyx_23060075_axi_arbiter (
         endcase
     end
     always @(*) begin
-        case (sel)
+        case (arbiter_sel)
             1'b0: axi_bready = axi_1_bready;
             1'b1: axi_bready = axi_2_bready;
         endcase
