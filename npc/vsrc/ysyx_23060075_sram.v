@@ -40,7 +40,7 @@ module ysyx_23060075_sram (
         .raddr_1(axi_araddr),
         .rdata_2(),
         .raddr_2(`ysyx_23060075_ISA_WIDTH'b0),
-        .wen    (axi_awvalid && axi_awready && axi_wvalid && axi_wready)
+        .wen    (axi_wvalid && axi_wready)
     );
 `else
 
@@ -85,7 +85,7 @@ module ysyx_23060075_sram (
     end
     always @(posedge clk, posedge rst) begin
         if (rst) wcnt <= `ysyx_23060075_ISA_WIDTH'd0;
-        else if (axi_awvalid && axi_awready && axi_wvalid && axi_wready)
+        else if (axi_wvalid && axi_wready)
             wcnt <= {$random} % 5 + `ysyx_23060075_ISA_WIDTH'd1;
         else if (wcnt != `ysyx_23060075_ISA_WIDTH'd0) wcnt <= wcnt - `ysyx_23060075_ISA_WIDTH'd1;
     end
