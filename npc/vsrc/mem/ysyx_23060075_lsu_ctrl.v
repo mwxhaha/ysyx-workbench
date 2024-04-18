@@ -40,11 +40,11 @@ module ysyx_23060075_lsu_ctrl (
 );
 
     // read address channel
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) axi_araddr <= `ysyx_23060075_ISA_WIDTH'b0;
         else if (mem_2_r_en) axi_araddr <= {mem_2_addr[`ysyx_23060075_ISA_WIDTH-1:2], 2'b0};
     end
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) axi_arvalid <= 1'b0;
         else if (axi_arvalid && axi_arready) axi_arvalid <= 1'b0;
         else if (mem_2_r_en) axi_arvalid <= 1'b1;
@@ -52,7 +52,7 @@ module ysyx_23060075_lsu_ctrl (
 
     // read data channel
     wire mem_2_r_finish;
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) mem_2_r <= `ysyx_23060075_ISA_WIDTH'b0;
         else if (axi_rvalid && axi_rready) begin
             case (mem_2_addr[1:0])
@@ -69,25 +69,25 @@ module ysyx_23060075_lsu_ctrl (
         .din (axi_rvalid && axi_rready),
         .dout(mem_2_r_finish)
     );
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) axi_rready <= 1'b0;
         else if (axi_rvalid && axi_rready) axi_rready <= 1'b0;
         else if (axi_arvalid && axi_arready) axi_rready <= 1'b1;
     end
 
     // write address channel
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) axi_awaddr <= `ysyx_23060075_ISA_WIDTH'b0;
         else if (mem_2_w_en) axi_awaddr <= {mem_2_addr[`ysyx_23060075_ISA_WIDTH-1:2], 2'b0};
     end
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) axi_awvalid <= 1'b0;
         else if (axi_awvalid && axi_awready) axi_awvalid <= 1'b0;
         else if (mem_2_w_en) axi_awvalid <= 1'b1;
     end
 
     // write data channel
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) axi_wdata <= `ysyx_23060075_ISA_WIDTH'b0;
         else if (mem_2_w_en) begin
             case (mem_2_addr[1:0])
@@ -98,7 +98,7 @@ module ysyx_23060075_lsu_ctrl (
             endcase
         end
     end
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) axi_wstrb <= `ysyx_23060075_ISA_WIDTH'b0;
         else if (mem_2_w_en) begin
             case (mem_2_addr[1:0])
@@ -127,7 +127,7 @@ module ysyx_23060075_lsu_ctrl (
             endcase
         end
     end
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) axi_wvalid <= 1'b0;
         else if (axi_wvalid && axi_wready) axi_wvalid <= 1'b0;
         else if (mem_2_w_en) axi_wvalid <= 1'b1;
@@ -142,7 +142,7 @@ module ysyx_23060075_lsu_ctrl (
         .dout(mem_2_w_finish)
     );
     assign mem_2_finish = mem_2_r_finish | mem_2_w_finish;
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) axi_bready <= 1'b0;
         else if (axi_bvalid && axi_bready) axi_bready <= 1'b0;
         else if (axi_awvalid && axi_awready) axi_bready <= 1'b1;

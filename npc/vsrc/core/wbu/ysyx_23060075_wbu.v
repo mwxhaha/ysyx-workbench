@@ -20,12 +20,12 @@ module ysyx_23060075_wbu (
     input  wire [`ysyx_23060075_SRD_MUX_SEL_WIDTH-1:0] srd_mux_sel
 );
 
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) ready_1 <= 1'b1;
         else if (ready_1 && valid_1) ready_1 <= 1'b0;
         else if (ready_2 && valid_2) ready_1 <= 1'b1;
     end
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) valid_2 <= 1'b1;
         else if (ready_2 && valid_2) valid_2 <= 1'b0;
         else if (ready_1 && valid_1) valid_2 <= 1'b1;

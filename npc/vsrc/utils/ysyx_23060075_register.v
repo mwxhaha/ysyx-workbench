@@ -9,7 +9,7 @@ module ysyx_23060075_register #(
     input  wire             wen
 );
 
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) dout <= RESET_VAL;
         else if (wen) dout <= din;
     end

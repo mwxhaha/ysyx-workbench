@@ -6,7 +6,7 @@ module ysyx_23060075_pluse (
 );
 
     reg din_reg;
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) din_reg <= 1'b0;
         else din_reg <= din;
     end
