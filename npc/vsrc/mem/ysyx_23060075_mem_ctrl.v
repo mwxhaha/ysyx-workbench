@@ -17,42 +17,42 @@ module ysyx_23060075_mem_ctrl (
     input  wire                                     mem_2_w_en,
     output wire                                     mem_2_finish,
 
-    output wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_araddr,
-    output wire                                axi_arvalid,
-    input  wire                                axi_arready,
-    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_rdata,
-    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_rresp,
-    input  wire                                axi_rvalid,
-    output wire                                axi_rready,
-    output wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_awaddr,
-    output wire                                axi_awvalid,
-    input  wire                                axi_awready,
-    output wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_wdata,
-    output wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_wstrb,
-    output wire                                axi_wvalid,
-    input  wire                                axi_wready,
-    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_bresp,
-    input  wire                                axi_bvalid,
-    output wire                                axi_bready
+    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_araddr,
+    output wire                                     axi_arvalid,
+    input  wire                                     axi_arready,
+    input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_rdata,
+    input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_rresp,
+    input  wire                                     axi_rvalid,
+    output wire                                     axi_rready,
+    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_awaddr,
+    output wire                                     axi_awvalid,
+    input  wire                                     axi_awready,
+    output wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_wdata,
+    output wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] axi_wstrb,
+    output wire                                     axi_wvalid,
+    input  wire                                     axi_wready,
+    input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_bresp,
+    input  wire                                     axi_bvalid,
+    output wire                                     axi_bready
 );
 
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_1_araddr;
-    wire                                axi_1_arvalid;
-    wire                                axi_1_arready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_1_rdata;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_1_rresp;
-    wire                                axi_1_rvalid;
-    wire                                axi_1_rready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_1_awaddr;
-    wire                                axi_1_awvalid;
-    wire                                axi_1_awready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_1_wdata;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_1_wstrb;
-    wire                                axi_1_wvalid;
-    wire                                axi_1_wready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_1_bresp;
-    wire                                axi_1_bvalid;
-    wire                                axi_1_bready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_1_araddr;
+    wire                                     axi_1_arvalid;
+    wire                                     axi_1_arready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_1_rdata;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_1_rresp;
+    wire                                     axi_1_rvalid;
+    wire                                     axi_1_rready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_1_awaddr;
+    wire                                     axi_1_awvalid;
+    wire                                     axi_1_awready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_1_wdata;
+    wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] axi_1_wstrb;
+    wire                                     axi_1_wvalid;
+    wire                                     axi_1_wready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_1_bresp;
+    wire                                     axi_1_bvalid;
+    wire                                     axi_1_bready;
     ysyx_23060075_ifu_ctrl ifu_ctrl_1 (
         .clk         (clk),
         .rst         (rst),
@@ -79,23 +79,23 @@ module ysyx_23060075_mem_ctrl (
         .axi_bready  (axi_1_bready)
     );
 
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_2_araddr;
-    wire                                axi_2_arvalid;
-    wire                                axi_2_arready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_2_rdata;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_2_rresp;
-    wire                                axi_2_rvalid;
-    wire                                axi_2_rready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_2_awaddr;
-    wire                                axi_2_awvalid;
-    wire                                axi_2_awready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_2_wdata;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_2_wstrb;
-    wire                                axi_2_wvalid;
-    wire                                axi_2_wready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_2_bresp;
-    wire                                axi_2_bvalid;
-    wire                                axi_2_bready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_2_araddr;
+    wire                                     axi_2_arvalid;
+    wire                                     axi_2_arready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_2_rdata;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_2_rresp;
+    wire                                     axi_2_rvalid;
+    wire                                     axi_2_rready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_2_awaddr;
+    wire                                     axi_2_awvalid;
+    wire                                     axi_2_awready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_2_wdata;
+    wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] axi_2_wstrb;
+    wire                                     axi_2_wvalid;
+    wire                                     axi_2_wready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_2_bresp;
+    wire                                     axi_2_bvalid;
+    wire                                     axi_2_bready;
     ysyx_23060075_lsu_ctrl lsu_ctrl_1 (
         .clk         (clk),
         .rst         (rst),
@@ -180,5 +180,5 @@ module ysyx_23060075_mem_ctrl (
         .axi_bvalid   (axi_bvalid),
         .axi_bready   (axi_bready)
     );
-    
+
 endmodule

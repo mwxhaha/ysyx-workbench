@@ -62,23 +62,23 @@ module ysyx_23060075_cpu (
         .mem_2_finish(mem_2_finish)
     );
 
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_araddr;
-    wire                                axi_arvalid;
-    wire                                axi_arready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_rdata;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_rresp;
-    wire                                axi_rvalid;
-    wire                                axi_rready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_awaddr;
-    wire                                axi_awvalid;
-    wire                                axi_awready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_wdata;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_wstrb;
-    wire                                axi_wvalid;
-    wire                                axi_wready;
-    wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_bresp;
-    wire                                axi_bvalid;
-    wire                                axi_bready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_araddr;
+    wire                                     axi_arvalid;
+    wire                                     axi_arready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_rdata;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_rresp;
+    wire                                     axi_rvalid;
+    wire                                     axi_rready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_awaddr;
+    wire                                     axi_awvalid;
+    wire                                     axi_awready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_wdata;
+    wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] axi_wstrb;
+    wire                                     axi_wvalid;
+    wire                                     axi_wready;
+    wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_bresp;
+    wire                                     axi_bvalid;
+    wire                                     axi_bready;
     ysyx_23060075_mem_ctrl mem_ctrl_1 (
         .clk         (clk),
         .rst         (rst_reg2),

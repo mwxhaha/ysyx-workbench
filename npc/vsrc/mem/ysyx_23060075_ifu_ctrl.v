@@ -26,11 +26,11 @@ module ysyx_23060075_ifu_ctrl (
     input  wire                                axi_awready,
     // verilator lint_on UNUSEDSIGNAL
 
-    output reg  [`ysyx_23060075_ISA_WIDTH-1:0] axi_wdata,
-    output reg  [`ysyx_23060075_ISA_WIDTH-1:0] axi_wstrb,
-    output reg                                 axi_wvalid,
+    output reg  [     `ysyx_23060075_ISA_WIDTH-1:0] axi_wdata,
+    output reg  [`ysyx_23060075_MEM_MASK_WIDTH-1:0] axi_wstrb,
+    output reg                                      axi_wvalid,
     // verilator lint_off UNUSEDSIGNAL
-    input  wire                                axi_wready,
+    input  wire                                     axi_wready,
     // verilator lint_on UNUSEDSIGNAL
 
     // verilator lint_off UNUSEDSIGNAL
@@ -81,7 +81,7 @@ module ysyx_23060075_ifu_ctrl (
         if (rst) axi_wdata <= `ysyx_23060075_ISA_WIDTH'b0;
     end
     always @(posedge clk, posedge rst) begin
-        if (rst) axi_wstrb <= `ysyx_23060075_ISA_WIDTH'b0;
+        if (rst) axi_wstrb <= `ysyx_23060075_MEM_MASK_WIDTH'b0;
     end
     always @(posedge clk, posedge rst) begin
         if (rst) axi_wvalid <= 1'b0;

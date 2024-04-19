@@ -17,10 +17,10 @@ module ysyx_23060075_sram (
     input  wire                                axi_awvalid,
     output reg                                 axi_awready,
 
-    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_wdata,
-    input  wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_wstrb,
-    input  wire                                axi_wvalid,
-    output reg                                 axi_wready,
+    input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] axi_wdata,
+    input  wire [`ysyx_23060075_MEM_MASK_WIDTH-1:0] axi_wstrb,
+    input  wire                                     axi_wvalid,
+    output reg                                      axi_wready,
 
     output reg  [`ysyx_23060075_ISA_WIDTH-1:0] axi_bresp,
     output reg                                 axi_bvalid,
@@ -85,8 +85,7 @@ module ysyx_23060075_sram (
     end
     always @(posedge clk, posedge rst) begin
         if (rst) wcnt <= `ysyx_23060075_ISA_WIDTH'd0;
-        else if (axi_wvalid && axi_wready)
-            wcnt <= {$random} % 5 + `ysyx_23060075_ISA_WIDTH'd1;
+        else if (axi_wvalid && axi_wready) wcnt <= {$random} % 5 + `ysyx_23060075_ISA_WIDTH'd1;
         else if (wcnt != `ysyx_23060075_ISA_WIDTH'd0) wcnt <= wcnt - `ysyx_23060075_ISA_WIDTH'd1;
     end
     always @(posedge clk, posedge rst) begin
@@ -98,14 +97,14 @@ module ysyx_23060075_sram (
     // write data channel
     reg [`ysyx_23060075_ISA_WIDTH-1:0] axi_wdata_reg;
     // verilator lint_off UNUSEDSIGNAL
-    reg [`ysyx_23060075_ISA_WIDTH-1:0] axi_wstrb_reg;
+    reg [`ysyx_23060075_MEM_MASK_WIDTH-1:0] axi_wstrb_reg;
     // verilator lint_on UNUSEDSIGNAL
     always @(posedge clk, posedge rst) begin
         if (rst) axi_wdata_reg <= `ysyx_23060075_ISA_WIDTH'b0;
         else if (axi_wvalid && axi_wready) axi_wdata_reg <= axi_wdata;
     end
     always @(posedge clk, posedge rst) begin
-        if (rst) axi_wstrb_reg <= `ysyx_23060075_ISA_WIDTH'b0;
+        if (rst) axi_wstrb_reg <= `ysyx_23060075_MEM_MASK_WIDTH'b0;
         else if (axi_wvalid && axi_wready) axi_wstrb_reg <= axi_wstrb;
     end
     always @(posedge clk, posedge rst) begin
@@ -118,7 +117,9 @@ module ysyx_23060075_sram (
     always @(posedge clk, posedge rst) begin
         if (rst);
         else if (wcnt == `ysyx_23060075_ISA_WIDTH'd1)
-            addr_write_dpic(axi_awaddr_reg, axi_wstrb_reg[7:0], axi_wdata_reg);
+            addr_write_dpic(axi_awaddr_reg, {
+                            {8 - `ysyx_23060075_MEM_MASK_WIDTH{1'b0}}, axi_wstrb_reg},
+                            axi_wdata_reg);
     end
     always @(posedge clk, posedge rst) begin
         if (rst) axi_bresp <= `ysyx_23060075_ISA_WIDTH'b0;

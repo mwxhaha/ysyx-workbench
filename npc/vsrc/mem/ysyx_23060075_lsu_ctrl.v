@@ -27,10 +27,10 @@ module ysyx_23060075_lsu_ctrl (
     output reg                                 axi_awvalid,
     input  wire                                axi_awready,
 
-    output reg  [`ysyx_23060075_ISA_WIDTH-1:0] axi_wdata,
-    output reg  [`ysyx_23060075_ISA_WIDTH-1:0] axi_wstrb,
-    output reg                                 axi_wvalid,
-    input  wire                                axi_wready,
+    output reg  [     `ysyx_23060075_ISA_WIDTH-1:0] axi_wdata,
+    output reg  [`ysyx_23060075_MEM_MASK_WIDTH-1:0] axi_wstrb,
+    output reg                                      axi_wvalid,
+    input  wire                                     axi_wready,
 
     // verilator lint_off UNUSEDSIGNAL
     input  wire [`ysyx_23060075_ISA_WIDTH-1:0] axi_bresp,
@@ -99,31 +99,13 @@ module ysyx_23060075_lsu_ctrl (
         end
     end
     always @(posedge clk, posedge rst) begin
-        if (rst) axi_wstrb <= `ysyx_23060075_ISA_WIDTH'b0;
+        if (rst) axi_wstrb <= `ysyx_23060075_MEM_MASK_WIDTH'b0;
         else if (mem_2_w_en) begin
             case (mem_2_addr[1:0])
-                2'b00:
-                axi_wstrb <= {
-                    {`ysyx_23060075_ISA_WIDTH - `ysyx_23060075_MEM_MASK_WIDTH{1'b0}}, mem_2_mask
-                };
-                2'b01:
-                axi_wstrb <= {
-                    {`ysyx_23060075_ISA_WIDTH - `ysyx_23060075_MEM_MASK_WIDTH{1'b0}},
-                    mem_2_mask[2:0],
-                    1'b0
-                };
-                2'b10:
-                axi_wstrb <= {
-                    {`ysyx_23060075_ISA_WIDTH - `ysyx_23060075_MEM_MASK_WIDTH{1'b0}},
-                    mem_2_mask[1:0],
-                    2'b0
-                };
-                2'b11:
-                axi_wstrb <= {
-                    {`ysyx_23060075_ISA_WIDTH - `ysyx_23060075_MEM_MASK_WIDTH{1'b0}},
-                    mem_2_mask[0],
-                    3'b0
-                };
+                2'b00: axi_wstrb <= mem_2_mask;
+                2'b01: axi_wstrb <= {mem_2_mask[2:0], 1'b0};
+                2'b10: axi_wstrb <= {mem_2_mask[1:0], 2'b0};
+                2'b11: axi_wstrb <= {mem_2_mask[0], 3'b0};
             endcase
         end
     end
