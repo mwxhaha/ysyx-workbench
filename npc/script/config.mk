@@ -5,8 +5,9 @@ VSRC_DIR = $(ROOT_DIR)/vsrc
 VSRC = $(shell find $(VSRC_DIR) -name "*.v")
 CSRC_DIR = $(ROOT_DIR)/csrc
 CSRC = $(shell find $(CSRC_DIR) -name "*.cpp")
-NXDC_DIR = $(ROOT_DIR)/nxdc
-NXDC = $(shell find $(NXDC_DIR) -name "*.nxdc")
+CONSTR_DIR = $(ROOT_DIR)/constr
+NXDC = $(shell find $(CONSTR_DIR) -name "*.nxdc")
+SDC = $(shell find $(CONSTR_DIR) -name "*.sdc")
 INCLUDE_DIR = $(ROOT_DIR)/include
 INCLUDE = $(shell find $(INCLUDE_DIR) -name "*.vh" -or -name "*.hpp")
 SCRIPT_DIR = $(ROOT_DIR)/script
@@ -41,9 +42,9 @@ DTRACE = 1
 ETRACE = 1
 endif
 WATCHPOINT = 1
-DIFFTEST = 1
+DIFFTEST = 0
 MEM_RANDOM = 1
-DEVICE = 1
+DEVICE = 0
 ifeq ($(DEVICE),1)
 HAS_SERIAL = 1
 HAS_TIMER = 1

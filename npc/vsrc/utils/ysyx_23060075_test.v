@@ -5,7 +5,7 @@ module ysyx_23060075_test (
     output reg  q
 );
 
-    always @(posedge clk) begin
+    always @(posedge clk, posedge rst) begin
         if (rst) begin
             q <= 1'b0;
         end else begin

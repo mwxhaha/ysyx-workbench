@@ -1,5 +1,5 @@
-#ifndef REG_HPP
-#define REG_HPP
+#ifndef CPU_EXEC_REG_HPP
+#define CPU_EXEC_REG_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

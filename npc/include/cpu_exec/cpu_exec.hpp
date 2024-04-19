@@ -1,5 +1,5 @@
-#ifndef CPU_EXEC_HPP
-#define CPU_EXEC_HPP
+#ifndef CPU_EXEC_CPU_EXEC_HPP
+#define CPU_EXEC_CPU_EXEC_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

@@ -9,32 +9,37 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 verilate: $(VERILATE)
 $(VERILATE): $(VERILATOR_SRC) $(INCLUDE) $(MAKE_FILE)
-	@echo "-----verilate------"
+	@echo "-----verilate-----"
 	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_SRC) $(VERILATOR_FLAGS_LIB)
 	touch $(VERILATE)
-	@echo "-----verilate done------"
+	@echo "-----verilate done-----"
 
 all: build
 build: $(BIN)
 $(BIN): $(VERILATE)
-	@echo "-----build------"
+	@echo "-----build-----"
 	$(MAKE) $(MAKE_FLAGS) $(BIN)
-	@echo "-----build done------"
+	@echo "-----build done-----"
 
 include ../Makefile
 
 run: sim
 sim: $(BIN)
-	@echo "-----simulate------"
+	@echo "-----simulate-----"
 	$(NPC_EXEC)
 ifeq ($(DISPLAY_WAVE),1)
 	$(WAVE_READER) $(WAVE)
 endif
 	$(call git_commit, "sim RTL") 
-	@echo "-----simulate done------"
+	@echo "-----simulate done-----"
+
+sta: verilate
+	@echo "-----sta-----"
+	$(MAKE) $(STA_FLAG) sta
+	@echo "-----sta done-----"
 
 gdb: build
 	@echo "do not support make gdb"
 clean: 
 	rm -rf $(BUILD_DIR)
-.PHONY : verilate build sim run all clean
+.PHONY : verilate all build run sim sta gdb clean

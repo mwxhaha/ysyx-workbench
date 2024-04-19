@@ -14,9 +14,10 @@
 #include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu_exec/mem.hpp>
 #include <cpu_exec/dut.hpp>
-#include <cpu_exec/vaddr.hpp>
+#include <mem/host.hpp>
+#include <mem/paddr.hpp>
+#include <mem/vaddr.hpp>
 
 #define IO_SPACE_MAX (2 * 1024 * 1024)
 

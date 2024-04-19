@@ -19,7 +19,7 @@
 #include <util/rand.hpp>
 #include <cpu_exec/dut.hpp>
 #include <cpu_exec/ftrace.hpp>
-#include <cpu_exec/mem.hpp>
+#include <mem/paddr.hpp>
 #include <device/device.hpp>
 #include <monitor/sdb.hpp>
 #include <verilated.h>

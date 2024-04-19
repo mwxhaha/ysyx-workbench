@@ -1,5 +1,5 @@
-#ifndef INIT_HPP
-#define INIT_HPP
+#ifndef MONITOR_INIT_HPP
+#define MONITOR_INIT_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

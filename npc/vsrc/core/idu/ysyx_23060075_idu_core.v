@@ -1,6 +1,6 @@
-`include "config.vh"
+`include "ysyx_23060075_isa.vh"
 
-module ysyx_23060075_idu (
+module ysyx_23060075_idu_core (
     input wire clk,
     input wire rst,
 

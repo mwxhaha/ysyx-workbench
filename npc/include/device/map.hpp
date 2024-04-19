@@ -1,5 +1,5 @@
-#ifndef MAP_HPP
-#define MAP_HPP
+#ifndef DEVICE_MAP_HPP
+#define DEVICE_MAP_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

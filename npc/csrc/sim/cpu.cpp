@@ -14,7 +14,7 @@
 #include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu_exec/mem.hpp>
+#include <mem/paddr.hpp>
 #include <monitor/sdb.hpp>
 
 npc_state_t npc_state = {NPC_STOP, RESET_VECTOR, 1};

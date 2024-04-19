@@ -1,5 +1,5 @@
-#ifndef WATCHPOINT_HPP
-#define WATCHPOINT_HPP
+#ifndef MONITOR_WATCHPOINT_HPP
+#define MONITOR_WATCHPOINT_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

@@ -1,5 +1,5 @@
-#ifndef SERIAL_HPP
-#define SERIAL_HPP
+#ifndef DEVICE_SERIAL_HPP
+#define DEVICE_SERIAL_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

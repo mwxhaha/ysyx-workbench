@@ -1,5 +1,5 @@
-#ifndef MACRO_HPP
-#define MACRO_HPP
+#ifndef UTIL_MACRO_HPP
+#define UTIL_MACRO_HPP
 
 #include <stdio.h>
 #include <stdbool.h>

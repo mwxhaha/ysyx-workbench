@@ -15,7 +15,7 @@
 #include <util/log.hpp>
 #include <util/macro.hpp>
 #include <util/sim_tool.hpp>
-#include <cpu_exec/vaddr.hpp>
+#include <mem/vaddr.hpp>
 #include <cpu_exec/reg.hpp>
 
 enum

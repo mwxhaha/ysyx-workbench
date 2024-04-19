@@ -1,10 +1,8 @@
-`include "config.vh"
+`include "ysyx_23060075_isa.vh"
 
 module ysyx_23060075_gpr (
     input wire clk,
-    // verilator lint_off UNUSEDSIGNAL
     input wire rst,
-    // verilator lint_on UNUSEDSIGNAL
 
     input  wire [     `ysyx_23060075_ISA_WIDTH-1:0] gpr_w,
     output wire [     `ysyx_23060075_ISA_WIDTH-1:0] gpr_1_r,
@@ -29,6 +27,7 @@ module ysyx_23060075_gpr (
         .DATA_WIDTH(`ysyx_23060075_ISA_WIDTH)
     ) reg_file_gpr (
         .clk    (clk),
+        .rst    (rst),
         .wdata  (wdata),
         .waddr  (gpr_w_addr),
         .rdata_1(rdata_1),

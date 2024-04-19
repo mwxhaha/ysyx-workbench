@@ -1,6 +1,6 @@
-`include "config.vh"
+`include "ysyx_23060075_isa.vh"
 
-module ysyx_23060075_wbu (
+module ysyx_23060075_wbu_core (
     input  wire [        `ysyx_23060075_IMM_WIDTH-1:0] imm,
     input  wire [        `ysyx_23060075_ISA_WIDTH-1:0] pc_imm,
     input  wire [        `ysyx_23060075_ISA_WIDTH-1:0] snpc,
