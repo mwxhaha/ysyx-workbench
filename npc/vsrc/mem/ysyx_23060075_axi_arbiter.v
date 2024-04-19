@@ -2,8 +2,6 @@
 `define FREE 2'b00
 `define WAIT 2'b01
 `define BUSY 2'b10
-`define ysyx_23060075_AXI_MTOS_WIDTH `ysyx_23060075_ISA_WIDTH*3+`ysyx_23060075_MEM_MASK_WIDTH+5
-`define ysyx_23060075_AXI_STOM_WIDTH `ysyx_23060075_ISA_WIDTH*3+5
 
 module ysyx_23060075_axi_arbiter (
     input wire clk,
@@ -129,7 +127,17 @@ module ysyx_23060075_axi_arbiter (
     assign axi_2_bresp   = axi_2_stom[`ysyx_23060075_ISA_WIDTH:1];
     assign axi_2_bvalid  = axi_2_stom[0];
 
-    wire [`ysyx_23060075_AXI_STOM_WIDTH-1:0] axi_mtos = {
+    reg [`ysyx_23060075_AXI_MTOS_WIDTH-1:0] axi_mtos;
+    assign axi_araddr  = axi_mtos[`ysyx_23060075_ISA_WIDTH*3+`ysyx_23060075_MEM_MASK_WIDTH+4:`ysyx_23060075_ISA_WIDTH*2+`ysyx_23060075_MEM_MASK_WIDTH+5];
+    assign axi_arvalid = axi_mtos[`ysyx_23060075_ISA_WIDTH*2+`ysyx_23060075_MEM_MASK_WIDTH+4];
+    assign axi_rready = axi_mtos[`ysyx_23060075_ISA_WIDTH*2+`ysyx_23060075_MEM_MASK_WIDTH+3];
+    assign axi_awaddr  = axi_mtos[`ysyx_23060075_ISA_WIDTH*2+`ysyx_23060075_MEM_MASK_WIDTH+2:`ysyx_23060075_ISA_WIDTH+`ysyx_23060075_MEM_MASK_WIDTH+3];
+    assign axi_awvalid = axi_mtos[`ysyx_23060075_ISA_WIDTH+`ysyx_23060075_MEM_MASK_WIDTH+2];
+    assign axi_wdata   = axi_mtos[`ysyx_23060075_ISA_WIDTH+`ysyx_23060075_MEM_MASK_WIDTH+1:`ysyx_23060075_MEM_MASK_WIDTH+2];
+    assign axi_wstrb = axi_mtos[`ysyx_23060075_MEM_MASK_WIDTH+1:2];
+    assign axi_wvalid = axi_mtos[1];
+    assign axi_bready = axi_mtos[0];
+    wire [`ysyx_23060075_AXI_STOM_WIDTH-1:0] axi_stom = {
         axi_arready,
         axi_rdata,
         axi_rresp,
@@ -139,33 +147,23 @@ module ysyx_23060075_axi_arbiter (
         axi_bresp,
         axi_bvalid
     };
-    reg [`ysyx_23060075_AXI_MTOS_WIDTH-1:0] axi_stom;
-    assign axi_araddr = axi_stom[`ysyx_23060075_ISA_WIDTH*3+`ysyx_23060075_MEM_MASK_WIDTH+4:`ysyx_23060075_ISA_WIDTH*2+`ysyx_23060075_MEM_MASK_WIDTH+5];
-    assign axi_arvalid = axi_stom[`ysyx_23060075_ISA_WIDTH*2+`ysyx_23060075_MEM_MASK_WIDTH+4];
-    assign axi_rready = axi_stom[`ysyx_23060075_ISA_WIDTH*2+`ysyx_23060075_MEM_MASK_WIDTH+3];
-    assign axi_awaddr = axi_stom[`ysyx_23060075_ISA_WIDTH*2+`ysyx_23060075_MEM_MASK_WIDTH+2:`ysyx_23060075_ISA_WIDTH+`ysyx_23060075_MEM_MASK_WIDTH+3];
-    assign axi_awvalid = axi_stom[`ysyx_23060075_ISA_WIDTH+`ysyx_23060075_MEM_MASK_WIDTH+2];
-    assign axi_wdata = axi_stom[`ysyx_23060075_ISA_WIDTH+`ysyx_23060075_MEM_MASK_WIDTH+1:`ysyx_23060075_MEM_MASK_WIDTH+2];
-    assign axi_wstrb = axi_stom[`ysyx_23060075_MEM_MASK_WIDTH+1:2];
-    assign axi_wvalid = axi_stom[1];
-    assign axi_bready = axi_stom[0];
-    
+
     always @(*) begin
         case (arbiter_sel)
             1'b0: begin
-                axi_stom   = axi_1_mtos;
-                axi_1_stom = axi_mtos;
+                axi_1_stom = axi_stom;
                 axi_2_stom = {`ysyx_23060075_AXI_STOM_WIDTH{1'b0}};
+                axi_mtos   = axi_1_mtos;
             end
             1'b1: begin
-                axi_stom   = axi_2_mtos;
                 axi_1_stom = {`ysyx_23060075_AXI_STOM_WIDTH{1'b0}};
-                axi_2_stom = axi_mtos;
+                axi_2_stom = axi_stom;
+                axi_mtos   = axi_2_mtos;
             end
             default: begin
-                axi_stom   = {`ysyx_23060075_AXI_MTOS_WIDTH{1'b0}};
                 axi_1_stom = {`ysyx_23060075_AXI_STOM_WIDTH{1'b0}};
                 axi_2_stom = {`ysyx_23060075_AXI_STOM_WIDTH{1'b0}};
+                axi_mtos   = {`ysyx_23060075_AXI_MTOS_WIDTH{1'b0}};
             end
         endcase
     end
