@@ -21,8 +21,8 @@
 #define PAGE_MASK (PAGE_SIZE - 1)
 
 word_t addr_montior_read(vaddr_t addr, int len);
-word_t addr_ifetch(vaddr_t addr);
-word_t addr_read(vaddr_t addr);
-void addr_write(vaddr_t addr, uint8_t mask, word_t data);
+word_t addr_ifetch(vaddr_t addr, int len);
+word_t addr_read(vaddr_t addr, int len);
+void addr_write(vaddr_t addr, int len, word_t data);
 
 #endif

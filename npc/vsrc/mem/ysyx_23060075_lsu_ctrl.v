@@ -42,7 +42,7 @@ module ysyx_23060075_lsu_ctrl (
     // read address channel
     always @(posedge clk, posedge rst) begin
         if (rst) axi_araddr <= `ysyx_23060075_ISA_WIDTH'b0;
-        else if (mem_2_r_en) axi_araddr <= {mem_2_addr[`ysyx_23060075_ISA_WIDTH-1:2], 2'b0};
+        else if (mem_2_r_en) axi_araddr <= mem_2_addr;
     end
     always @(posedge clk, posedge rst) begin
         if (rst) axi_arvalid <= 1'b0;
@@ -78,7 +78,7 @@ module ysyx_23060075_lsu_ctrl (
     // write address channel
     always @(posedge clk, posedge rst) begin
         if (rst) axi_awaddr <= `ysyx_23060075_ISA_WIDTH'b0;
-        else if (mem_2_w_en) axi_awaddr <= {mem_2_addr[`ysyx_23060075_ISA_WIDTH-1:2], 2'b0};
+        else if (mem_2_w_en) axi_awaddr <= mem_2_addr;
     end
     always @(posedge clk, posedge rst) begin
         if (rst) axi_awvalid <= 1'b0;
