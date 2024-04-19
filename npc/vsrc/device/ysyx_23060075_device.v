@@ -172,7 +172,7 @@ module ysyx_23060075_device (
         .axi_bready (axi_1_bready)
     );
 
-    ysyx_23060075_sram sram_2 (
+    ysyx_23060075_serial serial_1 (
         .clk        (clk),
         .rst        (rst),
         .axi_araddr (axi_2_araddr),

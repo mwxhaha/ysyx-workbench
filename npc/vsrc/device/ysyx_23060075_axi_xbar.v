@@ -83,13 +83,13 @@ module ysyx_23060075_axi_xbar (
     reg [1:0] xbar_sel;
     always @(posedge clk, posedge rst) begin
         if (rst) xbar_sel <= 2'b00;
-        else if(axi_araddr<`ysyx_23060075_ISA_WIDTH'h88000000 &&axi_1_arvalid||axi_awaddr<`ysyx_23060075_ISA_WIDTH'h88000000 &&axi_1_awvalid)
+        else if(axi_araddr<`ysyx_23060075_ISA_WIDTH'h88000000 &&axi_arvalid||axi_awaddr<`ysyx_23060075_ISA_WIDTH'h88000000 &&axi_awvalid)
             xbar_sel <= 2'b01;
-        // else if(axi_araddr>=`ysyx_23060075_ISA_WIDTH'ha00003f8&& axi_araddr<`ysyx_23060075_ISA_WIDTH'ha0000400&&axi_1_arvalid||axi_awaddr>=`ysyx_23060075_ISA_WIDTH'ha00003f8&& axi_awaddr<`ysyx_23060075_ISA_WIDTH'ha0000400&&axi_1_awvalid)
-        //     xbar_sel <= 2'b01;
-        // else if(axi_araddr>=`ysyx_23060075_ISA_WIDTH'ha0000048&& axi_araddr<`ysyx_23060075_ISA_WIDTH'ha0000050&&axi_1_arvalid||axi_awaddr>=`ysyx_23060075_ISA_WIDTH'ha0000048&& axi_awaddr<`ysyx_23060075_ISA_WIDTH'ha0000500&&axi_1_awvalid)
-        //     xbar_sel <= 2'b10;
-        else if (axi_rvalid && axi_rready) xbar_sel <= 2'b00;
+        else if(axi_araddr>=`ysyx_23060075_ISA_WIDTH'ha00003f8&& axi_araddr<`ysyx_23060075_ISA_WIDTH'ha0000400&&axi_arvalid||axi_awaddr>=`ysyx_23060075_ISA_WIDTH'ha00003f8&& axi_awaddr<`ysyx_23060075_ISA_WIDTH'ha0000400&&axi_awvalid)
+            xbar_sel <= 2'b10;
+        // else if(axi_araddr>=`ysyx_23060075_ISA_WIDTH'ha0000048&& axi_araddr<`ysyx_23060075_ISA_WIDTH'ha0000050&&axi_arvalid||axi_awaddr>=`ysyx_23060075_ISA_WIDTH'ha0000048&& axi_awaddr<`ysyx_23060075_ISA_WIDTH'ha0000500&&axi_awvalid)
+        //     xbar_sel <= 2'b11;
+        else if (axi_rvalid && axi_rready || axi_bvalid && axi_bready) xbar_sel <= 2'b00;
     end
 
     wire [`ysyx_23060075_AXI_MTOS_WIDTH-1:0] axi_mtos = {
