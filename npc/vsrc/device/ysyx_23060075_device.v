@@ -194,7 +194,7 @@ module ysyx_23060075_device (
         .axi_bready (axi_2_bready)
     );
 
-    ysyx_23060075_sram sram_3 (
+    ysyx_23060075_clint clint_3 (
         .clk        (clk),
         .rst        (rst),
         .axi_araddr (axi_3_araddr),
