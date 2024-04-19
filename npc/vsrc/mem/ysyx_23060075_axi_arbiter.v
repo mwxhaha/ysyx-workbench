@@ -1,7 +1,7 @@
 `include "ysyx_23060075_isa.vh"
-`define FREE 2'b00
-`define WAIT 2'b01
-`define BUSY 2'b10
+`define AXI_STATE_FREE 2'b00
+`define AXI_STATE_WAIT 2'b01
+`define AXI_STATE_BUSY 2'b10
 
 module ysyx_23060075_axi_arbiter (
     input wire clk,
@@ -62,27 +62,28 @@ module ysyx_23060075_axi_arbiter (
     output wire                                     axi_bready
 );
 
-    reg arbiter_sel;
     reg [1:0] axi_1_state;
     reg [1:0] axi_2_state;
     always @(posedge clk, posedge rst) begin
-        if (rst) axi_1_state <= `FREE;
-        else if (axi_1_arvalid && axi_1_arready || axi_1_awvalid && axi_1_awready && axi_1_wvalid && axi_1_wready)
-            axi_1_state <= `BUSY;
-        else if (axi_1_arvalid || axi_1_awvalid && axi_1_wvalid) axi_1_state <= `WAIT;
-        else if (axi_1_rvalid && axi_1_rready || axi_1_bvalid && axi_1_bready) axi_1_state <= `FREE;
+        if (rst) axi_1_state <= `AXI_STATE_FREE;
+        else if (axi_1_arvalid && axi_1_arready || axi_1_awvalid && axi_1_awready)
+            axi_1_state <= `AXI_STATE_BUSY;
+        else if (axi_1_arvalid || axi_1_awvalid && axi_1_wvalid) axi_1_state <= `AXI_STATE_WAIT;
+        else if (axi_1_rvalid && axi_1_rready || axi_1_bvalid && axi_1_bready) axi_1_state <= `AXI_STATE_FREE;
     end
     always @(posedge clk, posedge rst) begin
-        if (rst) axi_2_state <= `FREE;
-        else if (axi_2_arvalid && axi_2_arready || axi_2_awvalid && axi_2_awready && axi_2_wvalid && axi_2_wready)
-            axi_2_state <= `BUSY;
-        else if (axi_2_arvalid || axi_2_awvalid && axi_2_wvalid) axi_2_state <= `WAIT;
-        else if (axi_2_rvalid && axi_2_rready || axi_2_bvalid && axi_2_bready) axi_2_state <= `FREE;
+        if (rst) axi_2_state <= `AXI_STATE_FREE;
+        else if (axi_2_arvalid && axi_2_arready || axi_2_awvalid && axi_2_awready)
+            axi_2_state <= `AXI_STATE_BUSY;
+        else if (axi_2_arvalid || axi_2_awvalid && axi_2_wvalid) axi_2_state <= `AXI_STATE_WAIT;
+        else if (axi_2_rvalid && axi_2_rready || axi_2_bvalid && axi_2_bready) axi_2_state <= `AXI_STATE_FREE;
     end
+    
+    reg arbiter_sel;
     always @(posedge clk, posedge rst) begin
         if (rst) arbiter_sel <= 1'b0;
-        else if (axi_1_state == `WAIT || axi_2_state == `FREE) arbiter_sel <= 1'b0;
-        else if (axi_2_state == `WAIT || axi_1_state == `FREE) arbiter_sel <= 1'b1;
+        else if (axi_1_state == `AXI_STATE_WAIT || axi_2_state == `AXI_STATE_FREE) arbiter_sel <= 1'b0;
+        else if (axi_2_state == `AXI_STATE_WAIT || axi_1_state == `AXI_STATE_FREE) arbiter_sel <= 1'b1;
     end
 
     wire [`ysyx_23060075_AXI_MTOS_WIDTH-1:0] axi_1_mtos = {

@@ -112,7 +112,7 @@ module ysyx_23060075_cpu (
         .axi_bready  (axi_bready)
     );
 
-    ysyx_23060075_sram sram_1 (
+    ysyx_23060075_device device_1 (
         .clk        (clk),
         .rst        (rst_reg2),
         .axi_araddr (axi_araddr),
