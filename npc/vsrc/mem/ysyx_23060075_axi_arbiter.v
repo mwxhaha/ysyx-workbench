@@ -85,163 +85,70 @@ module ysyx_23060075_axi_arbiter (
         else if (axi_2_state == `WAIT || axi_1_state == `FREE) arbiter_sel <= 1'b1;
     end
 
-    // read address channel
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: axi_araddr = axi_1_araddr;
-            1'b1: axi_araddr = axi_2_araddr;
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: axi_arvalid = axi_1_arvalid;
-            1'b1: axi_arvalid = axi_2_arvalid;
-        endcase
-    end
     always @(*) begin
         case (arbiter_sel)
             1'b0: begin
+                axi_araddr = axi_1_araddr;
+                axi_arvalid = axi_1_arvalid;
                 axi_1_arready = axi_arready;
                 axi_2_arready = 1'b0;
-            end
-            1'b1: begin
-                axi_1_arready = 1'b0;
-                axi_2_arready = axi_arready;
-            end
-        endcase
-    end
 
-    // read data channel
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: begin
                 axi_1_rdata = axi_rdata;
                 axi_2_rdata = `ysyx_23060075_ISA_WIDTH'b0;
-            end
-            1'b1: begin
-                axi_1_rdata = `ysyx_23060075_ISA_WIDTH'b0;
-                axi_2_rdata = axi_rdata;
-            end
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: begin
                 axi_1_rresp = axi_rresp;
                 axi_2_rresp = `ysyx_23060075_ISA_WIDTH'b0;
-            end
-            1'b1: begin
-                axi_1_rresp = `ysyx_23060075_ISA_WIDTH'b0;
-                axi_2_rresp = axi_rresp;
-            end
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: begin
                 axi_1_rvalid = axi_rvalid;
                 axi_2_rvalid = 1'b0;
-            end
-            1'b1: begin
-                axi_1_rvalid = 1'b0;
-                axi_2_rvalid = axi_rvalid;
-            end
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: axi_rready = axi_1_rready;
-            1'b1: axi_rready = axi_2_rready;
-        endcase
-    end
+                axi_rready = axi_1_rready;
 
-    // write address channel
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: axi_awaddr = axi_1_awaddr;
-            1'b1: axi_awaddr = axi_2_awaddr;
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: axi_awvalid = axi_1_awvalid;
-            1'b1: axi_awvalid = axi_2_awvalid;
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: begin
+                axi_awaddr = axi_1_awaddr;
+                axi_awvalid = axi_1_awvalid;
                 axi_1_awready = axi_awready;
                 axi_2_awready = 1'b0;
-            end
-            1'b1: begin
-                axi_1_awready = 1'b0;
-                axi_2_awready = axi_awready;
-            end
-        endcase
-    end
 
-    // write data channel
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: axi_wdata = axi_1_wdata;
-            1'b1: axi_wdata = axi_2_wdata;
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: axi_wstrb = axi_1_wstrb;
-            1'b1: axi_wstrb = axi_2_wstrb;
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: axi_wvalid = axi_1_wvalid;
-            1'b1: axi_wvalid = axi_2_wvalid;
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: begin
+                axi_wdata = axi_1_wdata;
+                axi_wstrb = axi_1_wstrb;
+                axi_wvalid = axi_1_wvalid;
                 axi_1_wready = axi_wready;
                 axi_2_wready = 1'b0;
-            end
-            1'b1: begin
-                axi_1_wready = 1'b0;
-                axi_2_wready = axi_wready;
-            end
-        endcase
-    end
 
-    // write response channel
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: begin
                 axi_1_bresp = axi_bresp;
                 axi_2_bresp = `ysyx_23060075_ISA_WIDTH'b0;
-            end
-            1'b1: begin
-                axi_1_bresp = `ysyx_23060075_ISA_WIDTH'b0;
-                axi_2_bresp = axi_bresp;
-            end
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: begin
                 axi_1_bvalid = axi_bvalid;
                 axi_2_bvalid = 1'b0;
+                axi_bready = axi_1_bready;
             end
             1'b1: begin
+                axi_araddr = axi_2_araddr;
+                axi_arvalid = axi_2_arvalid;
+                axi_1_arready = 1'b0;
+                axi_2_arready = axi_arready;
+
+                axi_1_rdata = `ysyx_23060075_ISA_WIDTH'b0;
+                axi_2_rdata = axi_rdata;
+                axi_1_rresp = `ysyx_23060075_ISA_WIDTH'b0;
+                axi_2_rresp = axi_rresp;
+                axi_1_rvalid = 1'b0;
+                axi_2_rvalid = axi_rvalid;
+                axi_rready = axi_2_rready;
+
+                axi_awaddr = axi_2_awaddr;
+                axi_awvalid = axi_2_awvalid;
+                axi_1_awready = 1'b0;
+                axi_2_awready = axi_awready;
+
+                axi_wdata = axi_2_wdata;
+                axi_wstrb = axi_2_wstrb;
+                axi_wvalid = axi_2_wvalid;
+                axi_1_wready = 1'b0;
+                axi_2_wready = axi_wready;
+
+                axi_1_bresp = `ysyx_23060075_ISA_WIDTH'b0;
+                axi_2_bresp = axi_bresp;
                 axi_1_bvalid = 1'b0;
                 axi_2_bvalid = axi_bvalid;
+                axi_bready = axi_2_bready;
             end
-        endcase
-    end
-    always @(*) begin
-        case (arbiter_sel)
-            1'b0: axi_bready = axi_1_bready;
-            1'b1: axi_bready = axi_2_bready;
         endcase
     end
 
