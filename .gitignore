@@ -10,9 +10,9 @@
 !README.md
 !.gitignore
 !init.sh
-/fceux-am
-/nvboard
-/am-kernels
-/rt-thread-am
-/yosys-sta
-/ysyxSoC
+# /fceux-am
+# /nvboard
+# /am-kernels
+# /rt-thread-am
+# /yosys-sta
+# /ysyxSoC
